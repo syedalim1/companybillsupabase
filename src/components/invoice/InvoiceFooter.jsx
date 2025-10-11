@@ -9,33 +9,33 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
     return (
         <footer className=" border p-2 ">
             {/* Terms and Conditions */}
-            {invoiceData.invoiceDetails.terms && (
+            {/* {invoiceData.invoiceDetails.terms && (
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                     <p className="text-xs font-bold text-gray-700 mb-1">Terms & Conditions:</p>
                     <p className="text-xs text-gray-600">{invoiceData.invoiceDetails.terms}</p>
                 </div>
-            )}
+            )} */}
 
             {/* Payment Terms */}
-            {invoiceData.invoiceDetails.paymentTerms && (
+            {/* {invoiceData.invoiceDetails.paymentTerms && (
                 <div className="mb-4 p-3 bg-blue-50 rounded-lg">
                     <p className="text-xs font-bold text-blue-700 mb-1">Payment Terms:</p>
                     <p className="text-xs text-blue-600">{invoiceData.invoiceDetails.paymentTerms}</p>
                 </div>
-            )}
+            )} */}
 
             {/* Totals and Bank Details */}
-            <div className="flex justify-between gap-2  p-1 ">
-                <div className="flex-1">
+            <div className="flex justify-between  ">
+                {/* <div className="flex-1">
                      <p className="text-[12px] font-bold uppercase  mb-1">Amount in words</p>
                      <p className="text-[12px] ">{numberToWords(Math.round(grandTotal))} </p>
                    
-                </div>
+                </div> */}
                 <div className="w-[45%] space-y-1 text-[12px]">
-                    <div className="flex justify-between"><span className="text-gray-600">Item Total:</span> <span className="font-semibold">₹{itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                    {/* <div className="flex justify-between"><span className="text-gray-600">Item Total:</span> <span className="font-semibold">₹{itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div> */}
 
                     {/* Additional Charges */}
-                    {additionalChargesTotal > 0 && (
+                    {/* {additionalChargesTotal > 0 && (
                         <>
                             {invoiceData.additionalCharges.freight > 0 && (
                                 <div className="flex justify-between"><span className="text-gray-600">Freight:</span> <span>₹{parseFloat(invoiceData.additionalCharges.freight).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
@@ -51,9 +51,9 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
                             )}
                             <div className="flex justify-between border-t pt-1"><span className="text-gray-600 font-medium">Subtotal:</span> <span className="font-semibold">₹{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
                         </>
-                    )}
+                    )} */}
 
-                    {isCGST_SGST ? (
+                    {/* {isCGST_SGST ? (
                         <>
                             <div className="flex justify-between"><span className="text-gray-600">CGST:</span> <span>₹{cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
                             <div className="flex justify-between"><span className="text-gray-600">SGST:</span> <span>₹{sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
@@ -64,10 +64,10 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
                     <div className="flex justify-between font-bold text-blue-600 border-t-2 border-blue-600 pt-2 mt-2">
                         <span>Grand Total:</span>
                         <span>₹{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
-              <div className="mt-4  border  p-1 flex gap-2 items-center ">
+              <div className=" flex gap-2 items-center ">
                 <div className='items-center text-center '>
                         <p className="text-sm font-bold uppercase  mb-1">Bank Details</p>
                 </div>
