@@ -5,10 +5,13 @@ import CompanyBillHeader from "@/components/CompanyForm";
 import InvoiceDetailsForm from "@/components/InvoiceDetailsForm";
 import InvoicePreview from "@/components/InvoicePreview";
 import ItemsForm from "@/components/ItemsForm";
+import LandingPage from "@/components/LandingPage";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation'
+  const [quotationGstOption, setQuotationGstOption] = useState('with-gst'); // 'with-gst', 'without-gst'
   const [nextId, setNextId] = useState(2);
   const [isGenerating, setIsGenerating] = useState(false); // State to track PDF generation
 
@@ -73,16 +76,26 @@ export default function Home() {
     taxRate: 18,
   });
 
-  // Auto-set tax type based on state codes
+  // Handle generator selection
+  const handleSelectGenerator = (generatorType) => {
+    setCurrentMode(generatorType);
+  };
+
+  // Handle quotation GST option change
+  const handleQuotationGstChange = (gstOption) => {
+    setQuotationGstOption(gstOption);
+  };
+
+  // Auto-set tax type based on state codes (only for GST bill)
   useEffect(() => {
-    if (invoiceData.seller.stateCode && invoiceData.buyer.stateCode) {
+    if (currentMode === 'gst-bill' && invoiceData.seller.stateCode && invoiceData.buyer.stateCode) {
       if (invoiceData.seller.stateCode === invoiceData.buyer.stateCode) {
         setInvoiceData(prev => ({ ...prev, invoiceDetails: { ...prev.invoiceDetails, taxType: 'cgst_sgst' } }));
       } else {
         setInvoiceData(prev => ({ ...prev, invoiceDetails: { ...prev.invoiceDetails, taxType: 'igst' } }));
       }
     }
-  }, [invoiceData.seller.stateCode, invoiceData.buyer.stateCode]);
+  }, [currentMode, invoiceData.seller.stateCode, invoiceData.buyer.stateCode]);
 
   const handleInputChange = (section, field, value) => {
     setInvoiceData(prev => ({
@@ -188,26 +201,80 @@ const handleGeneratePDF = async () => {
   const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge) => acc + (parseFloat(charge) || 0), 0);
   const subtotal = itemTotal + additionalChargesTotal;
 
-  const isCGST_SGST = invoiceData.invoiceDetails.taxType === 'cgst_sgst';
+  // GST calculations based on mode and quotation GST option
+  const shouldCalculateGST = currentMode === 'gst-bill' || (currentMode === 'quotation' && quotationGstOption === 'with-gst');
+
+  const isCGST_SGST = shouldCalculateGST && invoiceData.invoiceDetails.taxType === 'cgst_sgst';
   const cgstRate = isCGST_SGST ? invoiceData.taxRate / 2 : 0;
   const sgstRate = isCGST_SGST ? invoiceData.taxRate / 2 : 0;
-  const igstRate = isCGST_SGST ? 0 : invoiceData.taxRate;
+  const igstRate = shouldCalculateGST && !isCGST_SGST ? invoiceData.taxRate : 0;
   const cgstAmount = (subtotal * cgstRate) / 100;
   const sgstAmount = (subtotal * sgstRate) / 100;
   const igstAmount = (subtotal * igstRate) / 100;
   const taxAmount = cgstAmount + sgstAmount + igstAmount;
   const grandTotal = subtotal + taxAmount;
 
+  // Show landing page
+  if (currentMode === 'landing') {
+    return <LandingPage onSelectGenerator={handleSelectGenerator} />;
+  }
+
+  // Show GST Bill or Quotation interface
   return (
       <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
       <div className="flex-1 max-w-lg print:hidden mx-auto lg:mx-0">
-        <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Invoice Generator</h1>
+        {/* Back to landing button */}
+        <button
+          onClick={() => setCurrentMode('landing')}
+          className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+        >
+          ← Back to Home
+        </button>
+
+        <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">
+          {currentMode === 'gst-bill' ? 'GST Bill Generator' : 'Quotation Generator'}
+        </h1>
+
+        {/* GST Option for Quotations */}
+        {currentMode === 'quotation' && (
+          <div className="mb-6 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-lg font-semibold mb-3 text-gray-800">GST Options</h3>
+            <div className="flex gap-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="gstOption"
+                  value="with-gst"
+                  checked={quotationGstOption === 'with-gst'}
+                  onChange={(e) => handleQuotationGstChange(e.target.value)}
+                  className="mr-2"
+                />
+                <span className="text-gray-700">With GST</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="gstOption"
+                  value="without-gst"
+                  checked={quotationGstOption === 'without-gst'}
+                  onChange={(e) => handleQuotationGstChange(e.target.value)}
+                  className="mr-2"
+                />
+                <span className="text-gray-700">Without GST</span>
+              </label>
+            </div>
+          </div>
+        )}
 
         <CompanyBillHeader  />
 
         <ClientForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
 
-        <InvoiceDetailsForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
+        <InvoiceDetailsForm
+          invoiceData={invoiceData}
+          handleInputChange={handleInputChange}
+          hideBillNumber={currentMode === 'quotation'}
+        />
 
         <ItemsForm
           invoiceData={invoiceData}
@@ -225,7 +292,7 @@ const handleGeneratePDF = async () => {
           className="w-full py-4 mt-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
           onClick={() => window.print()}
         >
-          Print Invoice
+          Print {currentMode === 'gst-bill' ? 'Invoice' : 'Quotation'}
         </button>
 
         <button
@@ -233,7 +300,7 @@ const handleGeneratePDF = async () => {
           onClick={handleGeneratePDF}
           disabled={isGenerating}
         >
-          {isGenerating ? 'Generating PDF...' : 'Save as PDF'}
+          {isGenerating ? 'Generating PDF...' : `Save as PDF`}
         </button>
       </div>
 
@@ -244,6 +311,8 @@ const handleGeneratePDF = async () => {
         sgstAmount={sgstAmount}
         igstAmount={igstAmount}
         grandTotal={grandTotal}
+        mode={currentMode}
+        gstOption={quotationGstOption}
       />
     </div>
   );

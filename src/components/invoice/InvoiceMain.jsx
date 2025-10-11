@@ -9,10 +9,11 @@ const toWords = new ToWords({
   },
 });
 
-const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal }) => {
+const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal, mode, gstOption }) => {
     const totalQuantity = invoiceData.items.reduce((acc, item) => acc + item.quantity, 0);
     const amountInWords = toWords.convert(grandTotal);
     const isCGST_SGST = invoiceData.invoiceDetails.taxType === 'cgst_sgst';
+    const shouldShowGST = mode === 'gst-bill' || (mode === 'quotation' && gstOption === 'with-gst');
 
     const minRows = 11; // Minimum number of rows for the items section
     const emptyRowsCount = minRows > invoiceData.items.length ? minRows - invoiceData.items.length : 0;
@@ -21,24 +22,34 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
     return (
         <main className="flex-grow text-[12px]">
             {/* Billing Information */}
-            <div className="grid grid-cols-2 gap-2 ">
-                <div className="border p-2 rounded-lg bg-gray-50">
-                     <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
+            {shouldShowGST ? (
+                <div className="grid grid-cols-2  ">
+                    <div className="border border-r-0 border-t-0 p-2  bg-gray-50">
+                         <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
+                         <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
+                         <p className="text-[13px] ">{invoiceData.buyer.address}</p>
+                         <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.buyer.gstin || 'N/A'}</p>
+                         <p className="text-[13px] "><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
+                    </div>
+                    <div className="border p-2 border-t-0  bg-gray-50">
+                         <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
+                         <p className="font-bold text-gray-800 text-[13px]">{invoiceData.buyer.name}</p>
+                         <p className="text-[13px] ">{invoiceData.buyer.destination}</p>
+                         <p className="text-[13px]  mt-1"><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
+                         {invoiceData.invoiceDetails.placeOfSupply && (
+                             <p className="text-[13px] "><strong>Place of Supply:</strong> {invoiceData.invoiceDetails.placeOfSupply}</p>
+                         )}
+                    </div>
+                </div>
+            ) : (
+                <div className="border p-2 border-t-0 bg-gray-50">
+                     <h3 className="text-[10px] font-bold uppercase text-gray-500 mb-2">Party Details</h3>
                      <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
                      <p className="text-[13px] ">{invoiceData.buyer.address}</p>
-                     <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.buyer.gstin || 'N/A'}</p>
+                     <p className="text-[13px]  mt-1"><strong>Contact:</strong> {invoiceData.buyer.contact || 'N/A'}</p>
                      <p className="text-[13px] "><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
                 </div>
-                <div className="border p-2 rounded-lg bg-gray-50">
-                     <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
-                     <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
-                     <p className="text-[13px] ">{invoiceData.buyer.destination}</p>
-                     <p className="text-[13px]  mt-1"><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
-                     {invoiceData.invoiceDetails.placeOfSupply && (
-                         <p className="text-[13px] "><strong>Place of Supply:</strong> {invoiceData.invoiceDetails.placeOfSupply}</p>
-                     )}
-                </div>
-            </div>
+            )}
 
          
 
@@ -101,7 +112,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                             </td>
                         </tr>
                         {/* --- Tax Rows --- */}
-                        {isCGST_SGST ? (
+                        {shouldShowGST && (isCGST_SGST ? (
                             <>
                                 {/* --- CGST Row --- */}
                                 <tr>
@@ -132,11 +143,11 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                                     {igstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                             </tr>
-                        )}
+                        ))}
                         {/* --- Grand Total Row --- */}
                         <tr className="font-bold bg-gray-50">
                             <td colSpan="3" className="p-2 text-left border border-slate-300">Total</td>
-                            <td className="p-2 text-center border border-slate-300">{totalQuantity} Pcs</td>
+                            <td className="p-2 text-center border border-slate-300">{totalQuantity} Qty</td>
                             <td className="border border-slate-300"></td>
                             <td className="p-2 text-right border border-slate-300">
                                 ₹{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

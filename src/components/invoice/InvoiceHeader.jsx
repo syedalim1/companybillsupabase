@@ -1,11 +1,13 @@
 import React from 'react';
 
-const InvoiceHeader = ({ copyType, invoiceData }) => {
+const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
+    const isQuotation = mode === 'quotation';
+
     return (
-        <header className="p-0">
-            {/* TAX INVOICE Title */}
-            <div className="text-center mb-4 print:mb-2">
-                <h2 className=" font-extrabold  tracking-wider">TAX INVOICE</h2>
+        <header className="p-1 border">
+            {/* TAX INVOICE/QUOTATION Title */}
+            <div className="text-center mb-2 print:mb-2">
+                <h2 className=" font-extrabold  tracking-wider">{isQuotation ? 'QUOTATION' : 'TAX INVOICE'}</h2>
             </div>
             <div className="flex justify-between items-start px-2 print:px-0">
                 {/* Company Details */}
@@ -20,20 +22,32 @@ const InvoiceHeader = ({ copyType, invoiceData }) => {
                         <strong>GSTIN:</strong> {invoiceData.seller.gstin}
                     </p>
                 </div>
-                {/* Invoice Details */}
+                {/* Invoice/Quotation Details */}
                 <div className="text-right">
-                    <p className=" font-semibold text-[15px]">
-                        <strong>Invoice No:</strong> {invoiceData.invoiceDetails.invoiceNo}
-                    </p>
+                    {!isQuotation && (
+                        <p className=" font-semibold text-[15px]">
+                            <strong>Invoice No:</strong> {invoiceData.invoiceDetails.invoiceNo}
+                        </p>
+                    )}
                     <p className="text-md text-[15px]">
-                        <strong>Invoice Date:</strong> {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
+                        <div>
+                            <div>
+<strong>{isQuotation ? 'Quotation' : 'Invoice'} Date</strong>
+                            </div>
+                            <div>
+ {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
+                            </div>
+                        </div>
+                        
                     </p>
 
                 </div>
             </div>
-            <div className="text-center text-sm font-semibold px-2 print:px-0">
-                {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : 'DUPLICATE FOR TRANSPORTER'}
-            </div>
+            {copyType !== 'quotation' && (
+                <div className="text-center text-sm font-semibold px-2 print:px-0">
+                    {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : 'DUPLICATE FOR TRANSPORTER'}
+                </div>
+            )}
         </header>
     );
 };
