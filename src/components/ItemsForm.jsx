@@ -44,21 +44,6 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
             />
           </div>
           <div className="flex flex-wrap gap-3">
-            <input
-              type="number"
-              value={item.discount}
-              onChange={(e) => handleItemChange(index, 'discount', parseFloat(e.target.value) || 0)}
-              placeholder="Discount"
-              className="w-28 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <select
-              value={item.discountType}
-              onChange={(e) => handleItemChange(index, 'discountType', e.target.value)}
-              className="w-32 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="percentage">%</option>
-              <option value="amount">₹</option>
-            </select>
             <button
               onClick={() => removeItem(index)}
               className="px-4 py-3 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"

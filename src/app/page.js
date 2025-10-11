@@ -62,8 +62,6 @@ export default function Home() {
         sac: '',
         quantity: 8,
         rate: 1900.00,
-        discount: 0,
-        discountType: 'percentage', // 'percentage' or 'amount'
       },
     ],
     additionalCharges: {
@@ -107,8 +105,6 @@ export default function Home() {
       sac: '',
       quantity: 1,
       rate: 0,
-      discount: 0,
-      discountType: 'percentage'
     };
     setInvoiceData(prev => ({
       ...prev,
@@ -141,16 +137,37 @@ const handleGeneratePDF = async () => {
     console.log('html2pdf.js imported successfully.');
 
     const options = {
-      margin: 0.5,
+      margin: [0.2, 0.2, 0.2, 0.2], // top, left, bottom, right margins in inches
       filename: `Invoice_${invoiceData.invoiceDetails.invoiceNo}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
+      image: { type: 'jpeg', quality: 0.95 },
       html2canvas: {
-        scale: 2,
+        scale: 1.2, // Further reduced scale for better compatibility
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        ignoreElements: (element) => {
+          // Skip elements that might cause issues
+          return element.classList.contains('print:hidden');
+        },
+        onclone: (clonedDoc) => {
+          // Remove problematic CSS that html2canvas can't handle
+          const styles = clonedDoc.querySelectorAll('style');
+          styles.forEach(style => {
+            if (style.textContent.includes('lab(') || style.textContent.includes('oklab(')) {
+              style.remove();
+            }
+          });
+        }
       },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      jsPDF: {
+        unit: 'in',
+        format: 'a4',
+        orientation: 'portrait',
+        compress: true
+      },
+      pagebreak: {
+        mode: ['avoid-all', 'css', 'legacy']
+      }
     };
 
     await html2pdf().from(element).set(options).save();
@@ -165,11 +182,7 @@ const handleGeneratePDF = async () => {
 
   // --- Calculations ---
   const itemTotal = invoiceData.items.reduce((acc, item) => {
-    const itemAmount = item.quantity * item.rate;
-    const discountAmount = item.discountType === 'percentage'
-      ? (itemAmount * item.discount) / 100
-      : item.discount;
-    return acc + (itemAmount - discountAmount);
+    return acc + (item.quantity * item.rate);
   }, 0);
 
   const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge) => acc + (parseFloat(charge) || 0), 0);

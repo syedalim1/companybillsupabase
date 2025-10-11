@@ -24,3 +24,38 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* PDF Generation Styles */
+@media print {
+  .print\:page-break-after-always {
+    page-break-after: always;
+  }
+
+  .print\:page-break-before-always {
+    page-break-before: always;
+  }
+
+  .print\:page-break-inside-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* Ensure proper rendering for PDF */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Hide elements that shouldn't appear in PDF */
+  .print\:hidden {
+    display: none !important;
+  }
+}
+
+/* Additional styles for better PDF compatibility */
+#invoice-preview {
+  font-family: Arial, sans-serif;
+}
+
+#invoice-preview * {
+  box-sizing: border-box;
+}

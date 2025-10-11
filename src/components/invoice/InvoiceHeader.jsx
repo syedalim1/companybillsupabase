@@ -2,18 +2,18 @@ import React from 'react';
 
 const InvoiceHeader = ({ copyType, invoiceData }) => {
     return (
-        <header className="pb-2  ">
+        <header className="p-0">
             {/* TAX INVOICE Title */}
-            <div className="text-center mb-4">
-                <h2 className=" font-extrabold text-blue-600 tracking-wider">TAX INVOICE</h2>
+            <div className="text-center mb-4 print:mb-2">
+                <h2 className=" font-extrabold  tracking-wider">TAX INVOICE</h2>
             </div>
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start px-2 print:px-0">
                 {/* Company Details */}
                 <div className="flex-1">
                     <h1 className=" font-bold text-[15px] ">
                         {invoiceData.seller.name}
                     </h1>
-                    <p className="text-[12px]  max-w-sm">
+                    <p className="text-[12px] max-w-sm">
                         NO.K-6, Sidco, Kurichi, <br/>Sidco Industrial Estate, Coimbatore - 641021
                     </p>
                     <p className="text-[14px] mt-2">
@@ -28,10 +28,10 @@ const InvoiceHeader = ({ copyType, invoiceData }) => {
                     <p className="text-md text-[15px]">
                         <strong>Invoice Date:</strong> {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
                     </p>
-                 
+
                 </div>
             </div>
-            <div className="text-center text-sm font-semibold ">
+            <div className="text-center text-sm font-semibold px-2 print:px-0">
                 {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : 'DUPLICATE FOR TRANSPORTER'}
             </div>
         </header>

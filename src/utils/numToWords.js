@@ -10,7 +10,7 @@ const numberToWords = (num) => {
   str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'thousand ' : '';
   str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'hundred ' : '';
   str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
-  return str.trim().split(' ').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ') + ' Only';
+  return str.trim().split(' ').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ') + ' ';
 };
 
 export default numberToWords;

@@ -5,13 +5,13 @@ import InvoiceFooter from './InvoiceFooter';
 
 const InvoiceContent = ({ copyType, invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal }) => {
     return (
-        <div className="p-2 bg-white shadow-2xl print:shadow-none print:p-4 font-sans">
-            <div className=" p-2 flex flex-col min-h-[26cm] relative"> {/* A4-like container with fixed border */}
+        <div className="p-2  shadow-2xl print:shadow-none print:p-4 font-sans">
+            <div className=" p-2 flex flex-col "> {/* A4-like container with fixed border */}
                 <InvoiceHeader copyType={copyType} invoiceData={invoiceData} />
-                <InvoiceMain invoiceData={invoiceData} igstAmount={igstAmount} />
+                <InvoiceMain invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} />
                 <InvoiceFooter invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} />
 
-              
+
             </div>
         </div>
     );
