@@ -17,7 +17,7 @@ const InvoicePreview = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmo
                     </div>
 
                     {/* Duplicate Copy */}
-                    <div>
+                    <div className='print:pt-10'>
                         <InvoiceContent copyType="duplicate" invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} mode={mode} gstOption={gstOption} />
                     </div>
                 </>

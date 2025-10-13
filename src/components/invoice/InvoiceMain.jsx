@@ -23,15 +23,15 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
         <main className="flex-grow text-[12px]">
             {/* Billing Information */}
             {shouldShowGST ? (
-                <div className="grid grid-cols-2  ">
-                    <div className="border border-r-0 border-t-0 p-2  bg-gray-50">
+                <div className="grid grid-cols-2 border border-t-0 ">
+                    <div className=" p-2 border-r-1  bg-gray-50">
                          <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
                          <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
                          <p className="text-[13px] ">{invoiceData.buyer.address}</p>
                          <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.buyer.gstin || 'N/A'}</p>
                          <p className="text-[13px] "><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
                     </div>
-                    <div className="border p-2 border-t-0  bg-gray-50">
+                    <div className=" p-2   bg-gray-50">
                          <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
                          <p className="font-bold text-gray-800 text-[13px]">{invoiceData.buyer.name}</p>
                          <p className="text-[13px] ">{invoiceData.buyer.destination}</p>
@@ -42,7 +42,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                     </div>
                 </div>
             ) : (
-                <div className="border p-2 border-t-0 bg-gray-50">
+                <div className=" p-2  bg-gray-50">
                      <h3 className="text-[10px] font-bold uppercase text-gray-500 mb-2">Party Details</h3>
                      <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
                      <p className="text-[13px] ">{invoiceData.buyer.address}</p>

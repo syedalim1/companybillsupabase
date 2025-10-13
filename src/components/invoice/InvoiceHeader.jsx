@@ -6,10 +6,10 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
     return (
         <header className="p-1 border">
             {/* TAX INVOICE/QUOTATION Title */}
-            <div className="text-center mb-2 print:mb-2">
+            <div className="text-center mb-2 ">
                 <h2 className=" font-extrabold  tracking-wider">{isQuotation ? 'QUOTATION' : 'TAX INVOICE'}</h2>
             </div>
-            <div className="flex justify-between items-start px-2 print:px-0">
+            <div className="flex justify-between items-start px-2 ">
                 {/* Company Details */}
                 <div className="flex-1">
                     <h1 className=" font-bold text-[15px] ">
@@ -44,7 +44,7 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                 </div>
             </div>
             {copyType !== 'quotation' && (
-                <div className="text-center text-sm font-semibold px-2 print:px-0">
+                <div className="text-center text-sm font-extrabold px-2 print:px-0">
                     {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : 'DUPLICATE FOR TRANSPORTER'}
                 </div>
             )}
