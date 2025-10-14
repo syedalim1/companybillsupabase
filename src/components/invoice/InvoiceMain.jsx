@@ -69,12 +69,12 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                 <table className="w-full text-xs border-collapse border border-slate-400">
                     <thead className="bg-gray-50">
                         <tr className=''>
-                            <th className="p-2 text-center w-[5%] border border-slate-300">SI No.</th>
-                            <th className="p-2 text-left w-[35%] border border-slate-300">Description of Goods</th>
-                            <th className="p-2 text-center w-[10%] border border-slate-300">HSN/SAC</th>
-                            <th className="p-2 text-center w-[10%] border border-slate-300">Qty</th>
-                            <th className="p-2 text-right w-[10%] border border-slate-300">Rate</th>
-                            <th className="p-2 text-right  border border-slate-300">Amount</th>
+                            <th className="p-2 text-center w-[5%] border ">SI No.</th>
+                            <th className="p-2 text-left w-[35%] border ">Description of Goods</th>
+                            <th className="p-2 text-center w-[10%] border ">HSN/SAC</th>
+                            <th className="p-2 text-center w-[10%] border ">Qty</th>
+                            <th className="p-2 text-right w-[10%] border ">Rate</th>
+                            <th className="p-2 text-right  border ">Amount</th>
                         </tr>
                     </thead>
                     <tbody className="align-top">
@@ -83,13 +83,13 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                             const itemTotal = item.quantity * item.rate * (1 - item.discount / 100);
                             return (
                                 <tr key={item.id}>
-                                    <td className="p-2 text-center border border-slate-300">{index + 1}</td>
-                                    <td className="p-2 text-left font-semibold border border-slate-300">{item.description}</td>
-                                    <td className="p-2 text-center border border-slate-300">{item.hsn}</td>
-                                    <td className="p-2 text-center border border-slate-300">{item.quantity}</td>
-                                    <td className="p-2 text-right border border-slate-300">{item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    <td className="p-2 text-center border ">{index + 1}</td>
+                                    <td className="p-2 text-left font-semibold border ">{item.description}</td>
+                                    <td className="p-2 text-center border ">{item.hsn}</td>
+                                    <td className="p-2 text-center border ">{item.quantity}</td>
+                                    <td className="p-2 text-right border ">{item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
 </td>
-                                    <td className="p-2 text-right font-semibold border border-slate-300">
+                                    <td className="p-2 text-right font-semibold border ">
                                         {itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
                                 </tr>
@@ -99,12 +99,12 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                         {/* --- Empty rows to maintain table height --- */}
                         {Array.from({ length: emptyRowsCount }).map((_, i) => (
                              <tr key={`empty-${i}`}>
-                                <td className="p-2 border border-slate-300 border-y-0">&nbsp;</td>
-                                <td className="p-2 border border-slate-300 border-y-0"></td>
-                                <td className="p-2 border border-slate-300 border-y-0"></td>
-                                <td className="p-2 border border-slate-300 border-y-0"></td>
-                                <td className="p-2 border border-slate-300 border-y-0"></td>
-                                <td className="p-2 border border-slate-300 border-y-0"></td>
+                                <td className="p-2 border  border-y-0">&nbsp;</td>
+                                <td className="p-2 border  border-y-0"></td>
+                                <td className="p-2 border  border-y-0"></td>
+                                <td className="p-2 border  border-y-0"></td>
+                                <td className="p-2 border  border-y-0"></td>
+                                <td className="p-2 border  border-y-0"></td>
                             </tr>
                         ))}
                     </tbody>
@@ -113,10 +113,10 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                     <tfoot>
                         {/* --- Subtotal Row --- */}
                         <tr>
-                            <td colSpan="5" className="p-2 text-right font-semibold border border-slate-300">
+                            <td colSpan="5" className="p-2 text-right font-semibold border ">
                                 Subtotal
                             </td>
-                            <td className="p-2 text-right font-semibold border border-slate-300">
+                            <td className="p-2 text-right font-semibold border ">
                                 {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
                         </tr>
@@ -125,19 +125,19 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                             <>
                                 {/* --- CGST Row --- */}
                                 <tr>
-                                    <td colSpan="5" className="p-2 text-right font-semibold border border-slate-300">
+                                    <td colSpan="5" className="p-2 text-right font-semibold border ">
                                         CGST @ 9%
                                     </td>
-                                    <td className="p-2 text-right border border-slate-300">
+                                    <td className="p-2 text-right border ">
                                         {cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
                                 </tr>
                                 {/* --- SGST Row --- */}
                                 <tr>
-                                    <td colSpan="5" className="p-2 text-right font-semibold border border-slate-300">
+                                    <td colSpan="5" className="p-2 text-right font-semibold border ">
                                         SGST @ 9%
                                     </td>
-                                    <td className="p-2 text-right border border-slate-300">
+                                    <td className="p-2 text-right border ">
                                         {sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </td>
                                 </tr>
@@ -145,26 +145,125 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                         ) : (
                             /* --- IGST Row --- */
                             <tr>
-                                <td colSpan="5" className="p-2 text-right font-semibold border border-slate-300">
+                                <td colSpan="5" className="p-2 text-right font-semibold border ">
                                     IGST @ 18%
                                 </td>
-                                <td className="p-2 text-right border border-slate-300">
+                                <td className="p-2 text-right border ">
                                     {igstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </td>
                             </tr>
                         ))}
                         {/* --- Grand Total Row --- */}
                         <tr className="font-bold bg-gray-50">
-                            <td colSpan="3" className="p-2 text-left border border-slate-300">Total</td>
-                            <td className="p-2 text-center border border-slate-300">{totalQuantity} Qty</td>
-                            <td className="border border-slate-300"></td>
-                            <td className="p-2 text-right border border-slate-300">
+                            <td colSpan="3" className="p-2 text-left border ">Total</td>
+                            <td className="p-2 text-center border ">{totalQuantity} Qty</td>
+                            <td className="border "></td>
+                            <td className="p-2 text-right border ">
                                 ₹{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
+
+            {/* {shouldShowGST && (
+                <div className="overflow-hidden mt-4">
+                    <table className="w-full text-xs border-collapse border border-slate-400">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="p-2 text-center border ">HSN/SAC</th>
+                                <th className="p-2 text-center border ">Taxable Amount</th>
+                                <th className="p-2 text-center border ">Rate</th>
+                                <th className="p-2 text-center border ">Tax Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {isCGST_SGST ? (
+                                <>
+                                    <tr>
+                                        <td className="p-2 text-center border ">CGST</td>
+                                        <td className="p-2 text-right border ">{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                        <td className="p-2 text-center border ">9%</td>
+                                        <td className="p-2 text-right border ">{cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                    </tr>
+                                    <tr>
+                                        <td className="p-2 text-center border ">SGST</td>
+                                        <td className="p-2 text-right border ">{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                        <td className="p-2 text-center border ">9%</td>
+                                        <td className="p-2 text-right border ">{sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                    </tr>
+                                </>
+                            ) : (
+                                <tr>
+                                    <td className="p-2 text-center border ">IGST</td>
+                                    <td className="p-2 text-right border ">{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                    <td className="p-2 text-center border ">18%</td>
+                                    <td className="p-2 text-right border ">{igstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )} */}
+            {/* GST Colum */}
+ <div className="p-4 font-sans">
+      <table className="w-full border-collapse border border-black">
+        <thead>
+          <tr className="text-center font-bold">
+            {/* HSN/SAC */}
+            <th rowSpan="2" className="border border-black align-middle">
+              HSN/SAC
+            </th>
+            {/* Taxable Value */}
+            <th rowSpan="2" className="border border-black align-middle">
+              Taxable Value
+            </th>
+            {/* Central Tax */}
+            <th colSpan="2" className="border border-black align-middle">
+              Central Tax
+            </th>
+            {/* State Tax */}
+            <th colSpan="2" className="border border-black align-middle">
+              State Tax
+            </th>
+            {/* Total Tax Amount */}
+            <th rowSpan="2" className="border border-black  align-middle">
+              Total Tax Amount
+            </th>
+          </tr>
+          <tr className="text-center font-bold">
+            <th className="border border-black align-middle">Rate</th>
+            <th className="border border-black align-middle">Amount</th>
+            <th className="border border-black align-middle">Rate</th>
+            <th className="border border-black align-middle">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border border-black  text-center align-middle">9403</td>
+            <td className="border border-black  text-right align-middle">15,200.00</td>
+            <td className="border border-black  text-center align-middle">9%</td>
+            <td className="border border-black  text-right align-middle">1,368.00</td>
+            <td className="border border-black  text-center align-middle">9%</td>
+            <td className="border border-black  text-right align-middle">1,368.00</td>
+            <td className="border border-black  text-right align-middle">2,736.00</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr className="font-bold">
+            <th className="border border-black  text-center align-middle">Total</th>
+            <td className="border border-black  text-right align-middle">15,200.00</td>
+            {/* Empty cell under Central Tax Rate */}
+            <td className="border border-black "></td>
+            <td className="border border-black  text-right align-middle">1,368.00</td>
+            {/* Empty cell under State Tax Rate */}
+            <td className="border border-black "></td>
+            <td className="border border-black  text-right align-middle">1,368.00</td>
+            <td className="border border-black  text-right align-middle">2,736.00</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 
             {/* --- Amount in Words and E&OE --- */}
             <div className="flex justify-between mt-2 text-xs">

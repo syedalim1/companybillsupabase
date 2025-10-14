@@ -112,7 +112,7 @@ export default function Home() {
       });
 
       if (response.ok) {
-        alert('Invoice saved successfully!');
+        alert(`${currentMode === 'quotation' ? 'Quotation' : 'Invoice'} saved successfully!`);
         // Optionally refresh the list of saved invoices
         fetchSavedInvoices();
         // Increment next invoice number
@@ -255,7 +255,7 @@ export default function Home() {
       const maxInvoiceNo = Math.max(...savedInvoices.map(invoice => parseInt(invoice.invoiceNo) || 0));
       setNextInvoiceNo((maxInvoiceNo + 1).toString());
     }
-  }, [savedInvoices, nextInvoiceNo]);
+  }, [savedInvoices.length, nextInvoiceNo]);
 
   // Export to Excel
   const handleExportToExcel = () => {
@@ -572,7 +572,7 @@ const handleGeneratePDF = async () => {
           className="w-full py-4 mt-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
           onClick={editingInvoiceId ? handleUpdateInvoice : handleSaveInvoice}
         >
-          {editingInvoiceId ? 'Update Invoice' : 'Save Invoice'}
+          {editingInvoiceId ? 'Update Invoice' : `Save ${currentMode === 'quotation' ? 'Quotation' : 'Invoice'}`}
         </button>
 
         {editingInvoiceId && (
