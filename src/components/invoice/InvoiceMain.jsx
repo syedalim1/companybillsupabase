@@ -15,7 +15,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
     const isCGST_SGST = invoiceData.invoiceDetails.taxType === 'cgst_sgst';
     const shouldShowGST = mode === 'gst-bill' || (mode === 'quotation' && gstOption === 'with-gst');
 
-    const minRows =12; // Minimum number of rows for the items section
+    const minRows =10; // Minimum number of rows for the items section
     const emptyRowsCount = minRows > invoiceData.items.length ? minRows - invoiceData.items.length : 0;
 
 
@@ -29,12 +29,18 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                          <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
                          <p className="text-[13px] ">{invoiceData.buyer.address}</p>
                          <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.buyer.gstin || 'N/A'}</p>
+                         {invoiceData.buyer.buyerNumber && (
+                           <p className="text-[13px] "><strong>Contact Number:</strong> {invoiceData.buyer.buyerNumber}</p>
+                         )}
                          <p className="text-[13px] "><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
                     </div>
                     <div className=" p-2   bg-gray-50">
                          <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
                          <p className="font-bold text-gray-800 text-[13px]">{invoiceData.buyer.name}</p>
                          <p className="text-[13px] ">{invoiceData.buyer.destination}</p>
+                         {invoiceData.buyer.buyerNumber && (
+                           <p className="text-[13px]  mt-1"><strong>Contact Number:</strong> {invoiceData.buyer.buyerNumber}</p>
+                         )}
                          <p className="text-[13px]  mt-1"><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
                          {invoiceData.invoiceDetails.placeOfSupply && (
                              <p className="text-[13px] "><strong>Place of Supply:</strong> {invoiceData.invoiceDetails.placeOfSupply}</p>
@@ -46,6 +52,9 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                      <h3 className="text-[10px] font-bold uppercase text-gray-500 mb-2">Party Details</h3>
                      <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
                      <p className="text-[13px] ">{invoiceData.buyer.address}</p>
+                     {invoiceData.buyer.buyerNumber && (
+                       <p className="text-[13px]  mt-1"><strong>Buyer No:</strong> {invoiceData.buyer.buyerNumber}</p>
+                     )}
                      <p className="text-[13px]  mt-1"><strong>Contact:</strong> {invoiceData.buyer.contact || 'N/A'}</p>
                      <p className="text-[13px] "><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
                 </div>
@@ -71,7 +80,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                     <tbody className="align-top">
                         {/* --- Item Rows --- */}
                         {invoiceData.items.map((item, index) => {
-                            const itemTotal = item.quantity * item.rate;
+                            const itemTotal = item.quantity * item.rate * (1 - item.discount / 100);
                             return (
                                 <tr key={item.id}>
                                     <td className="p-2 text-center border border-slate-300">{index + 1}</td>
@@ -167,6 +176,14 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                     <p>E. & O.E.</p>
                 </div>
             </div>
+
+            {/* --- Notes Section --- */}
+            {invoiceData.invoiceDetails.notes && (
+                <div className="mt-4 p-2 border-t border-gray-300">
+                    <p className="font-semibold text-xs mb-1">Notes:</p>
+                    <p className="text-xs">{invoiceData.invoiceDetails.notes}</p>
+                </div>
+            )}
         </div>
         </main>
     );

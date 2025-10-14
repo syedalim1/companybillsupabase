@@ -90,7 +90,17 @@ const InvoiceDetailsForm = ({ invoiceData, handleInputChange, hideBillNumber = f
         </div>
       </div>
 
-  
+      {/* Notes Section */}
+      <div className="mb-3">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Notes/Comments</label>
+        <textarea
+          value={invoiceData.invoiceDetails.notes}
+          onChange={(e) => handleInputChange('invoiceDetails', 'notes', e.target.value)}
+          placeholder="Add any additional notes or comments here..."
+          rows="3"
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+        />
+      </div>
 
     </fieldset>
   );

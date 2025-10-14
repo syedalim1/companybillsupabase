@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id                String   @id @default(cuid())
+  invoiceNo         String
+  date              String
+  dueDate           String?
+  poNumber          String?
+  reference         String?
+  placeOfSupply     String?
+  taxType           String
+  reverseCharge     Boolean  @default(false)
+  ewayBillNo        String?
+  vehicleNo         String?
+  transporterName   String?
+  transporterId     String?
+  distance          String?
+  modeOfTransport   String?
+  terms             String?
+  paymentTerms      String?
+  notes             String?
+  taxRate           Float
+  mode              String   // 'gst-bill' or 'quotation'
+  quotationGstOption String? // 'with-gst' or 'without-gst'
+  subtotal          Float
+  cgstAmount        Float
+  sgstAmount        Float
+  igstAmount        Float
+  grandTotal        Float
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  seller            Seller   @relation(fields: [sellerId], references: [id])
+  sellerId          String
+  buyer             Buyer    @relation(fields: [buyerId], references: [id])
+  buyerId           String
+  items             Item[]
+  additionalCharges AdditionalCharge?
+
+  @@map("invoices")
+}
+
+model Seller {
+  id          String    @id @default(cuid())
+  name        String
+  address     String?
+  gstin       String?
+  state       String?
+  stateCode   Int?
+  contact     String?
+  email       String?
+  bankName    String?
+  accNo       String?
+  branch      String?
+  ifsc        String?
+  logo        String?   // URL or path to logo
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  invoices    Invoice[]
+
+  @@map("sellers")
+}
+
+model Buyer {
+  id          String    @id @default(cuid())
+  name        String
+  address     String?
+  destination String?
+  contact     String?
+  gstin       String?
+  state       String?
+  stateCode   Int?
+  buyerNumber String?   @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  invoices    Invoice[]
+
+  @@map("buyers")
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  description String
+  hsn         String?
+  sac         String?
+  quantity    Float
+  rate        Float
+  discount    Float    @default(0)
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId   String
+
+  @@map("items")
+}
+
+model AdditionalCharge {
+  id        String   @id @default(cuid())
+  freight   Float    @default(0)
+  insurance Float    @default(0)
+  packing   Float    @default(0)
+  other     Float    @default(0)
+  discount  Float    @default(0)
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId String   @unique
+
+  @@map("additional_charges")
+}

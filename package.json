@@ -8,16 +8,20 @@
     "start": "next start"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/client": "^6.17.1",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.12.1",
     "jspdf": "^3.0.3",
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "to-words": "^4.7.0"
+    "to-words": "^4.7.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "prisma": "^6.17.1",
     "tailwindcss": "^4"
   }
 }

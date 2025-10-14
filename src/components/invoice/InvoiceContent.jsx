@@ -10,8 +10,6 @@ const InvoiceContent = ({ copyType, invoiceData, subtotal, cgstAmount, sgstAmoun
                 <InvoiceHeader copyType={copyType} invoiceData={invoiceData} mode={mode} />
                 <InvoiceMain invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} mode={mode} gstOption={gstOption} />
                 <InvoiceFooter invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} mode={mode} gstOption={gstOption} />
-
-
             </div>
         </div>
     );
