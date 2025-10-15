@@ -41,6 +41,10 @@ model Invoice {
   sgstAmount        Float
   igstAmount        Float
   grandTotal        Float
+  paymentStatus     String   @default("unpaid") // 'paid', 'unpaid', 'partial', 'overdue'
+  paymentDate       DateTime?
+  paymentAmount     Float    @default(0)
+  paymentNotes      String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -122,4 +126,18 @@ model AdditionalCharge {
   invoiceId String   @unique
 
   @@map("additional_charges")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  hsn         String?
+  sac         String?
+  rate        Float
+  category    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("products")
 }

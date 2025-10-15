@@ -24,7 +24,9 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
   // Filter buyers based on search term
   const filteredBuyers = buyers.filter(buyer =>
     buyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    buyer.gstin.toLowerCase().includes(searchTerm.toLowerCase())
+    buyer.gstin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    buyer.contact?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    buyer.state?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle buyer selection
@@ -92,7 +94,7 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
           type="text"
           value={invoiceData.buyer.name}
           onChange={(e) => handleNameChange(e.target.value)}
-          placeholder="Client Name (type to search existing buyers)"
+          placeholder="Client Name (type to search existing buyers by name, GSTIN, contact, or state)"
           className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {showDropdown && filteredBuyers.length > 0 && (
@@ -104,8 +106,15 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
                 onClick={() => handleBuyerSelect(buyer)}
               >
                 <div className="font-semibold">{buyer.name}</div>
-                <div className="text-sm text-gray-600">{buyer.gstin}</div>
-                <div className="text-sm text-gray-500">{buyer.state}</div>
+                <div className="text-sm text-gray-600">
+                  {buyer.gstin && <span>GSTIN: {buyer.gstin}</span>}
+                  {buyer.contact && <span className="ml-2">• {buyer.contact}</span>}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {buyer.state && <span>{buyer.state}</span>}
+                  {buyer.stateCode && <span> ({buyer.stateCode})</span>}
+                  {buyer.address && <span className="ml-2">• {buyer.address}</span>}
+                </div>
               </div>
             ))}
           </div>

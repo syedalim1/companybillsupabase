@@ -93,7 +93,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
          
 
             {/* Items Table - "Box Table" Style */}
-           <div className="py-4 bg-white">
+           <div className="pt-4 border-b-0 bg-white">
             {/* --- Main Items Table --- */}
             <div className="overflow-hidden">
                 <table className="w-full text-xs border-collapse border border-slate-400">

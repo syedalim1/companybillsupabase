@@ -8,7 +8,7 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
     const isQuotationWithoutGST = mode === 'quotation' && gstOption === 'without-gst';
 
     return (
-        <footer className=" border p-2 ">
+        <footer className=" border border-t-0 p-2 ">
 
 
               <div className=" flex gap-2 items-center ">

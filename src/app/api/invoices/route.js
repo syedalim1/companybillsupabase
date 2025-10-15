@@ -307,3 +307,37 @@ export async function DELETE(request) {
     return NextResponse.json({ error: 'Failed to delete invoice' }, { status: 500 });
   }
 }
+
+// PATCH /api/invoices - Partial update for payment status
+export async function PATCH(request) {
+  try {
+    const body = await request.json();
+    const { id, paymentStatus, paymentDate, paymentAmount, paymentNotes } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Invoice ID is required' }, { status: 400 });
+    }
+
+    const updateData = {};
+    if (paymentStatus !== undefined) updateData.paymentStatus = paymentStatus;
+    if (paymentDate !== undefined) updateData.paymentDate = paymentDate ? new Date(paymentDate) : null;
+    if (paymentAmount !== undefined) updateData.paymentAmount = parseFloat(paymentAmount) || 0;
+    if (paymentNotes !== undefined) updateData.paymentNotes = paymentNotes;
+
+    const invoice = await prisma.invoice.update({
+      where: { id },
+      data: updateData,
+      include: {
+        seller: true,
+        buyer: true,
+        items: true,
+        additionalCharges: true,
+      },
+    });
+
+    return NextResponse.json({ invoice });
+  } catch (error) {
+    console.error('Error updating invoice payment status:', error);
+    return NextResponse.json({ error: 'Failed to update payment status' }, { status: 500 });
+  }
+}
