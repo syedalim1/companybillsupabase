@@ -6,12 +6,13 @@ import InvoiceDetailsForm from "@/components/InvoiceDetailsForm";
 import InvoicePreview from "@/components/InvoicePreview";
 import ItemsForm from "@/components/ItemsForm";
 import LandingPage from "@/components/LandingPage";
+import MonthlyGSTReport from "@/components/MonthlyGSTReport";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import * as XLSX from 'xlsx';
 
 export default function Home() {
-  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation'
+  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'gst-monthly-report'
   const [quotationGstOption, setQuotationGstOption] = useState('with-gst'); // 'with-gst', 'without-gst'
   const [nextId, setNextId] = useState(2);
   const [isGenerating, setIsGenerating] = useState(false); // State to track PDF generation
@@ -482,6 +483,29 @@ const handleGeneratePDF = async () => {
   // Show landing page
   if (currentMode === 'landing') {
     return <LandingPage onSelectGenerator={handleSelectGenerator} />;
+  }
+
+  // Show GST Monthly Report interface
+  if (currentMode === 'gst-monthly-report') {
+    return (
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+        <div className="flex-1 max-w-4xl print:hidden mx-auto">
+          {/* Back to landing button */}
+          <button
+            onClick={() => setCurrentMode('landing')}
+            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+          >
+            ← Back to Home
+          </button>
+
+          <h1 className="text-3xl font-bold text-center mb-6 text-purple-600">
+            GST Monthly Report Generator
+          </h1>
+
+          <MonthlyGSTReport savedInvoices={savedInvoices} invoiceData={invoiceData} />
+        </div>
+      </div>
+    );
   }
 
   // Show GST Bill or Quotation interface
