@@ -40,7 +40,7 @@ export function useInvoiceState() {
     invoiceDetails: {
       invoiceNo: nextInvoiceNo,
       date: new Date().toISOString().split('T')[0],
-      taxType: 'igst',
+      taxType: 'cgst_sgst',
       dueDate: '',
       poNumber: '',
       reference: '',
@@ -73,6 +73,8 @@ export function useInvoiceState() {
       packing: 0,
       other: 0,
       discount: 0,
+      lessAmount: 0,
+      lessDescription: '',
     },
     taxRate: 18,
   });

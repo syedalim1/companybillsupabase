@@ -151,8 +151,8 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
         />
         <input
           type="number"
-          value={invoiceData.buyer.stateCode}
-          onChange={(e) => handleInputChange('buyer', 'stateCode', parseInt(e.target.value) || 0)}
+          value={invoiceData.buyer.stateCode || ''}
+          onChange={(e) => handleInputChange('buyer', 'stateCode', parseInt(e.target.value) || null)}
           placeholder="State Code"
           className="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

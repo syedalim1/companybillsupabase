@@ -294,6 +294,7 @@ const handleGeneratePDF = async () => {
         currentMode={currentMode}
         setCurrentMode={setCurrentMode}
         quotationGstOption={quotationGstOption}
+        handleQuotationGstChange={handleQuotationGstChange}
         invoiceData={invoiceData}
         setInvoiceData={setInvoiceData}
         handleInputChange={handleInputChange}

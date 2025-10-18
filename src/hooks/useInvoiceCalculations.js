@@ -7,14 +7,15 @@ export function useInvoiceCalculations(invoiceData, currentMode, quotationGstOpt
 
   const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge, index) => {
     const chargeValue = parseFloat(charge) || 0;
-    // Skip discount for now, we'll handle it separately
-    if (index === 4) return acc; // discount is the 5th item (index 4)
+    // Skip discount and lessAmount for now, we'll handle them separately
+    if (index === 4 || index === 5) return acc; // discount is the 5th item (index 4), lessAmount is the 6th (index 5)
     return acc + chargeValue;
   }, 0);
 
   const subtotalBeforeDiscount = itemTotal + additionalChargesTotal;
   const overallDiscountAmount = (subtotalBeforeDiscount * invoiceData.additionalCharges.discount) / 100;
-  const subtotal = subtotalBeforeDiscount - overallDiscountAmount;
+  const lessAmount = parseFloat(invoiceData.additionalCharges.lessAmount) || 0;
+  const subtotal = subtotalBeforeDiscount - overallDiscountAmount - lessAmount;
 
   // GST calculations based on mode and quotation GST option
   const shouldCalculateGST = currentMode === 'gst-bill' || (currentMode === 'quotation' && quotationGstOption === 'with-gst');

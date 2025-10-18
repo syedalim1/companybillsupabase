@@ -150,6 +150,17 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                                 {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
                         </tr>
+                        {/* --- Less Amount Row (only for quotations without GST) --- */}
+                        {mode === 'quotation' && gstOption === 'without-gst' && invoiceData.additionalCharges.lessAmount > 0 && (
+                            <tr>
+                                <td colSpan="5" className="p-2 text-right font-semibold border ">
+                                    Less: {invoiceData.additionalCharges.lessDescription || 'Discount'}
+                                </td>
+                                <td className="p-2 text-right border ">
+                                    -{invoiceData.additionalCharges.lessAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
+                            </tr>
+                        )}
                         {/* --- Tax Rows --- */}
                         {shouldShowGST && (isCGST_SGST ? (
                             <>

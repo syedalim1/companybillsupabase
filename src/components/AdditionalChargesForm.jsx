@@ -49,6 +49,9 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-3">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Discount (%)</label>
           <input
@@ -57,6 +60,23 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
             onChange={(e) => handleInputChange('additionalCharges', 'discount', parseFloat(e.target.value) || 0)}
             placeholder="0.00"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Less Amount</label>
+          <input
+            type="number"
+            value={invoiceData.additionalCharges.lessAmount || 0}
+            onChange={(e) => handleInputChange('additionalCharges', 'lessAmount', parseFloat(e.target.value) || 0)}
+            placeholder="0.00"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
+            value={invoiceData.additionalCharges.lessDescription || ''}
+            onChange={(e) => handleInputChange('additionalCharges', 'lessDescription', e.target.value)}
+            placeholder="Description for less amount"
+            className="w-full p-2 mt-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>

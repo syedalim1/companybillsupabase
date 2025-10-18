@@ -9,6 +9,7 @@ export default function InvoiceForm({
   currentMode,
   setCurrentMode,
   quotationGstOption,
+  handleQuotationGstChange,
   invoiceData,
   handleInputChange,
   handleItemChange,
@@ -141,7 +142,7 @@ export default function InvoiceForm({
               invoiceDetails: {
                 invoiceNo: '',
                 date: new Date().toISOString().split('T')[0],
-                taxType: 'igst',
+                taxType: 'cgst_sgst',
                 dueDate: '',
                 poNumber: '',
                 reference: '',
@@ -174,6 +175,8 @@ export default function InvoiceForm({
                 packing: 0,
                 other: 0,
                 discount: 0,
+                lessAmount: 0,
+                lessDescription: '',
               },
               taxRate: 18,
             });
