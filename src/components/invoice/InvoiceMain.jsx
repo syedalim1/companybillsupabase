@@ -15,7 +15,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
     const isCGST_SGST = invoiceData.invoiceDetails.taxType === 'cgst_sgst';
     const shouldShowGST = mode === 'gst-bill' || (mode === 'quotation' && gstOption === 'with-gst');
 
-    const minRows =10; // Minimum number of rows for the items section
+    const minRows =8; // Minimum number of rows for the items section
     const emptyRowsCount = minRows > invoiceData.items.length ? minRows - invoiceData.items.length : 0;
 
     // Calculate GST data grouped by HSN
