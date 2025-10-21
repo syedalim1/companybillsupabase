@@ -21,6 +21,15 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                     <p className="text-[14px] mt-2">
                         <strong>GSTIN:</strong> {invoiceData.seller.gstin}
                     </p>
+                    <p className="text-[12px] mt-1">
+                        <strong>State Name:</strong> Tamil Nadu, <strong>Code:</strong> 33
+                    </p>
+                    <p className="text-[12px] mt-1">
+                        <strong>Contact:</strong> 9585745303, 6379016686
+                    </p>
+                    <p className="text-[12px] mt-1">
+                        <strong>E-Mail:</strong> indianmaksteel1982@gmail.com
+                    </p>
                 </div>
                 {/* Invoice/Quotation Details */}
                 <div className="text-right">

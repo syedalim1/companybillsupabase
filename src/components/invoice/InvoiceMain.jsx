@@ -9,13 +9,13 @@ const toWords = new ToWords({
   },
 });
 
-const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal, mode, gstOption }) => {
+const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal, lessAmount, discountAmount, mode, gstOption }) => {
     const totalQuantity = invoiceData.items.reduce((acc, item) => acc + item.quantity, 0);
     const amountInWords = toWords.convert(grandTotal);
     const isCGST_SGST = invoiceData.invoiceDetails.taxType === 'cgst_sgst';
     const shouldShowGST = mode === 'gst-bill' || (mode === 'quotation' && gstOption === 'with-gst');
 
-    const minRows =8; // Minimum number of rows for the items section
+    const minRows =7; // Minimum number of rows for the items section
     const emptyRowsCount = minRows > invoiceData.items.length ? minRows - invoiceData.items.length : 0;
 
     // Calculate GST data grouped by HSN
@@ -78,7 +78,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                     </div>
                 </div>
             ) : (
-                <div className=" p-2  bg-gray-50">
+                <div className=" p-2  bg-gray-50 border border-t-0">
                      <h3 className="text-[10px] font-bold uppercase text-gray-500 mb-2">Party Details</h3>
                      <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
                      <p className="text-[13px] ">{invoiceData.buyer.address}</p>
@@ -150,6 +150,17 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                                 {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
                         </tr>
+                        {/* --- Discount Row (only for quotations without GST) --- */}
+                        {mode === 'quotation' && gstOption === 'without-gst' && invoiceData.additionalCharges.discount > 0 && (
+                            <tr>
+                                <td colSpan="5" className="p-2 text-right font-semibold border ">
+                                    Less: Discount @ {invoiceData.additionalCharges.discount}%
+                                </td>
+                                <td className="p-2 text-right border ">
+                                    -{discountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
+                            </tr>
+                        )}
                         {/* --- Less Amount Row (only for quotations without GST) --- */}
                         {mode === 'quotation' && gstOption === 'without-gst' && invoiceData.additionalCharges.lessAmount > 0 && (
                             <tr>
@@ -161,6 +172,7 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                                 </td>
                             </tr>
                         )}
+                       
                         {/* --- Tax Rows --- */}
                         {shouldShowGST && (isCGST_SGST ? (
                             <>
@@ -196,7 +208,9 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                         ))}
                         {/* --- Grand Total Row --- */}
                         <tr className="font-bold bg-gray-50">
-                            <td colSpan="3" className="p-2 text-left border ">Total</td>
+                            <td colSpan="3" className="p-2 text-left border ">
+                                {mode === 'quotation' && gstOption === 'without-gst' && (invoiceData.additionalCharges.discount > 0 || invoiceData.additionalCharges.lessAmount > 0) ? 'Balance Amount' : 'Total'}
+                            </td>
                             <td className="p-2 text-center border ">{totalQuantity} Qty</td>
                             <td className="border "></td>
                             <td className="p-2 text-right border ">

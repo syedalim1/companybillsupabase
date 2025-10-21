@@ -17,7 +17,7 @@ export default function SavedInvoicesList({
               className="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200 text-left"
               onClick={() => handleLoadInvoice(invoice)}
             >
-              {invoice.mode === 'gst-bill' ? 'Invoice' : 'Quotation'} - {invoice.invoiceNo || 'No Number'} ({new Date(invoice.createdAt).toLocaleDateString()})
+              {invoice.mode === 'gst-bill' ? 'Invoice' : 'Quotation'} - {invoice.invoiceNo || 'No Number'} ({invoice.invoiceDetails && invoice.invoiceDetails.date ? new Date(invoice.date).toLocaleDateString('en-GB') : new Date(invoice.date).toLocaleDateString('en-GB')})
             </button>
             <button
               className="py-2 px-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"

@@ -14,8 +14,10 @@ export function useInvoiceCalculations(invoiceData, currentMode, quotationGstOpt
 
   const subtotalBeforeDiscount = itemTotal + additionalChargesTotal;
   const overallDiscountAmount = (subtotalBeforeDiscount * invoiceData.additionalCharges.discount) / 100;
+  const subtotalAfterDiscount = subtotalBeforeDiscount ;
   const lessAmount = parseFloat(invoiceData.additionalCharges.lessAmount) || 0;
-  const subtotal = subtotalBeforeDiscount - overallDiscountAmount - lessAmount;
+  const subtotal = subtotalAfterDiscount - lessAmount;
+  const discountAmount = overallDiscountAmount;
 
   // GST calculations based on mode and quotation GST option
   const shouldCalculateGST = currentMode === 'gst-bill' || (currentMode === 'quotation' && quotationGstOption === 'with-gst');
@@ -36,5 +38,7 @@ export function useInvoiceCalculations(invoiceData, currentMode, quotationGstOpt
     sgstAmount,
     igstAmount,
     grandTotal,
+    lessAmount,
+    discountAmount,
   };
 }

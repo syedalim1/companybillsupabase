@@ -215,7 +215,7 @@ const handleGeneratePDF = async () => {
   }
 };
 
-  const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal } = calculations;
+  const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal, lessAmount, discountAmount } = calculations;
 
   // Show landing page
   if (currentMode === 'landing') {
@@ -321,6 +321,8 @@ const handleGeneratePDF = async () => {
         sgstAmount={sgstAmount}
         igstAmount={igstAmount}
         grandTotal={grandTotal}
+        lessAmount={lessAmount}
+        discountAmount={discountAmount}
         mode={currentMode}
         gstOption={quotationGstOption}
       />
