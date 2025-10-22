@@ -29,7 +29,7 @@ export default function InvoiceForm({
   handleDeleteInvoice,
 }) {
   return (
-    <div className="flex-1 max-w-lg print:hidden mx-auto lg:mx-0">
+    <div className="flex-1 text-black max-w-lg print:hidden mx-auto lg:mx-0">
       {/* Back to landing button */}
       <button
         onClick={() => setCurrentMode('landing')}

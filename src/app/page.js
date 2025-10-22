@@ -4,6 +4,7 @@ import LandingPage from "@/components/LandingPage";
 import MonthlyGSTReport from "@/components/MonthlyGSTReport";
 import ProductList from "@/components/ProductList";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import CustomerManager from "@/components/CustomerManager";
 import EmailInvoiceModal from "@/components/EmailInvoiceModal";
 import PaymentStatusModal from "@/components/PaymentStatusModal";
 import InvoiceForm from "@/components/InvoiceForm";
@@ -225,7 +226,7 @@ const handleGeneratePDF = async () => {
   // Show GST Monthly Report interface
   if (currentMode === 'gst-monthly-report') {
     return (
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+      <div className="flex  text-black flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
         <div className="flex-1 max-w-4xl print:hidden mx-auto">
           {/* Back to landing button */}
           <button
@@ -245,10 +246,29 @@ const handleGeneratePDF = async () => {
     );
   }
 
+  // Show Customer Manager interface
+  if (currentMode === 'customers') {
+    return (
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+        <div className="flex-1 max-w-7xl print:hidden mx-auto">
+          {/* Back to landing button */}
+          <button
+            onClick={() => setCurrentMode('landing')}
+            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+          >
+            ← Back to Home
+          </button>
+
+          <CustomerManager />
+        </div>
+      </div>
+    );
+  }
+
   // Show Product Management interface
   if (currentMode === 'products') {
     return (
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+      <div className="flex text-black flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
         <div className="flex-1 max-w-6xl print:hidden mx-auto">
           {/* Back to landing button */}
           <button

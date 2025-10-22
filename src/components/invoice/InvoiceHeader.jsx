@@ -4,7 +4,7 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
     const isQuotation = mode === 'quotation';
 
     return (
-        <header className="p-1 border">
+        <header className="p-1 border text-black">
             {/* TAX INVOICE/QUOTATION Title */}
             <div className="text-center mb-2 ">
                 <h2 className=" font-extrabold  tracking-wider">{isQuotation ? 'QUOTATION' : 'TAX INVOICE'}</h2>

@@ -242,10 +242,12 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-black">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold text-gray-800">Business Analytics Dashboard</h2>
+        <h2 className="text-3xl font-bold text-gray-800">
+          Business Analytics Dashboard
+        </h2>
         <button
           onClick={handleExportAnalytics}
           className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
@@ -256,10 +258,14 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
 
       {/* Period Selector */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Analysis Period</h3>
+        <h3 className="text-lg font-semibold mb-4 text-gray-800">
+          Analysis Period
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Period Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Period Type
+            </label>
             <select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -271,9 +277,11 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
               <option value="year">Yearly</option>
             </select>
           </div>
-          {(selectedPeriod === 'month' || selectedPeriod === 'quarter') && (
+          {(selectedPeriod === "month" || selectedPeriod === "quarter") && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Month</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Month
+              </label>
               <select
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
@@ -281,15 +289,19 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
               >
                 {Array.from({ length: 12 }, (_, i) => (
                   <option key={i + 1} value={i + 1}>
-                    {new Date(2000, i, 1).toLocaleDateString('en-IN', { month: 'long' })}
+                    {new Date(2000, i, 1).toLocaleDateString("en-IN", {
+                      month: "long",
+                    })}
                   </option>
                 ))}
               </select>
             </div>
           )}
-          {(selectedPeriod !== 'all') && (
+          {selectedPeriod !== "all" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Year
+              </label>
               <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
@@ -297,7 +309,11 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
               >
                 {Array.from({ length: 5 }, (_, i) => {
                   const year = new Date().getFullYear() - i;
-                  return <option key={year} value={year}>{year}</option>;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
                 })}
               </select>
             </div>
@@ -308,47 +324,86 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h4 className="text-sm font-medium text-gray-500 mb-2">Total Invoices</h4>
-          <p className="text-3xl font-bold text-blue-600">{analytics.totalInvoices}</p>
+          <h4 className="text-sm font-medium text-gray-500 mb-2">
+            Total Invoices
+          </h4>
+          <p className="text-3xl font-bold text-blue-600">
+            {analytics.totalInvoices}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h4 className="text-sm font-medium text-gray-500 mb-2">Total Revenue</h4>
-          <p className="text-3xl font-bold text-green-600">₹{analytics.totalRevenue.toLocaleString('en-IN')}</p>
+          <h4 className="text-sm font-medium text-gray-500 mb-2">
+            Total Revenue
+          </h4>
+          <p className="text-3xl font-bold text-green-600">
+            ₹{analytics.totalRevenue.toLocaleString("en-IN")}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h4 className="text-sm font-medium text-gray-500 mb-2">GST Collected</h4>
-          <p className="text-3xl font-bold text-purple-600">₹{analytics.totalGST.toLocaleString('en-IN')}</p>
+          <h4 className="text-sm font-medium text-gray-500 mb-2">
+            GST Collected
+          </h4>
+          <p className="text-3xl font-bold text-purple-600">
+            ₹{analytics.totalGST.toLocaleString("en-IN")}
+          </p>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <h4 className="text-sm font-medium text-gray-500 mb-2">Avg Invoice Value</h4>
+          <h4 className="text-sm font-medium text-gray-500 mb-2">
+            Avg Invoice Value
+          </h4>
           <p className="text-3xl font-bold text-orange-600">
-            ₹{(analytics.totalRevenue / analytics.totalInvoices || 0).toLocaleString('en-IN')}
+            ₹
+            {(
+              analytics.totalRevenue / analytics.totalInvoices || 0
+            ).toLocaleString("en-IN")}
           </p>
         </div>
       </div>
 
       {/* Top Products */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-xl font-semibold mb-4 text-gray-800">🏆 Top Performing Products</h3>
+        <h3 className="text-xl font-semibold mb-4 text-gray-800">
+          🏆 Top Performing Products
+        </h3>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Revenue</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">GST</th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Invoices</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Product
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                  Quantity
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                  Revenue
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                  GST
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                  Invoices
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {analytics.topProducts.slice(0, 5).map((product, index) => (
                 <tr key={index} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{product.name}</td>
-                  <td className="px-4 py-3 text-right">{product.totalQuantity.toFixed(2)}</td>
-                  <td className="px-4 py-3 text-right">₹{product.totalRevenue.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-right">₹{product.totalGST.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-center">{product.invoiceCount}</td>
+                  <td className="px-4 py-3 font-medium text-black">
+                    {product.name}
+                  </td>
+                  <td className="px-4 py-3 text-right text-black">
+                    {product.totalQuantity.toFixed(2)}
+                  </td>
+                  <td className="px-4 py-3 text-right text-black">
+                    ₹{product.totalRevenue.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-4 py-3 text-right text-black">
+                    ₹{product.totalGST.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-4 py-3 text-center text-black">
+                    {product.invoiceCount}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -358,16 +413,28 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
 
       {/* Top Buyers */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-xl font-semibold mb-4 text-gray-800">👥 Top Buyers</h3>
+        <h3 className="text-xl font-semibold mb-4 text-gray-800">
+          👥 Top Buyers
+        </h3>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Buyer</th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Invoices</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Revenue</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">GST</th>
-                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Last Purchase</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-black uppercase">
+                  Buyer
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-black uppercase">
+                  Invoices
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-black uppercase">
+                  Revenue
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-black uppercase">
+                  GST
+                </th>
+                <th className="px-4 py-3 text-center text-xs font-medium text-black uppercase">
+                  Last Purchase
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -375,13 +442,21 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-3">
                     <div className="font-medium">{buyer.name}</div>
-                    {buyer.gstin && <div className="text-sm text-gray-500">{buyer.gstin}</div>}
+                    {buyer.gstin && (
+                      <div className="text-sm text-gray-500">{buyer.gstin}</div>
+                    )}
                   </td>
-                  <td className="px-4 py-3 text-center">{buyer.totalInvoices}</td>
-                  <td className="px-4 py-3 text-right">₹{buyer.totalRevenue.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-3 text-right">₹{buyer.totalGST.toLocaleString('en-IN')}</td>
                   <td className="px-4 py-3 text-center">
-                    {new Date(buyer.lastPurchase).toLocaleDateString('en-IN')}
+                    {buyer.totalInvoices}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    ₹{buyer.totalRevenue.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    ₹{buyer.totalGST.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {new Date(buyer.lastPurchase).toLocaleDateString("en-IN")}
                   </td>
                 </tr>
               ))}
@@ -392,7 +467,9 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
 
       {/* Monthly Trends Chart Placeholder */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-xl font-semibold mb-4 text-gray-800">📈 Monthly Revenue Trends</h3>
+        <h3 className="text-xl font-semibold mb-4 text-gray-800">
+          📈 Monthly Revenue Trends
+        </h3>
         <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
           <div className="text-center text-gray-500">
             <div className="text-4xl mb-2">📊</div>
@@ -414,8 +491,12 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
               {analytics.monthlyTrends.map((trend, index) => (
                 <tr key={index} className="border-t">
                   <td className="px-3 py-2 font-medium">{trend.month}</td>
-                  <td className="px-3 py-2 text-right">₹{trend.revenue.toLocaleString('en-IN')}</td>
-                  <td className="px-3 py-2 text-right">₹{trend.gst.toLocaleString('en-IN')}</td>
+                  <td className="px-3 py-2 text-right">
+                    ₹{trend.revenue.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-3 py-2 text-right">
+                    ₹{trend.gst.toLocaleString("en-IN")}
+                  </td>
                   <td className="px-3 py-2 text-center">{trend.invoices}</td>
                 </tr>
               ))}

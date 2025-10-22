@@ -75,3 +75,50 @@ export async function POST(request) {
     }, { status: 500 });
   }
 }
+
+export async function PUT(request) {
+  try {
+    const data = await request.json();
+    const { id, ...updateData } = data;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Buyer ID is required' }, { status: 400 });
+    }
+
+    const buyer = await prisma.buyer.update({
+      where: { id: parseInt(id) },
+      data: updateData
+    });
+
+    return NextResponse.json(buyer);
+  } catch (error) {
+    console.error('Error updating buyer:', error);
+    return NextResponse.json({
+      error: 'Failed to update buyer',
+      details: error.message
+    }, { status: 500 });
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Buyer ID is required' }, { status: 400 });
+    }
+
+    await prisma.buyer.delete({
+      where: { id: parseInt(id) }
+    });
+
+    return NextResponse.json({ message: 'Buyer deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting buyer:', error);
+    return NextResponse.json({
+      error: 'Failed to delete buyer',
+      details: error.message
+    }, { status: 500 });
+  }
+}
