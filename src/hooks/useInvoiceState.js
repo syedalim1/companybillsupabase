@@ -37,6 +37,20 @@ export function useInvoiceState() {
       state: '',
       stateCode: null,
     },
+    billing: {
+      name: '',
+      address: '',
+      gstin: '',
+      state: '',
+      stateCode: null,
+    },
+    shipping: {
+      name: '',
+      address: '',
+      gstin: '',
+      state: '',
+      stateCode: null,
+    },
     invoiceDetails: {
       invoiceNo: nextInvoiceNo,
       date: new Date().toISOString().split('T')[0],

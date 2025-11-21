@@ -63,6 +63,20 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
     const loadedInvoice = {
       seller: invoice.seller,
       buyer: invoice.buyer,
+      billing: {
+        name: invoice.billingName || '',
+        address: invoice.billingAddress || '',
+        gstin: invoice.billingGstin || '',
+        state: invoice.billingState || '',
+        stateCode: invoice.billingStateCode || null,
+      },
+      shipping: {
+        name: invoice.shippingName || '',
+        address: invoice.shippingAddress || '',
+        gstin: invoice.shippingGstin || '',
+        state: invoice.shippingState || '',
+        stateCode: invoice.shippingStateCode || null,
+      },
       invoiceDetails: {
         invoiceNo: invoice.invoiceNo,
         date: invoice.date,

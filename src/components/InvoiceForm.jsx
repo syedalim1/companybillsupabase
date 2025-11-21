@@ -1,5 +1,6 @@
 import CompanyBillHeader from "@/components/CompanyForm";
 import ClientForm from "@/components/ClientForm";
+import BillingShippingForm from "@/components/BillingShippingForm";
 import InvoiceDetailsForm from "@/components/InvoiceDetailsForm";
 import ItemsForm from "@/components/ItemsForm";
 import AdditionalChargesForm from "@/components/AdditionalChargesForm";
@@ -77,6 +78,11 @@ export default function InvoiceForm({
 
       <ClientForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
 
+      {/* Billing & Shipping Form for GST Bills */}
+      {currentMode === 'gst-bill' && (
+        <BillingShippingForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
+      )}
+
       <InvoiceDetailsForm
         invoiceData={invoiceData}
         handleInputChange={handleInputChange}
@@ -135,6 +141,20 @@ export default function InvoiceForm({
                 address: '',
                 destination: '',
                 contact: '',
+                gstin: '',
+                state: '',
+                stateCode: null,
+              },
+              billing: {
+                name: '',
+                address: '',
+                gstin: '',
+                state: '',
+                stateCode: null,
+              },
+              shipping: {
+                name: '',
+                address: '',
                 gstin: '',
                 state: '',
                 stateCode: null,

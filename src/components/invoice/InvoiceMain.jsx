@@ -56,24 +56,27 @@ const InvoiceMain = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount
                 <div className="grid grid-cols-2 border border-t-0 ">
                     <div className=" p-2 border-r-1  bg-gray-50">
                          <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
-                         <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>
-                         <p className="text-[13px] ">{invoiceData.buyer.address}</p>
-                         <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.buyer.gstin || 'N/A'}</p>
+                         <p className="font-bold  text-[13px]">{invoiceData.billing?.name || invoiceData.buyer.name}</p>
+                         <p className="text-[13px] ">{invoiceData.billing?.address || invoiceData.buyer.address}</p>
+                         <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.billing?.gstin || invoiceData.buyer.gstin || 'N/A'}</p>
                          {invoiceData.buyer.buyerNumber && (
                            <p className="text-[13px] "><strong>Contact Number:</strong> {invoiceData.buyer.buyerNumber}</p>
                          )}
-                         <p className="text-[13px] "><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
+                         <p className="text-[13px] "><strong>State:</strong> {invoiceData.billing?.state || invoiceData.buyer.state} (Code: {invoiceData.billing?.stateCode || invoiceData.buyer.stateCode})</p>
                     </div>
                     <div className=" p-2   bg-gray-50">
                          <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
-                         <p className="font-bold text-gray-800 text-[13px]">{invoiceData.buyer.name}</p>
-                         <p className="text-[13px] ">{invoiceData.buyer.destination}</p>
+                         <p className="font-bold text-gray-800 text-[13px]">{invoiceData.shipping?.name || invoiceData.buyer.name}</p>
+                         <p className="text-[13px] ">{invoiceData.shipping?.address || invoiceData.buyer.destination}</p>
                          {invoiceData.buyer.buyerNumber && (
                            <p className="text-[13px]  mt-1"><strong>Contact Number:</strong> {invoiceData.buyer.buyerNumber}</p>
                          )}
-                         <p className="text-[13px]  mt-1"><strong>State:</strong> {invoiceData.buyer.state} (Code: {invoiceData.buyer.stateCode})</p>
+                         <p className="text-[13px]  mt-1"><strong>State:</strong> {invoiceData.shipping?.state || invoiceData.buyer.state} (Code: {invoiceData.shipping?.stateCode || invoiceData.buyer.stateCode})</p>
                          {invoiceData.invoiceDetails.placeOfSupply && (
                              <p className="text-[13px] "><strong>Place of Supply:</strong> {invoiceData.invoiceDetails.placeOfSupply}</p>
+                         )}
+                         {invoiceData.shipping?.gstin && (
+                             <p className="text-[13px]  mt-1"><strong>GSTIN:</strong> {invoiceData.shipping.gstin}</p>
                          )}
                     </div>
                 </div>

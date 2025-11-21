@@ -89,6 +89,18 @@ export async function POST(request) {
         sgstAmount: data.sgstAmount,
         igstAmount: data.igstAmount,
         grandTotal: data.grandTotal,
+        // Billing Address - commented out until migration is run
+        // billingName: data.billing?.name || null,
+        // billingAddress: data.billing?.address || null,
+        // billingGstin: data.billing?.gstin || null,
+        // billingState: data.billing?.state || null,
+        // billingStateCode: data.billing?.stateCode || null,
+        // Shipping Address - commented out until migration is run
+        // shippingName: data.shipping?.name || null,
+        // shippingAddress: data.shipping?.address || null,
+        // shippingGstin: data.shipping?.gstin || null,
+        // shippingState: data.shipping?.state || null,
+        // shippingStateCode: data.shipping?.stateCode || null,
         sellerId: seller.id,
         buyerId: buyer.id,
         items: {
@@ -250,6 +262,18 @@ export async function PUT(request) {
         sgstAmount: data.sgstAmount,
         igstAmount: data.igstAmount,
         grandTotal: data.grandTotal,
+        // Billing Address - commented out until migration is run
+        // billingName: data.billing?.name || null,
+        // billingAddress: data.billing?.address || null,
+        // billingGstin: data.billing?.gstin || null,
+        // billingState: data.billing?.state || null,
+        // billingStateCode: data.billing?.stateCode || null,
+        // Shipping Address - commented out until migration is run
+        // shippingName: data.shipping?.name || null,
+        // shippingAddress: data.shipping?.address || null,
+        // shippingGstin: data.shipping?.gstin || null,
+        // shippingState: data.shipping?.state || null,
+        // shippingStateCode: data.shipping?.stateCode || null,
         sellerId: seller.id,
         buyerId: buyer.id,
         items: {

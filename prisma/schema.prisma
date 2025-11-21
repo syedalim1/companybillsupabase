@@ -48,6 +48,20 @@ model Invoice {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  // Billing Address
+  billingName       String?
+  billingAddress    String?
+  billingGstin      String?
+  billingState      String?
+  billingStateCode  Int?
+
+  // Shipping Address
+  shippingName      String?
+  shippingAddress   String?
+  shippingGstin     String?
+  shippingState     String?
+  shippingStateCode Int?
+
   // Relations
   seller            Seller   @relation(fields: [sellerId], references: [id])
   sellerId          String
