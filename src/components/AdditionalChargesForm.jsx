@@ -7,7 +7,7 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
 
       <div className="grid grid-cols-2 gap-3 mb-3">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Freight</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Transport Charge</label>
           <input
             type="number"
             value={invoiceData.additionalCharges.freight}

@@ -1,36 +1,46 @@
-export function useInvoiceCalculations(invoiceData, currentMode, quotationGstOption) {
+export function useInvoiceCalculations(
+  invoiceData,
+  currentMode,
+  quotationGstOption
+) {
   // --- Calculations ---
   const itemTotal = invoiceData.items.reduce((acc, item) => {
-    const itemAmount = item.quantity * item.rate * (1 - item.discount / 100);
+    const itemAmount = (parseFloat(item.quantity) || 0) * (parseFloat(item.rate) || 0) * (1 - (parseFloat(item.discount) || 0) / 100);
     return acc + itemAmount;
   }, 0);
 
-  const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge, index) => {
+  const freight = parseFloat(invoiceData.additionalCharges.freight) || 0;
+  const additionalChargesTotal = Object.values(
+    invoiceData.additionalCharges
+  ).reduce((acc, charge, index) => {
     const chargeValue = parseFloat(charge) || 0;
-    // Skip discount and lessAmount for now, we'll handle them separately
-    if (index === 4 || index === 5) return acc; // discount is the 5th item (index 4), lessAmount is the 6th (index 5)
+    // Skip freight, discount and lessAmount for now, we'll handle them separately
+    if (index === 0 || index === 4 || index === 5) return acc; // freight is the 1st item (index 0), discount is the 5th (index 4), lessAmount is the 6th (index 5)
     return acc + chargeValue;
   }, 0);
 
-  const subtotalBeforeDiscount = itemTotal + additionalChargesTotal;
-  const overallDiscountAmount = (subtotalBeforeDiscount * invoiceData.additionalCharges.discount) / 100;
-  const subtotalAfterDiscount = subtotalBeforeDiscount ;
+  const subtotal = itemTotal + freight;
+  const discountAmount =
+    (subtotal * parseFloat(invoiceData.additionalCharges.discount || 0)) / 100;
   const lessAmount = parseFloat(invoiceData.additionalCharges.lessAmount) || 0;
-  const subtotal = subtotalAfterDiscount - lessAmount;
-  const discountAmount = overallDiscountAmount;
+  const taxableAmount = subtotal - discountAmount - lessAmount;
 
   // GST calculations based on mode and quotation GST option
-  const shouldCalculateGST = currentMode === 'gst-bill' || (currentMode === 'quotation' && quotationGstOption === 'with-gst');
+  const shouldCalculateGST =
+    currentMode === "gst-bill" ||
+    (currentMode === "quotation" && quotationGstOption === "with-gst");
 
-  const isCGST_SGST = shouldCalculateGST && invoiceData.invoiceDetails.taxType === 'cgst_sgst';
-  const cgstRate = isCGST_SGST ? invoiceData.taxRate / 2 : 0;
-  const sgstRate = isCGST_SGST ? invoiceData.taxRate / 2 : 0;
-  const igstRate = shouldCalculateGST && !isCGST_SGST ? invoiceData.taxRate : 0;
-  const cgstAmount = (subtotal * cgstRate) / 100;
-  const sgstAmount = (subtotal * sgstRate) / 100;
-  const igstAmount = (subtotal * igstRate) / 100;
+  const isCGST_SGST =
+    shouldCalculateGST && invoiceData.invoiceDetails.taxType === "cgst_sgst";
+  const taxRate = parseFloat(invoiceData.taxRate) || 0;
+  const cgstRate = isCGST_SGST ? taxRate / 2 : 0;
+  const sgstRate = isCGST_SGST ? taxRate / 2 : 0;
+  const igstRate = shouldCalculateGST && !isCGST_SGST ? taxRate : 0;
+  const cgstAmount = (taxableAmount * cgstRate) / 100;
+  const sgstAmount = (taxableAmount * sgstRate) / 100;
+  const igstAmount = (taxableAmount * igstRate) / 100;
   const taxAmount = cgstAmount + sgstAmount + igstAmount;
-  const grandTotal = subtotal + taxAmount;
+  const grandTotal = taxableAmount + taxAmount;
 
   return {
     subtotal,
