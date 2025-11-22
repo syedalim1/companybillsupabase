@@ -19,35 +19,35 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                         NO.K-6, Sidco, Kurichi, <br/>Sidco Industrial Estate, Coimbatore - 641021
                     </p>
                     <p className="text-[14px] mt-2">
-                        <strong>GSTIN:</strong> {invoiceData.seller.gstin}
+                        <span className="font-bold">GSTIN:</span> {invoiceData.seller.gstin}
                     </p>
                     <p className="text-[12px] mt-1">
-                        <strong>State Name:</strong> Tamil Nadu, <strong>Code:</strong> 33
+                        <span className="font-bold">State Name:</span> Tamil Nadu, <span className="font-bold">Code:</span> 33
                     </p>
                     <p className="text-[12px] mt-1">
-                        <strong>Contact:</strong> 9585745303, 6379016686
+                        <span className="font-bold">Contact:</span> 9585745303, 6379016686
                     </p>
                     <p className="text-[12px] mt-1">
-                        <strong>E-Mail:</strong> indianmaksteel1982@gmail.com
+                        <span className="font-bold">E-Mail:</span> indianmaksteel1982@gmail.com
                     </p>
                 </div>
                 {/* Invoice/Quotation Details */}
                 <div className="text-right">
                     {!isQuotation && (
-                        <p className=" font-semibold text-[15px]">
-                            <strong>Invoice No:</strong> {invoiceData.invoiceDetails.invoiceNo}
+                    <p className=" font-semibold text-[15px]">
+                            <span className="font-bold">Invoice No:</span> {invoiceData.invoiceDetails.invoiceNo}
                         </p>
                     )}
                     <p className="text-md text-[15px]">
                         <div>
                             <div>
-<strong>{isQuotation ? 'Quotation' : 'Invoice'} Date</strong>
+<span className="font-bold">{isQuotation ? 'Quotation' : 'Invoice'} Date</span>
                             </div>
                             <div>
  {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
                             </div>
                         </div>
-                        
+
                     </p>
 
                 </div>
