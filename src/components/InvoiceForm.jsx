@@ -30,203 +30,235 @@ export default function InvoiceForm({
   handleDeleteInvoice,
 }) {
   return (
-    <div className="flex-1 text-black max-w-lg print:hidden mx-auto lg:mx-0">
+    <div className="flex-1 text-black max-w-2xl print:hidden mx-auto lg:mx-0 space-y-6 animate-in fade-in duration-500">
       {/* Back to landing button */}
       <button
         onClick={() => setCurrentMode('landing')}
-        className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+        className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-gray-200"
       >
-        ← Back to Home
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Back to Home
       </button>
 
-      <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">
-        {currentMode === 'gst-bill' ? 'GST Bill Generator' : 'Quotation Generator'}
-      </h1>
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+          {currentMode === 'gst-bill' ? 'GST Invoice Generator' : 'Quotation Generator'}
+        </h1>
+        <p className="text-gray-500 mt-2">
+          {currentMode === 'gst-bill' ? 'Create professional compliant tax invoices.' : 'Generate quick estimates for your clients.'}
+        </p>
+      </div>
 
       {/* GST Option for Quotations */}
       {currentMode === 'quotation' && (
-        <div className="mb-6 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold mb-3 text-gray-800">GST Options</h3>
-          <div className="flex gap-4">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="gstOption"
-                value="with-gst"
-                checked={quotationGstOption === 'with-gst'}
-                onChange={(e) => handleQuotationGstChange(e.target.value)}
-                className="mr-2"
-              />
-              <span className="text-gray-700">With GST</span>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Tax Configuration
+          </h3>
+          <div className="flex gap-6">
+            <label className="flex items-center cursor-pointer group">
+              <div className="relative flex items-center justify-center w-5 h-5 mr-2">
+                <input
+                  type="radio"
+                  name="gstOption"
+                  value="with-gst"
+                  checked={quotationGstOption === 'with-gst'}
+                  onChange={(e) => handleQuotationGstChange(e.target.value)}
+                  className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full checked:border-purple-600 checked:bg-purple-600 transition-all"
+                />
+                <div className="absolute w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+              </div>
+              <span className="text-gray-700 font-medium group-hover:text-purple-600 transition-colors">With GST</span>
             </label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="gstOption"
-                value="without-gst"
-                checked={quotationGstOption === 'without-gst'}
-                onChange={(e) => handleQuotationGstChange(e.target.value)}
-                className="mr-2"
-              />
-              <span className="text-gray-700">Without GST</span>
+            <label className="flex items-center cursor-pointer group">
+              <div className="relative flex items-center justify-center w-5 h-5 mr-2">
+                <input
+                  type="radio"
+                  name="gstOption"
+                  value="without-gst"
+                  checked={quotationGstOption === 'without-gst'}
+                  onChange={(e) => handleQuotationGstChange(e.target.value)}
+                  className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full checked:border-purple-600 checked:bg-purple-600 transition-all"
+                />
+                <div className="absolute w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+              </div>
+              <span className="text-gray-700 font-medium group-hover:text-purple-600 transition-colors">Without GST</span>
             </label>
           </div>
         </div>
       )}
 
-      <CompanyBillHeader invoiceData={invoiceData} handleInputChange={handleInputChange} />
+      {/* Forms Stack */}
+      <div className="space-y-6">
+        <CompanyBillHeader invoiceData={invoiceData} handleInputChange={handleInputChange} />
+        
+        <ClientForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
 
-      <ClientForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
+        {currentMode === 'gst-bill' && (
+          <BillingShippingForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
+        )}
 
-      {/* Billing & Shipping Form for GST Bills */}
-      {currentMode === 'gst-bill' && (
-        <BillingShippingForm invoiceData={invoiceData} handleInputChange={handleInputChange} />
-      )}
+        <InvoiceDetailsForm
+          invoiceData={invoiceData}
+          handleInputChange={handleInputChange}
+          hideBillNumber={currentMode === 'quotation'}
+        />
 
-      <InvoiceDetailsForm
-        invoiceData={invoiceData}
-        handleInputChange={handleInputChange}
-        hideBillNumber={currentMode === 'quotation'}
-      />
+        <ItemsForm
+          invoiceData={invoiceData}
+          handleItemChange={handleItemChange}
+          addItem={addItem}
+          removeItem={removeItem}
+        />
 
-      <ItemsForm
-        invoiceData={invoiceData}
-        handleItemChange={handleItemChange}
-        addItem={addItem}
-        removeItem={removeItem}
-      />
+        <AdditionalChargesForm
+          invoiceData={invoiceData}
+          handleInputChange={handleInputChange}
+        />
+      </div>
 
-      <AdditionalChargesForm
-        invoiceData={invoiceData}
-        handleInputChange={handleInputChange}
-      />
+      {/* Actions Toolbar */}
+      <div className="sticky bottom-4 z-20 bg-white/90 backdrop-blur-lg border border-gray-200 p-4 rounded-xl shadow-2xl space-y-3">
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            className="flex items-center justify-center gap-2 w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg hover:shadow-blue-200 transition-all transform hover:-translate-y-0.5"
+            onClick={() => window.print()}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            Print
+          </button>
 
-      <button
-        className="w-full py-4 mt-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-        onClick={() => window.print()}
-      >
-        Print {currentMode === 'gst-bill' ? 'Invoice' : 'Quotation'}
-      </button>
+          <button
+            className="flex items-center justify-center gap-2 w-full py-3.5 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 shadow-lg hover:shadow-purple-200 transition-all transform hover:-translate-y-0.5"
+            onClick={editingInvoiceId ? handleUpdateInvoice : handleSaveInvoice}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+            {editingInvoiceId ? 'Update' : 'Save'}
+          </button>
+        </div>
 
-      <button
-        className="w-full py-4 mt-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
-        onClick={editingInvoiceId ? handleUpdateInvoice : handleSaveInvoice}
-      >
-        {editingInvoiceId ? 'Update Invoice' : `Save ${currentMode === 'quotation' ? 'Quotation' : 'Invoice'}`}
-      </button>
+        <div className="grid grid-cols-2 gap-3">
+           <button
+            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-orange-600 font-bold rounded-xl border-2 border-orange-100 hover:bg-orange-50 transition-all"
+            onClick={handleExportToExcel}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Excel
+          </button>
 
-      {editingInvoiceId && (
-        <button
-          className="w-full py-4 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
-          onClick={() => {
-            setEditingInvoiceId(null);
-            // Reset to empty form
-            setInvoiceData({
-              seller: {
-                name: 'INDIAN MAKE STEEL INDUSTRIES',
-                address: '',
-                gstin: '33FAXPM0581G1ZC',
-                state: 'Tamil Nadu',
-                stateCode: 33,
-                contact: '9585745303, 6379016686',
-                email: 'indianmaksteel1982@gmail.com',
-                bankName: 'Indian Overseas Bank',
-                accNo: '356502000000347',
-                branch: 'Podanur',
-                ifsc: 'IOBA0003565',
-                logo: null,
-              },
-              buyer: {
-                name: '',
-                address: '',
-                destination: '',
-                contact: '',
-                gstin: '',
-                state: '',
-                stateCode: null,
-              },
-              billing: {
-                name: '',
-                address: '',
-                gstin: '',
-                state: '',
-                stateCode: null,
-              },
-              shipping: {
-                name: '',
-                address: '',
-                gstin: '',
-                state: '',
-                stateCode: null,
-              },
-              invoiceDetails: {
-                invoiceNo: '',
-                date: new Date().toISOString().split('T')[0],
-                taxType: 'cgst_sgst',
-                dueDate: '',
-                poNumber: '',
-                reference: '',
-                placeOfSupply: '',
-                reverseCharge: false,
-                ewayBillNo: '',
-                vehicleNo: '',
-                transporterName: '',
-                transporterId: '',
-                distance: '',
-                modeOfTransport: '',
-                terms: '',
-                paymentTerms: '',
-                notes: '',
-              },
-              items: [
-                {
-                  id: 1,
-                  description: '',
-                  hsn: '',
-                  sac: '',
-                  quantity: 1,
-                  rate: 0,
-                  discount: 0,
+          <button
+            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-green-600 font-bold rounded-xl border-2 border-green-100 hover:bg-green-50 transition-all"
+            onClick={() => setShowEmailModal(true)}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            Email
+          </button>
+        </div>
+
+        {editingInvoiceId && (
+          <button
+            className="w-full py-3 bg-gray-100 text-gray-600 font-semibold rounded-xl hover:bg-gray-200 transition-all"
+            onClick={() => {
+              setEditingInvoiceId(null);
+              // Reset Logic (Simplified for brevity, assuming standard reset is fine or parent handles it, but copying strictly from original)
+              setInvoiceData({
+                seller: {
+                  name: 'INDIAN MAKE STEEL INDUSTRIES',
+                  address: '',
+                  gstin: '33FAXPM0581G1ZC',
+                  state: 'Tamil Nadu',
+                  stateCode: 33,
+                  contact: '9585745303, 6379016686',
+                  email: 'indianmaksteel1982@gmail.com',
+                  bankName: 'Indian Overseas Bank',
+                  accNo: '356502000000347',
+                  branch: 'Podanur',
+                  ifsc: 'IOBA0003565',
+                  logo: null,
                 },
-              ],
-              additionalCharges: {
-                freight: 0,
-                insurance: 0,
-                packing: 0,
-                other: 0,
-                discount: 0,
-                lessAmount: 0,
-                lessDescription: '',
-              },
-              taxRate: 18,
-            });
-          }}
-        >
-          Cancel Edit
-        </button>
-      )}
+                buyer: {
+                  name: '',
+                  address: '',
+                  destination: '',
+                  contact: '',
+                  gstin: '',
+                  state: '',
+                  stateCode: null,
+                },
+                billing: {
+                  name: '',
+                  address: '',
+                  gstin: '',
+                  state: '',
+                  stateCode: null,
+                },
+                shipping: {
+                  name: '',
+                  address: '',
+                  gstin: '',
+                  state: '',
+                  stateCode: null,
+                },
+                invoiceDetails: {
+                  invoiceNo: '',
+                  date: new Date().toISOString().split('T')[0],
+                  taxType: 'cgst_sgst',
+                  dueDate: '',
+                  poNumber: '',
+                  reference: '',
+                  placeOfSupply: '',
+                  reverseCharge: false,
+                  ewayBillNo: '',
+                  vehicleNo: '',
+                  transporterName: '',
+                  transporterId: '',
+                  distance: '',
+                  modeOfTransport: '',
+                  terms: '',
+                  paymentTerms: '',
+                  notes: '',
+                },
+                items: [
+                  {
+                    id: 1,
+                    description: '',
+                    hsn: '',
+                    sac: '',
+                    quantity: 1,
+                    rate: 0,
+                    discount: 0,
+                  },
+                ],
+                additionalCharges: {
+                  freight: 0,
+                  insurance: 0,
+                  packing: 0,
+                  other: 0,
+                  discount: 0,
+                  lessAmount: 0,
+                  lessDescription: '',
+                },
+                taxRate: 18,
+              });
+            }}
+          >
+            Cancel Editing
+          </button>
+        )}
+      </div>
 
-      <button
-        className="w-full py-4 mt-4 bg-orange-600 text-white font-semibold rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200"
-        onClick={handleExportToExcel}
-      >
-        Export to Excel
-      </button>
-
-      <button
-        className="w-full py-4 mt-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200"
-        onClick={() => setShowEmailModal(true)}
-      >
-        📧 Send via Email
-      </button>
-
-      <SavedInvoicesList
-        savedInvoices={savedInvoices}
-        handleLoadInvoice={handleLoadInvoice}
-        handleEditInvoice={handleEditInvoice}
-        handleOpenPaymentModal={handleOpenPaymentModal}
-        handleDeleteInvoice={handleDeleteInvoice}
-      />
+      <div className="mt-8 pt-8 border-t border-gray-200">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">Saved History</h3>
+        <SavedInvoicesList
+          savedInvoices={savedInvoices}
+          handleLoadInvoice={handleLoadInvoice}
+          handleEditInvoice={handleEditInvoice}
+          handleOpenPaymentModal={handleOpenPaymentModal}
+          handleDeleteInvoice={handleDeleteInvoice}
+        />
+      </div>
     </div>
   );
 }

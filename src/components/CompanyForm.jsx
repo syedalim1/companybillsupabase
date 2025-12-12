@@ -16,59 +16,49 @@ const CompanyBillHeader = ({ invoiceData, handleInputChange }) => {
     };
 
     return (
-        <fieldset className="border border-gray-300 rounded-md p-4 mb-5">
-            <legend className="px-2 font-bold text-blue-600">Company Details</legend>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-shadow hover:shadow-md">
+            <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-6 flex items-center gap-2 pb-4 border-b border-gray-100">
+                <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                Company Details
+            </h3>
 
             {/* Logo Upload */}
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Company Logo</label>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-                {(logoPreview || invoiceData.seller.logo) && (
-                    <div className="mt-2">
-                        <img
-                            src={logoPreview || invoiceData.seller.logo}
-                            alt="Company Logo"
-                            className="max-w-32 max-h-32 object-contain border border-gray-200 rounded"
+            <div className="mb-6 flex items-center gap-6">
+                 {/* <div className="relative group cursor-pointer">
+                    <div className="w-24 h-24 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden hover:border-blue-500 transition-colors">
+                        {(logoPreview || invoiceData.seller.logo) ? (
+                            <img
+                                src={logoPreview || invoiceData.seller.logo}
+                                alt="Company Logo"
+                                className="w-full h-full object-contain"
+                            />
+                        ) : (
+                            <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleLogoUpload}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                         />
                     </div>
-                )}
-            </div>
-
-            <div className="p-6 bg-white rounded-lg mb-6 border-b-2 border-gray-200">
-                <div className="flex justify-between items-start">
-                    {/* Left Side: Company Name and Address */}
-                    <div className="flex-1 pr-4">
-                        <h1 className="text-3xl font-extrabold text-gray-800 mb-2">
-                            {invoiceData.seller.name}
-                        </h1>
-                        <p className="text-sm text-gray-600 max-w-md">
-                            {invoiceData.seller.address}
-                        </p>
-                    </div>
-
-                {/* Right Side: Contact and Tax Details */}
-                <div className="text-right text-sm">
-                    <p className="mb-1">
-                        <span className="font-semibold text-gray-700">GSTIN:</span> {invoiceData.seller.gstin}
-                    </p>
-                    <p className="mb-2">
-                        <span className="font-semibold text-gray-700">State:</span> {invoiceData.seller.state} (Code: {invoiceData.seller.stateCode})
-                    </p>
-                    <p className="mb-1">
-                        <span className="font-semibold text-gray-700">Phone:</span> {invoiceData.seller.contact}
-                    </p>
-                    <p>
-                        <span className="font-semibold text-gray-700">Email:</span> {invoiceData.seller.email}
-                    </p>
-                </div>
+                    <p className="text-xs text-center mt-2 text-gray-500 font-medium group-hover:text-blue-600">Upload Logo</p>
+                 </div> */}
+                 
+                 <div className="flex-1">
+                     <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100">
+                        <div className="font-bold text-gray-900 text-lg mb-1">{invoiceData.seller.name}</div>
+                        <div className="text-sm text-gray-600 mb-2">{invoiceData.seller.address}</div>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
+                             <div><span className="font-semibold text-gray-700">GSTIN:</span> {invoiceData.seller.gstin}</div>
+                             <div><span className="font-semibold text-gray-700">State:</span> {invoiceData.seller.state}</div>
+                             <div><span className="font-semibold text-gray-700">Phone:</span> {invoiceData.seller.contact}</div>
+                             <div><span className="font-semibold text-gray-700">Email:</span> {invoiceData.seller.email}</div>
+                        </div>
+                     </div>
+                 </div>
             </div>
         </div>
-        </fieldset>
     );
 };
 

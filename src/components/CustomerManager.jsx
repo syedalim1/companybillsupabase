@@ -1,5 +1,49 @@
 import React, { useState, useEffect } from 'react';
 
+// --- Icons Components ---
+const SearchIcon = () => (
+  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+const EditIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+);
+
+const UserIcon = () => (
+  <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+const MapPinIcon = () => (
+  <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+const PhoneIcon = () => (
+  <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
 const CustomerManager = () => {
   const [buyers, setBuyers] = useState([]);
   const [editingBuyer, setEditingBuyer] = useState(null);
@@ -101,185 +145,153 @@ const CustomerManager = () => {
   };
 
   if (loading) {
-    return <div className="p-4">Loading customers...</div>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto text-black">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">
-        Customer Manager
-      </h1>
+    <div className="p-4 md:p-8 max-w-7xl mx-auto text-gray-800 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+            Customer Manager
+          </h1>
+          <p className="text-gray-500 mt-1">
+            Manage your customer database with ease.
+          </p>
+        </div>
+        <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200">
+          <span className="text-sm font-medium text-gray-500">Total Customers:</span>
+          <span className="ml-2 text-lg font-bold text-blue-600">{buyers.length}</span>
+        </div>
+      </div>
 
       {/* Search Bar */}
-      <div className="mb-6">
+      <div className="mb-6 relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <SearchIcon />
+        </div>
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search customers by name, GSTIN, contact, or state..."
-          className="w-full p-3 border  border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Search by name, GSTIN, contact, or state..."
+          className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
         />
       </div>
 
-      {/* Edit Modal */}
-      {editingBuyer && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Edit Customer</h2>
-            <div className="space-y-4">
-              <input
-                type="text"
-                value={editingBuyer.name}
-                onChange={(e) => handleEditChange("name", e.target.value)}
-                placeholder="Customer Name"
-                className="w-full p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="text"
-                value={editingBuyer.address}
-                onChange={(e) => handleEditChange("address", e.target.value)}
-                placeholder="Address"
-                className="w-full p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="text"
-                value={editingBuyer.destination}
-                onChange={(e) =>
-                  handleEditChange("destination", e.target.value)
-                }
-                placeholder="Destination"
-                className="w-full p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="text"
-                value={editingBuyer.gstin}
-                onChange={(e) => handleEditChange("gstin", e.target.value)}
-                placeholder="GSTIN"
-                className="w-full p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={editingBuyer.state}
-                  onChange={(e) => handleEditChange("state", e.target.value)}
-                  placeholder="State"
-                  className="flex-1 p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="number"
-                  value={editingBuyer.stateCode || ""}
-                  onChange={(e) =>
-                    handleEditChange(
-                      "stateCode",
-                      parseInt(e.target.value) || null
-                    )
-                  }
-                  placeholder="State Code"
-                  className="flex-1 p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+      {/* Mobile Card View (Visible on < md) */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {filteredBuyers.map((buyer) => (
+          <div key={buyer.id} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center">
+                <div className="bg-blue-100 p-2 rounded-full mr-3">
+                  <UserIcon />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">{buyer.name}</h3>
+                  <div className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-0.5 rounded mt-1 inline-block">
+                    {buyer.gstin || "No GSTIN"}
+                  </div>
+                </div>
               </div>
-              <input
-                type="text"
-                value={editingBuyer.contact}
-                onChange={(e) => handleEditChange("contact", e.target.value)}
-                placeholder="Contact"
-                className="w-full p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="text"
-                value={editingBuyer.buyerNumber || ""}
-                onChange={(e) =>
-                  handleEditChange("buyerNumber", e.target.value)
-                }
-                placeholder="Buyer Number (Optional)"
-                className="w-full p-3 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
             </div>
-            <div className="flex gap-3 mt-6">
+            
+            <div className="space-y-2 text-sm text-gray-600 mb-4">
+              <div className="flex items-center">
+                <PhoneIcon />
+                <span>{buyer.contact || "N/A"}</span>
+              </div>
+              <div className="flex items-start">
+                <MapPinIcon />
+                <span className="truncate">{buyer.address || "N/A"}</span>
+              </div>
+              <div className="flex items-center ml-5">
+                 <span className="text-xs text-gray-400 mr-1">State:</span>
+                 <span>{buyer.state} {buyer.stateCode && `(${buyer.stateCode})`}</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-3 border-t border-gray-100">
               <button
-                onClick={handleSaveEdit}
-                className="flex-1 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => handleEditBuyer(buyer)}
+                className="flex-1 flex items-center justify-center py-2 px-3 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-colors text-sm font-medium"
               >
-                Save Changes
+                <EditIcon />
+                <span className="ml-1.5">Edit</span>
               </button>
               <button
-                onClick={() => setEditingBuyer(null)}
-                className="flex-1 py-3 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                onClick={() => handleDeleteBuyer(buyer.id)}
+                className="flex-1 flex items-center justify-center py-2 px-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
               >
-                Cancel
+                <TrashIcon />
+                <span className="ml-1.5">Delete</span>
               </button>
             </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
 
-      {/* Customers List */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+      {/* Desktop Table View (Hidden on < md) */}
+      <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  GSTIN
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Contact
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  State
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Address
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">GSTIN</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">State</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200">
               {filteredBuyers.map((buyer) => (
-                <tr key={buyer.id} className="hover:bg-gray-50">
+                <tr key={buyer.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {buyer.name}
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{buyer.name}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-0.5 rounded inline-block">
                       {buyer.gstin || "N/A"}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
-                      {buyer.contact || "N/A"}
-                    </div>
+                    <div className="text-sm text-gray-600">{buyer.contact || "N/A"}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">
-                      {buyer.state} {buyer.stateCode && `(${buyer.stateCode})`}
+                    <div className="text-sm text-gray-600">
+                      {buyer.state} <span className="text-gray-400 text-xs">{buyer.stateCode && `(${buyer.stateCode})`}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-gray-500 max-w-xs truncate">
-                      {buyer.address}
+                    <div className="text-sm text-gray-600 max-w-xs truncate" title={buyer.address}>
+                      {buyer.address || "-"}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => handleEditBuyer(buyer)}
-                      className="text-indigo-600 hover:text-indigo-900 mr-3"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteBuyer(buyer.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex justify-end gap-3">
+                      <button
+                        onClick={() => handleEditBuyer(buyer)}
+                        className="text-indigo-600 hover:text-indigo-900 p-1 hover:bg-indigo-50 rounded transition-colors"
+                        title="Edit"
+                      >
+                        <EditIcon />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteBuyer(buyer.id)}
+                        className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors"
+                        title="Delete"
+                      >
+                        <TrashIcon />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -287,13 +299,137 @@ const CustomerManager = () => {
           </table>
         </div>
         {filteredBuyers.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            {searchTerm
-              ? "No customers found matching your search."
-              : "No customers found."}
+          <div className="p-12 text-center">
+            <div className="inline-block p-4 bg-gray-100 rounded-full mb-3">
+              <SearchIcon />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">No customers found</h3>
+            <p className="text-gray-500 mt-1">Try adjusting your search terms.</p>
           </div>
         )}
       </div>
+
+      {/* Edit Modal */}
+      {editingBuyer && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h2 className="text-xl font-bold text-gray-900">Edit Customer</h2>
+              <button 
+                onClick={() => setEditingBuyer(null)}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-200"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Customer Name</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.name}
+                    onChange={(e) => handleEditChange("name", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Enter customer name"
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Address</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.address}
+                    onChange={(e) => handleEditChange("address", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Enter complete address"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Destination</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.destination}
+                    onChange={(e) => handleEditChange("destination", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">GSTIN</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.gstin}
+                    onChange={(e) => handleEditChange("gstin", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">State</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.state}
+                    onChange={(e) => handleEditChange("state", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">State Code</label>
+                  <input
+                    type="number"
+                    value={editingBuyer.stateCode || ""}
+                    onChange={(e) => handleEditChange("stateCode", parseInt(e.target.value) || null)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Contact</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.contact}
+                    onChange={(e) => handleEditChange("contact", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Buyer Number</label>
+                  <input
+                    type="text"
+                    value={editingBuyer.buyerNumber || ""}
+                    onChange={(e) => handleEditChange("buyerNumber", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Optional"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex gap-3">
+              <button
+                onClick={() => setEditingBuyer(null)}
+                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                className="flex-1 py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
