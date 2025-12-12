@@ -162,9 +162,21 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
                     value={invoiceData.buyer.contact}
                     onChange={(e) => handleInputChange('buyer', 'contact', e.target.value)}
                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                    placeholder="Phone / Email"
+                    placeholder="Phone Number"
                 />
             </div>
+        </div>
+
+        {/* Email Field - NEW */}
+        <div>
+             <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Email (for invoice)</label>
+             <input
+                type="email"
+                value={invoiceData.buyer.email || ''}
+                onChange={(e) => handleInputChange('buyer', 'email', e.target.value)}
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                placeholder="client@company.com"
+            />
         </div>
 
         <div className="grid grid-cols-3 gap-4">

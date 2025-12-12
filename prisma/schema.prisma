@@ -106,6 +106,7 @@ model Buyer {
   state       String?
   stateCode   Int?
   buyerNumber String?   @unique
+  email       String?   // NEW: For sending invoices via email
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -130,14 +131,16 @@ model Item {
 }
 
 model AdditionalCharge {
-  id        String   @id @default(cuid())
-  freight   Float    @default(0)
-  insurance Float    @default(0)
-  packing   Float    @default(0)
-  other     Float    @default(0)
-  discount  Float    @default(0)
-  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  invoiceId String   @unique
+  id              String   @id @default(cuid())
+  freight         Float    @default(0)
+  insurance       Float    @default(0)
+  packing         Float    @default(0)
+  other           Float    @default(0)
+  discount        Float    @default(0)
+  lessAmount      Float    @default(0)   // NEW: For advance payments or deductions
+  lessDescription String?                // NEW: Description for the less amount
+  invoice         Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId       String   @unique
 
   @@map("additional_charges")
 }
@@ -150,6 +153,9 @@ model Product {
   sac         String?
   rate        Float
   category    String?
+  unit        String?  // NEW: Unit of measurement (KG, PCS, MTR, etc.)
+  gstRate     Float?   // NEW: Default GST rate for this product
+  minStock    Int?     // NEW: Minimum stock level for alerts
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

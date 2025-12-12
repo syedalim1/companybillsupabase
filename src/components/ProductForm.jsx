@@ -8,6 +8,9 @@ const ProductForm = ({ product, onSave, onCancel }) => {
     sac: '',
     rate: '',
     category: '',
+    unit: '',
+    gstRate: '',
+    minStock: '',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,6 +24,9 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         sac: product.sac || '',
         rate: product.rate?.toString() || '',
         category: product.category || '',
+        unit: product.unit || '',
+        gstRate: product.gstRate?.toString() || '',
+        minStock: product.minStock?.toString() || '',
       });
     }
   }, [product]);
@@ -40,15 +46,14 @@ const ProductForm = ({ product, onSave, onCancel }) => {
       const productData = {
         ...formData,
         rate: parseFloat(formData.rate) || 0,
+        gstRate: formData.gstRate ? parseFloat(formData.gstRate) : null,
+        minStock: formData.minStock ? parseInt(formData.minStock) : null,
       };
 
       if (product) {
-        // Update existing product
         const response = await fetch('/api/products', {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: product.id, ...productData }),
         });
 
@@ -60,12 +65,9 @@ const ProductForm = ({ product, onSave, onCancel }) => {
           throw new Error('Failed to update product');
         }
       } else {
-        // Create new product
         const response = await fetch('/api/products', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(productData),
         });
 
@@ -73,7 +75,6 @@ const ProductForm = ({ product, onSave, onCancel }) => {
           const result = await response.json();
           onSave(result.product);
           alert('Product created successfully!');
-          // Reset form for new product
           setFormData({
             name: '',
             description: '',
@@ -81,6 +82,9 @@ const ProductForm = ({ product, onSave, onCancel }) => {
             sac: '',
             rate: '',
             category: '',
+            unit: '',
+            gstRate: '',
+            minStock: '',
           });
         } else {
           throw new Error('Failed to create product');
@@ -103,24 +107,24 @@ const ProductForm = ({ product, onSave, onCancel }) => {
     'Other',
   ];
 
+  const units = ['PCS', 'KG', 'MTR', 'LTR', 'SQM', 'BOX', 'SET', 'BAG', 'NOS'];
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+    <div className="p-6">
+      <h3 className="text-lg font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">
         {product ? 'Edit Product' : 'Add New Product'}
       </h3>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Product Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Product Name *
-            </label>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Product Name *</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               placeholder="Enter product name"
               required
             />
@@ -128,88 +132,116 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Category
-            </label>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Category</label>
             <select
               value={formData.category}
               onChange={(e) => handleInputChange('category', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
             >
               <option value="">Select Category</option>
               {categories.map(category => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
+                <option key={category} value={category}>{category}</option>
               ))}
             </select>
           </div>
 
           {/* Rate */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Rate (₹) *
-            </label>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Rate (₹) *</label>
             <input
               type="number"
               step="0.01"
               value={formData.rate}
               onChange={(e) => handleInputChange('rate', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               placeholder="0.00"
               required
             />
           </div>
 
+          {/* Unit - NEW */}
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Unit</label>
+            <select
+              value={formData.unit}
+              onChange={(e) => handleInputChange('unit', e.target.value)}
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+            >
+              <option value="">Select Unit</option>
+              {units.map(unit => (
+                <option key={unit} value={unit}>{unit}</option>
+              ))}
+            </select>
+          </div>
+
           {/* HSN Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              HSN Code
-            </label>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">HSN Code</label>
             <input
               type="text"
               value={formData.hsn}
               onChange={(e) => handleInputChange('hsn', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter HSN code"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono"
+              placeholder="e.g., 7308"
             />
           </div>
 
           {/* SAC Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              SAC Code
-            </label>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">SAC Code</label>
             <input
               type="text"
               value={formData.sac}
               onChange={(e) => handleInputChange('sac', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter SAC code"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono"
+              placeholder="e.g., 9954"
+            />
+          </div>
+
+          {/* Default GST Rate - NEW */}
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Default GST Rate (%)</label>
+            <input
+              type="number"
+              step="0.01"
+              value={formData.gstRate}
+              onChange={(e) => handleInputChange('gstRate', e.target.value)}
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              placeholder="18"
+            />
+          </div>
+
+          {/* Minimum Stock - NEW */}
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Min Stock Alert</label>
+            <input
+              type="number"
+              value={formData.minStock}
+              onChange={(e) => handleInputChange('minStock', e.target.value)}
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              placeholder="Low stock threshold"
             />
           </div>
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Description
-          </label>
+          <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
             placeholder="Enter product description"
             rows={3}
           />
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-4 pt-4">
+        <div className="flex gap-3 pt-4 border-t border-gray-100">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:bg-gray-400"
+            className="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg hover:shadow-indigo-200 transition-all disabled:bg-gray-400"
           >
             {isSubmitting ? 'Saving...' : (product ? 'Update Product' : 'Add Product')}
           </button>
@@ -217,7 +249,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+            className="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition-all"
           >
             Cancel
           </button>

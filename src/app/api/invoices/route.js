@@ -120,6 +120,8 @@ export async function POST(request) {
             packing: data.additionalCharges.packing,
             other: data.additionalCharges.other,
             discount: data.additionalCharges.discount,
+            lessAmount: data.additionalCharges.lessAmount || 0,
+            lessDescription: data.additionalCharges.lessDescription || null,
           }
         }
       },
@@ -294,6 +296,8 @@ export async function PUT(request) {
             packing: data.additionalCharges.packing,
             other: data.additionalCharges.other,
             discount: data.additionalCharges.discount,
+            lessAmount: data.additionalCharges.lessAmount || 0,
+            lessDescription: data.additionalCharges.lessDescription || null,
           }
         }
       },

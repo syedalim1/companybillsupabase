@@ -45,6 +45,7 @@ export async function POST(request) {
           state: data.state,
           stateCode: data.stateCode,
           buyerNumber: data.buyerNumber,
+          email: data.email || null,
         }
       });
       console.log('Buyer updated successfully:', buyer.id);
@@ -62,6 +63,7 @@ export async function POST(request) {
           state: data.state,
           stateCode: data.stateCode,
           buyerNumber: data.buyerNumber,
+          email: data.email || null,
         }
       });
       console.log('Buyer created successfully:', buyer.id);
@@ -86,7 +88,7 @@ export async function PUT(request) {
     }
 
     const buyer = await prisma.buyer.update({
-      where: { id: parseInt(id) },
+      where: { id }, // ID is a CUID string, not an integer
       data: updateData
     });
 
@@ -100,6 +102,7 @@ export async function PUT(request) {
   }
 }
 
+
 export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -110,7 +113,7 @@ export async function DELETE(request) {
     }
 
     await prisma.buyer.delete({
-      where: { id: parseInt(id) }
+      where: { id } // ID is a CUID string, not an integer
     });
 
     return NextResponse.json({ message: 'Buyer deleted successfully' });

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '../../../generated/prisma';
+import { prisma } from '@/lib/prisma';
 
-const prisma = new PrismaClient();
 
 // GET /api/products - Get all products
 export async function GET() {
@@ -20,7 +19,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, description, hsn, sac, rate, category } = body;
+    const { name, description, hsn, sac, rate, category, unit, gstRate, minStock } = body;
 
     if (!name || !rate) {
       return NextResponse.json({ error: 'Name and rate are required' }, { status: 400 });
@@ -34,6 +33,9 @@ export async function POST(request) {
         sac,
         rate: parseFloat(rate),
         category,
+        unit: unit || null,
+        gstRate: gstRate ? parseFloat(gstRate) : null,
+        minStock: minStock ? parseInt(minStock) : null,
       },
     });
 
@@ -48,7 +50,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const { id, name, description, hsn, sac, rate, category } = body;
+    const { id, name, description, hsn, sac, rate, category, unit, gstRate, minStock } = body;
 
     if (!id || !name || !rate) {
       return NextResponse.json({ error: 'ID, name and rate are required' }, { status: 400 });
@@ -63,6 +65,9 @@ export async function PUT(request) {
         sac,
         rate: parseFloat(rate),
         category,
+        unit: unit || null,
+        gstRate: gstRate ? parseFloat(gstRate) : null,
+        minStock: minStock ? parseInt(minStock) : null,
       },
     });
 
