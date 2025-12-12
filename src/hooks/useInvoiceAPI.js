@@ -97,12 +97,14 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         notes: invoice.notes,
       },
       items: invoice.items,
-      additionalCharges: invoice.additionalCharges || {
-        freight: 0,
-        insurance: 0,
-        packing: 0,
-        other: 0,
-        discount: 0,
+      additionalCharges: {
+        freight: invoice.additionalCharges?.freight || 0,
+        insurance: invoice.additionalCharges?.insurance || 0,
+        packing: invoice.additionalCharges?.packing || 0,
+        other: invoice.additionalCharges?.other || 0,
+        discount: invoice.additionalCharges?.discount || 0,
+        lessAmount: invoice.additionalCharges?.lessAmount || 0,
+        lessDescription: invoice.additionalCharges?.lessDescription || '',
       },
       taxRate: invoice.taxRate,
     };

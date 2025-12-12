@@ -46,10 +46,8 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
     });
 
     // Only include GST bills and quotations with GST
-    const gstInvoices = filteredInvoices.filter(invoice =>
-      invoice.mode === 'gst-bill' ||
-      (invoice.mode === 'quotation' && invoice.quotationGstOption === 'with-gst')
-    );
+    // Only include GST bills (Strictly exclude all quotations as per requirement)
+    const gstInvoices = filteredInvoices.filter(invoice => invoice.mode === 'gst-bill');
 
     if (gstInvoices.length === 0) {
       setMonthlyData({
