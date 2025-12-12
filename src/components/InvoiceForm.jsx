@@ -250,13 +250,16 @@ export default function InvoiceForm({
       </div>
 
       <div className="mt-8 pt-8 border-t border-gray-200">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Saved History</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-4">
+          {currentMode === 'gst-bill' ? 'Saved Invoices' : 'Saved Quotations'}
+        </h3>
         <SavedInvoicesList
           savedInvoices={savedInvoices}
           handleLoadInvoice={handleLoadInvoice}
           handleEditInvoice={handleEditInvoice}
           handleOpenPaymentModal={handleOpenPaymentModal}
           handleDeleteInvoice={handleDeleteInvoice}
+          currentMode={currentMode}
         />
       </div>
     </div>
