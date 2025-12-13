@@ -207,7 +207,7 @@ const InvoiceMain = ({
                 <th className="p-2 text-center w-[10%] border ">HSN/SAC</th>
                 <th className="p-2 text-center w-[10%] border ">Qty</th>
                 <th className="p-2 text-right w-[10%] border ">Rate</th>
-                <th className="p-2 text-right  border ">Amount</th>
+                <th className="p-2 text-right  border ">{mode === 'dc-bill' ? 'Value' : 'Amount'}</th>
               </tr>
             </thead>
             <tbody className="align-top">
@@ -384,12 +384,10 @@ const InvoiceMain = ({
               {/* --- Grand Total Row --- */}
               <tr className="font-bold bg-gray-50">
                 <td colSpan="3" className="p-2 text-left border-b ">
-                  {mode === "quotation" &&
-                  gstOption === "without-gst" &&
-                  (invoiceData.additionalCharges.discount > 0 ||
+                  {(invoiceData.additionalCharges.discount > 0 ||
                     invoiceData.additionalCharges.lessAmount > 0)
                     ? "Balance Amount"
-                    : "Total"}
+                    : mode === 'dc-bill' ? "Total Declared Value" : "Total"}
                 </td>
                 <td className="p-2 text-center border-b "></td>
                 <td className=" border-b"></td>
@@ -406,12 +404,14 @@ const InvoiceMain = ({
         </div>
 
         {/* --- Amount in Words and E&OE --- */}
-        <div className="flex border-x-1 justify-between p-2 text-xs">
-          <div>
-            <p className="font-semibold">Amount Chargeable (in words)</p>
-            <p>{amountInWords} </p>
+        {mode !== 'dc-bill' && (
+          <div className="flex border-x-1 justify-between p-2 text-xs">
+            <div>
+              <p className="font-semibold">Amount Chargeable (in words)</p>
+              <p>{amountInWords} </p>
+            </div>
           </div>
-        </div>
+        )}
         {/* GST Column */}
         {shouldShowGST && (
           <div className=" font-sans">
@@ -585,9 +585,34 @@ const InvoiceMain = ({
 
         {/* --- Notes Section --- */}
         {invoiceData.invoiceDetails.notes && (
-          <div className="mt-4 p-2 border-t border-gray-300">
+          <div className="mt-4 p-2 border-t ">
             <p className="font-semibold text-xs mb-1">Notes:</p>
             <p className="text-xs">{invoiceData.invoiceDetails.notes}</p>
+          </div>
+        )}
+
+        {/* --- Receiver Signature Section for DC Bill --- */}
+        {mode === 'dc-bill' && (
+          <div className="mt-6 p-4 border border-b-0 bg-gray-50 ">
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <p className="font-semibold text-xs mb-1">Goods Dispatched By:</p>
+                <p className="text-xs">{invoiceData.seller.name}</p>
+                <div className="mt-8 border-t border-gray-400 pt-1">
+                  <p className="text-xs text-center">Authorized Signatory</p>
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold text-xs mb-1">Received By:</p>
+                <p className="text-xs">{invoiceData.dcDetails?.receiverName || '________________________'}</p>
+                <div className="mt-8 border-t border-gray-400 pt-1">
+                  <p className="text-xs text-center">Receiver's Signature</p>
+                </div>
+              </div>
+            </div>
+            <p className="text-[10px] text-gray-500 mt-4 text-center italic">
+              This is a Delivery Challan and not a Tax Invoice. No GST is charged on this document.
+            </p>
           </div>
         )}
       </div>

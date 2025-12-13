@@ -172,6 +172,45 @@ const LandingPage = ({ onSelectGenerator }) => {
             </div>
           </div>
 
+          {/* DC Bill Generator Card */}
+          <div
+            onClick={() => onSelectGenerator("dc-bill")}
+            className="group relative bg-white/60 backdrop-blur-xl rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-rose-400 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-7 h-7 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-rose-600 transition-colors">
+                Delivery Challan
+              </h3>
+              
+              <p className="text-gray-600 mb-6 leading-relaxed text-sm">
+                Create delivery challans for goods movement without tax invoice requirements.
+              </p>
+
+              <div className="space-y-3">
+                {[
+                  "No GST Required",
+                  "Delivery Tracking",
+                  "Receiver Confirmation"
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center text-sm text-gray-500">
+                    <svg className="w-4 h-4 text-rose-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* Quotation Generator Card */}
           <div
             onClick={() => onSelectGenerator("quotation")}

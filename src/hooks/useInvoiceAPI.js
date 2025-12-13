@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, editingInvoiceId, setEditingInvoiceId, setSavedInvoices, setNextInvoiceNo, setCurrentMode, setQuotationGstOption, setInvoiceData, setShowPaymentModal, setSelectedInvoiceForPayment) {
+export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, editingInvoiceId, setEditingInvoiceId, setSavedInvoices, setNextInvoiceNo, setNextDcNo, setCurrentMode, setQuotationGstOption, setInvoiceData, setShowPaymentModal, setSelectedInvoiceForPayment) {
   // Fetch saved invoices from database
   const fetchSavedInvoices = async () => {
     try {
@@ -9,6 +9,9 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         const data = await response.json();
         setSavedInvoices(data.invoices || []);
         setNextInvoiceNo(data.nextInvoiceNo?.toString() || '1');
+        if (setNextDcNo) {
+          setNextDcNo(data.nextDcNo?.toString() || '1');
+        }
       }
     } catch (error) {
       console.error('Error fetching invoices:', error);
@@ -46,9 +49,14 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
       });
 
       if (response.ok) {
-        alert(`${currentMode === 'quotation' ? 'Quotation' : 'Invoice'} saved successfully!`);
+        const docType = currentMode === 'dc-bill' ? 'DC Bill' : (currentMode === 'quotation' ? 'Quotation' : 'Invoice');
+        alert(`${docType} saved successfully!`);
         fetchSavedInvoices();
-        setNextInvoiceNo((prev) => (parseInt(prev) + 1).toString());
+        if (currentMode === 'dc-bill') {
+          setNextDcNo((prev) => (parseInt(prev) + 1).toString());
+        } else {
+          setNextInvoiceNo((prev) => (parseInt(prev) + 1).toString());
+        }
       } else {
         throw new Error('Failed to save invoice');
       }
@@ -105,6 +113,11 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         discount: invoice.additionalCharges?.discount || 0,
         lessAmount: invoice.additionalCharges?.lessAmount || 0,
         lessDescription: invoice.additionalCharges?.lessDescription || '',
+      },
+      dcDetails: {
+        dcNo: invoice.dcNo || '',
+        dcStatus: invoice.dcStatus || 'pending',
+        receiverName: invoice.receiverName || '',
       },
       taxRate: invoice.taxRate,
     };

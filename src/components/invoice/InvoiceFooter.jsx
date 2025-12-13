@@ -2,6 +2,11 @@ import React from 'react';
 import numberToWords from '../../utils/numToWords';
 
 const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal, mode, gstOption }) => {
+    // For DC Bills, we don't show bank details or standard footer signatures (handled in Main)
+    if (mode === 'dc-bill') {
+        return <footer className="border border-t-0 p-2 min-h-[20px]"></footer>;
+    }
+
     const isCGST_SGST = invoiceData.invoiceDetails.taxType === 'cgst_sgst';
     const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge) => acc + (parseFloat(charge) || 0), 0);
     const itemTotal = subtotal - additionalChargesTotal;

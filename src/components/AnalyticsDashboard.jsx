@@ -62,6 +62,7 @@ const MetricCard = ({ title, value, subtitle, icon, color = "green", trend }) =>
     indigo: { bg: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-100" },
     purple: { bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-100" },
     red: { bg: "bg-red-50", text: "text-red-600", border: "border-red-100" },
+    rose: { bg: "bg-rose-50", text: "text-rose-600", border: "border-rose-100" },
   };
   const c = colorClasses[color] || colorClasses.green;
   
@@ -120,9 +121,11 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
     let typeFilteredInvoices = filteredInvoices;
     if (activeTab === 'gst-bills') typeFilteredInvoices = filteredInvoices.filter(inv => inv.mode === 'gst-bill');
     else if (activeTab === 'quotations') typeFilteredInvoices = filteredInvoices.filter(inv => inv.mode === 'quotation');
+    else if (activeTab === 'dc-bills') typeFilteredInvoices = filteredInvoices.filter(inv => inv.mode === 'dc-bill');
 
     const gstBillsCount = filteredInvoices.filter(inv => inv.mode === 'gst-bill').length;
     const quotationsCount = filteredInvoices.filter(inv => inv.mode === 'quotation').length;
+    const dcBillsCount = filteredInvoices.filter(inv => inv.mode === 'dc-bill').length;
 
     // DOCUMENT COUNTS (Include Unpaid Quotes as they are documents)
     const paymentStats = {
@@ -132,8 +135,10 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       overdue: typeFilteredInvoices.filter(inv => inv.paymentStatus === 'overdue').length,
     };
     
-    // REVENUE FILTER: Exclude Unpaid Quotations from Financial Metrics
+    // REVENUE FILTER: Exclude Unpaid Quotations AND DC Bills from Financial Metrics
     const validRevenueInvoices = typeFilteredInvoices.filter(inv => {
+        // DC Bills are always excluded from revenue (no tax invoice)
+        if (inv.mode === 'dc-bill') return false;
         if (inv.mode === 'quotation') {
             return inv.paymentStatus === 'paid'; // Only PAID quotations count as revenue
         }
@@ -148,7 +153,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
     if (typeFilteredInvoices.length === 0) {
        setAnalytics({
         totalInvoices: 0, totalRevenue: 0, totalGST: 0, topProducts: [], topBuyers: [],
-        monthlyTrends: [], gstBillsCount, quotationsCount, paymentStats, paidAmount, pendingAmount,
+        monthlyTrends: [], gstBillsCount, quotationsCount, dcBillsCount, paymentStats, paidAmount, pendingAmount,
       });
       return;
     }
@@ -213,7 +218,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       totalInvoices: validRevenueInvoices.length, // Show valid revenue docs in metric
       totalDocuments: typeFilteredInvoices.length, // Total physical docs
       totalRevenue, totalGST, topProducts, topBuyers, monthlyTrends,
-      gstBillsCount, quotationsCount, paymentStats, paidAmount, pendingAmount,
+      gstBillsCount, quotationsCount, dcBillsCount, paymentStats, paidAmount, pendingAmount,
     });
   };
 
@@ -248,6 +253,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
   const getGradient = () => {
       if (activeTab === 'gst-bills') return { start: 'from-blue-500', end: 'to-cyan-400' };
       if (activeTab === 'quotations') return { start: 'from-purple-500', end: 'to-pink-400' };
+      if (activeTab === 'dc-bills') return { start: 'from-rose-500', end: 'to-orange-400' };
       return { start: 'from-indigo-600', end: 'to-blue-400' }; // Default
   };
   const gradient = getGradient();
@@ -265,7 +271,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
             </div>
              <div className="flex flex-wrap gap-2">
                <div className="flex bg-gray-100 p-1 rounded-xl">
-                   {['all', 'gst-bills', 'quotations'].map(tab => (
+                   {['all', 'gst-bills', 'quotations', 'dc-bills'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
@@ -275,7 +281,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
                                 : 'text-gray-500 hover:text-gray-700'
                             }`}
                         >
-                            {tab === 'all' ? 'All' : tab === 'gst-bills' ? 'GST' : 'Quotes'}
+                            {tab === 'all' ? 'All' : tab === 'gst-bills' ? 'GST' : tab === 'quotations' ? 'Quotes' : 'DC'}
                         </button>
                     ))}
                </div>
@@ -288,7 +294,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       </div>
 
       {/* Hero Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <MetricCard
           title="Total Revenue"
           value={`₹${analytics.totalRevenue.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`}
@@ -317,6 +323,13 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
           subtitle={`${analytics.paymentStats.unpaid} unpaid`}
           color="red"
           icon={<svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+        />
+        <MetricCard
+          title="DC Bills"
+          value={analytics.dcBillsCount || 0}
+          subtitle="Delivery challans"
+          color="rose"
+          icon={<svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>}
         />
       </div>
 

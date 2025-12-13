@@ -17,6 +17,7 @@ datasource db {
 model Invoice {
   id                String   @id @default(cuid())
   invoiceNo         String
+  dcNo              String?  // DC Bill number (e.g., "DC-001")
   date              String
   dueDate           String?
   poNumber          String?
@@ -34,7 +35,7 @@ model Invoice {
   paymentTerms      String?
   notes             String?
   taxRate           Float
-  mode              String   // 'gst-bill' or 'quotation'
+  mode              String   // 'gst-bill', 'quotation', or 'dc-bill'
   quotationGstOption String? // 'with-gst' or 'without-gst'
   subtotal          Float
   cgstAmount        Float
@@ -45,6 +46,11 @@ model Invoice {
   paymentDate       DateTime?
   paymentAmount     Float    @default(0)
   paymentNotes      String?
+  // DC Bill specific fields
+  dcStatus          String?  // 'pending', 'in-transit', 'delivered', 'returned'
+  deliveredDate     DateTime?
+  receiverName      String?  // Name of person who received goods
+  receiverSign      String?  // Signature confirmation (optional)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 

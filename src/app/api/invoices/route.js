@@ -89,6 +89,10 @@ export async function POST(request) {
         sgstAmount: data.sgstAmount,
         igstAmount: data.igstAmount,
         grandTotal: data.grandTotal,
+        // DC Bill specific fields
+        dcNo: data.dcDetails?.dcNo || null,
+        dcStatus: data.dcDetails?.dcStatus || null,
+        receiverName: data.dcDetails?.receiverName || null,
         // Billing Address
         billingName: data.billing?.name || null,
         billingAddress: data.billing?.address || null,
@@ -154,11 +158,17 @@ export async function GET() {
       }
     });
 
-    // Get the highest invoice number
-    const maxInvoiceNo = invoices.length > 0 ? Math.max(...invoices.map(invoice => parseInt(invoice.invoiceNo) || 0)) : 0;
+    // Get the highest invoice number (only for non-DC bills)
+    const invoicesOnly = invoices.filter(inv => inv.mode !== 'dc-bill');
+    const maxInvoiceNo = invoicesOnly.length > 0 ? Math.max(...invoicesOnly.map(invoice => parseInt(invoice.invoiceNo) || 0)) : 0;
     const nextInvoiceNo = maxInvoiceNo + 1;
 
-    return NextResponse.json({ invoices, nextInvoiceNo });
+    // Get the highest DC number (only for DC bills)
+    const dcBillsOnly = invoices.filter(inv => inv.mode === 'dc-bill');
+    const maxDcNo = dcBillsOnly.length > 0 ? Math.max(...dcBillsOnly.map(invoice => parseInt(invoice.dcNo?.replace('DC-', '')) || 0)) : 0;
+    const nextDcNo = maxDcNo + 1;
+
+    return NextResponse.json({ invoices, nextInvoiceNo, nextDcNo });
   } catch (error) {
     console.error('Error fetching invoices:', error);
     return NextResponse.json({ error: 'Failed to fetch invoices' }, { status: 500 });
@@ -264,6 +274,10 @@ export async function PUT(request) {
         sgstAmount: data.sgstAmount,
         igstAmount: data.igstAmount,
         grandTotal: data.grandTotal,
+        // DC Bill specific fields
+        dcNo: data.dcDetails?.dcNo || null,
+        dcStatus: data.dcDetails?.dcStatus || null,
+        receiverName: data.dcDetails?.receiverName || null,
         // Billing Address
         billingName: data.billing?.name || null,
         billingAddress: data.billing?.address || null,

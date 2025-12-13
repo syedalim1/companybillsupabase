@@ -2,12 +2,19 @@ import React from 'react';
 
 const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
     const isQuotation = mode === 'quotation';
+    const isDcBill = mode === 'dc-bill';
+
+    const getTitle = () => {
+        if (isDcBill) return 'DELIVERY CHALLAN';
+        if (isQuotation) return 'QUOTATION';
+        return 'TAX INVOICE';
+    };
 
     return (
         <header className="p-1 border text-black">
-            {/* TAX INVOICE/QUOTATION Title */}
+            {/* TAX INVOICE/QUOTATION/DELIVERY CHALLAN Title */}
             <div className="text-center mb-2 ">
-                <h2 className=" font-extrabold  tracking-wider">{isQuotation ? 'QUOTATION' : 'TAX INVOICE'}</h2>
+                <h2 className={`font-extrabold tracking-wider ${isDcBill ? 'text-rose-700' : ''}`}>{getTitle()}</h2>
             </div>
             <div className="flex justify-between items-start px-2 ">
                 {/* Company Details */}
@@ -31,9 +38,16 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                         <span className="font-bold">E-Mail:</span> indianmaksteel1982@gmail.com
                     </p>
                 </div>
-                {/* Invoice/Quotation Details */}
+                {/* Invoice/Quotation/DC Details */}
                 <div className="text-right">
-                    {!isQuotation && (
+                    {/* DC Number for DC Bill */}
+                    {isDcBill && (
+                        <p className=" font-semibold text-[15px]">
+                            <span className="font-bold">DC No:</span> {invoiceData.dcDetails?.dcNo || 'DC-001'}
+                        </p>
+                    )}
+                    {/* Invoice Number for GST Bill */}
+                    {!isQuotation && !isDcBill && (
                     <p className=" font-semibold text-[15px]">
                             <span className="font-bold">Invoice No:</span> {invoiceData.invoiceDetails.invoiceNo}
                         </p>
@@ -41,7 +55,7 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                     <p className="text-md text-[15px]">
                         <div>
                             <div>
-<span className="font-bold">{isQuotation ? 'Quotation' : 'Invoice'} Date</span>
+<span className="font-bold">{isDcBill ? 'DC' : (isQuotation ? 'Quotation' : 'Invoice')} Date</span>
                             </div>
                             <div>
  {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
@@ -49,10 +63,16 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                         </div>
 
                     </p>
+                    {/* Vehicle Number for DC Bill */}
+                    {isDcBill && invoiceData.invoiceDetails.vehicleNo && (
+                        <p className="text-[12px] mt-1">
+                            <span className="font-bold">Vehicle No:</span> {invoiceData.invoiceDetails.vehicleNo}
+                        </p>
+                    )}
 
                 </div>
             </div>
-            {copyType !== 'quotation' && (
+            {copyType !== 'quotation' && copyType !== 'dc' && (
                 <div className="text-center text-sm font-extrabold px-2 print:px-0">
                     {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : 'DUPLICATE FOR TRANSPORTER'}
                 </div>

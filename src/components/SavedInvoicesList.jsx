@@ -20,7 +20,7 @@ export default function SavedInvoicesList({
           </svg>
         </div>
         <p className="text-gray-500 text-sm">
-          No {currentMode === 'gst-bill' ? 'invoices' : 'quotations'} saved yet.
+          No {currentMode === 'gst-bill' ? 'invoices' : currentMode === 'dc-bill' ? 'delivery challans' : 'quotations'} saved yet.
         </p>
       </div>
     );
@@ -41,15 +41,23 @@ export default function SavedInvoicesList({
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  currentMode === 'gst-bill' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
+                  currentMode === 'gst-bill' ? 'bg-blue-50 text-blue-600' : 
+                  currentMode === 'dc-bill' ? 'bg-rose-50 text-rose-600' : 
+                  'bg-purple-50 text-purple-600'
                 }`}>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                  </svg>
+                  {currentMode === 'dc-bill' ? (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                  )}
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900">
-                    {currentMode === 'gst-bill' ? 'INV' : 'QTN'}-{invoice.invoiceNo || 'Draft'}
+                    {currentMode === 'gst-bill' ? 'INV' : currentMode === 'dc-bill' ? invoice.dcNo || 'DC' : 'QTN'}-{currentMode === 'dc-bill' ? '' : (invoice.invoiceNo || 'Draft')}
                   </div>
                   <div className="text-xs text-gray-500 flex items-center gap-2">
                     <span>{new Date(invoice.date).toLocaleDateString('en-GB')}</span>
@@ -65,16 +73,29 @@ export default function SavedInvoicesList({
               {invoice.buyer?.name || 'No Buyer'}
             </div>
 
-            {/* Payment Status Badge */}
+            {/* Payment Status Badge / DC Status Badge */}
             <div className={`hidden md:flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-              invoice.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' :
-              invoice.paymentStatus === 'partial' ? 'bg-yellow-100 text-yellow-700' :
-              invoice.paymentStatus === 'overdue' ? 'bg-red-100 text-red-700' :
-              'bg-gray-100 text-gray-600'
+              currentMode === 'dc-bill' ? (
+                invoice.dcStatus === 'delivered' ? 'bg-green-100 text-green-700' :
+                invoice.dcStatus === 'in-transit' ? 'bg-blue-100 text-blue-700' :
+                invoice.dcStatus === 'returned' ? 'bg-red-100 text-red-700' :
+                'bg-yellow-100 text-yellow-700'
+              ) : (
+                invoice.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' :
+                invoice.paymentStatus === 'partial' ? 'bg-yellow-100 text-yellow-700' :
+                invoice.paymentStatus === 'overdue' ? 'bg-red-100 text-red-700' :
+                'bg-gray-100 text-gray-600'
+              )
             }`}>
-              {invoice.paymentStatus === 'paid' ? '✓ Paid' :
-               invoice.paymentStatus === 'partial' ? 'Partial' :
-               invoice.paymentStatus === 'overdue' ? 'Overdue' : 'Unpaid'}
+              {currentMode === 'dc-bill' ? (
+                invoice.dcStatus === 'delivered' ? '✓ Delivered' :
+                invoice.dcStatus === 'in-transit' ? '→ In Transit' :
+                invoice.dcStatus === 'returned' ? '↺ Returned' : '○ Pending'
+              ) : (
+                invoice.paymentStatus === 'paid' ? '✓ Paid' :
+                invoice.paymentStatus === 'partial' ? 'Partial' :
+                invoice.paymentStatus === 'overdue' ? 'Overdue' : 'Unpaid'
+              )}
             </div>
 
             {/* Actions */}

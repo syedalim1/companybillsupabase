@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 
 export function useInvoiceState() {
-  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'gst-monthly-report', 'products', 'analytics'
+  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'dc-bill', 'gst-monthly-report', 'products', 'analytics'
   const [quotationGstOption, setQuotationGstOption] = useState('with-gst'); // 'with-gst', 'without-gst'
   const [nextId, setNextId] = useState(2);
   const [isGenerating, setIsGenerating] = useState(false); // State to track PDF generation
   const [savedInvoices, setSavedInvoices] = useState([]); // State to store saved invoices
   const [editingInvoiceId, setEditingInvoiceId] = useState(null); // State to track editing invoice
   const [nextInvoiceNo, setNextInvoiceNo] = useState('1'); // Next invoice number
+  const [nextDcNo, setNextDcNo] = useState('1'); // Next DC bill number
   const [showEmailModal, setShowEmailModal] = useState(false); // State for email modal
   const [showPaymentModal, setShowPaymentModal] = useState(false); // State for payment modal
   const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState(null); // Selected invoice for payment update
@@ -50,6 +51,12 @@ export function useInvoiceState() {
       gstin: '',
       state: '',
       stateCode: null,
+    },
+    // DC Bill specific fields
+    dcDetails: {
+      dcNo: '',
+      dcStatus: 'pending', // 'pending', 'in-transit', 'delivered', 'returned'
+      receiverName: '',
     },
     invoiceDetails: {
       invoiceNo: nextInvoiceNo,
@@ -172,6 +179,8 @@ export function useInvoiceState() {
     setEditingInvoiceId,
     nextInvoiceNo,
     setNextInvoiceNo,
+    nextDcNo,
+    setNextDcNo,
     showEmailModal,
     setShowEmailModal,
     showPaymentModal,
