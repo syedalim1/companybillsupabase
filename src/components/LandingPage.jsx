@@ -172,6 +172,45 @@ const LandingPage = ({ onSelectGenerator }) => {
             </div>
           </div>
 
+          {/* Slip Bill Generator Card */}
+          <div
+            onClick={() => onSelectGenerator("slip-bill")}
+            className="group relative bg-white/60 backdrop-blur-xl rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/20 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-amber-400 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            
+            <div className="relative z-10">
+              <div className="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-amber-600 transition-colors">
+                Slip Bill
+              </h3>
+              
+              <p className="text-gray-600 mb-6 leading-relaxed text-sm">
+                Generate simplified receipts for local businesses without GST complexity.
+              </p>
+
+              <div className="space-y-3">
+                {[
+                  "No GST Calculations",
+                  "Quick Receipt Format",
+                  "Thermal Printer Ready"
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center text-sm text-gray-500">
+                    <svg className="w-4 h-4 text-amber-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* DC Bill Generator Card */}
           <div
             onClick={() => onSelectGenerator("dc-bill")}

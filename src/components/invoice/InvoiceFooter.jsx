@@ -11,6 +11,27 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
     const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge) => acc + (parseFloat(charge) || 0), 0);
     const itemTotal = subtotal - additionalChargesTotal;
     const isQuotationWithoutGST = mode === 'quotation' && gstOption === 'without-gst';
+    const isSlipBill = mode === 'slip-bill';
+
+    if (isSlipBill) {
+        return (
+            <footer className="border-t-2 border-dashed border-black p-4 mt-4 mb-8">
+                {/* Thank You Message */}
+                <p className="font-bold text-xs text-center">Thank You For Your Purchase!</p>                
+                {/* Signature Section */}
+                <div className="flex justify-between mt-12">
+                    <div className="text-center flex-1">
+                        <div className=" w-40 mx-auto"></div>
+                        <p className="text-xs mt-1">Customer Sign</p>
+                    </div>
+                    <div className="text-center flex-1">
+                        <div className="  w-40 mx-auto"></div>
+                        <p className="text-xs mt-1">Company Sign</p>
+                    </div>
+                </div>
+            </footer>
+        );
+    }
 
     return (
         <footer className=" border border-t-0 p-2 ">

@@ -28,12 +28,14 @@ const InvoiceMain = ({
   const amountInWords = toWords.convert(grandTotal);
   const isCGST_SGST = invoiceData.invoiceDetails.taxType === "cgst_sgst";
   const shouldShowGST =
-    mode === "gst-bill" || (mode === "quotation" && gstOption === "with-gst");
+    (mode === "gst-bill" || (mode === "quotation" && gstOption === "with-gst")) && mode !== 'slip-bill';
+  const isSlipBill = mode === 'slip-bill';
 
-  const minRows = 5; // Minimum number of rows for the items section
+  const minRows = isSlipBill ? 12 : 5; // Minimum number of rows for the items section
 
   // Additional charges to display as items
   const additionalRows = [];
+
   if (invoiceData.additionalCharges?.freight > 0)
     additionalRows.push({
       type: "freight",
@@ -115,7 +117,26 @@ const InvoiceMain = ({
   return (
     <main className="flex-grow text-[12px]">
       {/* Billing Information */}
-      {shouldShowGST ? (
+      {/* Billing Information */}
+      {isSlipBill ? (
+          <div className="border-b border-dashed border-black p-2">
+            {/* Customer Name */}
+            <div className="mb-1">
+              <span className="font-bold text-xs">To: </span>
+              <span className="font-bold text-xs uppercase">{invoiceData.buyer.name}</span>
+            </div>
+            
+            {/* Phone & Address */}
+            <div className="text-xs mt-1">
+              {invoiceData.buyer.buyerNumber && (
+                <div className="mb-0.5"><span className="font-bold">Mobile:</span> {invoiceData.buyer.buyerNumber}</div>
+              )}
+              {invoiceData.buyer.address && (
+                <div><span className="font-bold">Address:</span> {invoiceData.buyer.address}</div>
+              )}
+            </div>
+          </div>
+      ) : (shouldShowGST ? (
         <div className="grid grid-cols-2 border border-t-0 ">
           <div className=" p-2 border-r-1  bg-gray-50">
             <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
@@ -191,12 +212,56 @@ const InvoiceMain = ({
             {invoiceData.buyer.stateCode})
           </p>
         </div>
-      )}
+      ))}
 
       {/* Items Table - "Box Table" Style */}
-      <div className="pt-4 border-b-0 bg-white">
+      <div className={`pt-2 border-b-0 ${isSlipBill ? '' : 'bg-white'}`}>
         {/* --- Main Items Table --- */}
         <div className="overflow-hidden">
+          {isSlipBill ? (
+            <table className="w-full text-xs border-collapse">
+              <thead>
+                <tr className="border-b-2 border-black">
+                  <th className="py-2 text-center font-bold" style={{width: '8%'}}>No</th>
+                  <th className="py-2 text-center font-bold" style={{width: '55%'}}>Item</th>
+                  <th className="py-2 text-center font-bold" style={{width: '7%'}}>Qty</th>
+                  <th className="py-2 text-center font-bold" style={{width: '15%'}}>Rate</th>
+                  <th className="py-2 text-center font-bold " style={{width: '15%'}}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {invoiceData.items.map((item, index) => {
+                  const itemTotal = item.quantity * item.rate * (1 - item.discount / 100);
+                  return (
+                    <tr key={item.id}>
+                      <td className="py-1 text-center">{index + 1}</td>
+                      <td className="py-1 text-left">{item.description}</td>
+                      <td className="py-1 text-center">{item.quantity}</td>
+                      <td className="py-1 text-center">{item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                      <td className="py-1 text-center">{itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                  )
+                })}
+                {/* Empty rows */}
+                {Array.from({ length: Math.max(0, minRows - invoiceData.items.length) }).map((_, i) => (
+                    <tr key={`empty-${i}`}>
+                        <td className="py-1 text-center text-gray-400">{invoiceData.items.length + i + 1}</td>
+                        <td className="py-1">&nbsp;</td>
+                        <td className="py-1"></td>
+                        <td className="py-1"></td>
+                        <td className="py-1"></td>
+                    </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr className="border-t-2 border-black font-bold text-xs">
+                  <td colSpan="4" className="py-2 text-right">Total:</td>
+                  <td className="py-2 text-center">Rs.{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}  </td>
+                </tr>
+              </tfoot>
+            </table>
+
+          ) : (
           <table className="w-full text-xs border-collapse border border-slate-400">
             <thead className="bg-gray-50">
               <tr className="">
@@ -267,6 +332,7 @@ const InvoiceMain = ({
                   <td className="p-2 text-right border ">
                     {row.amount.toLocaleString("en-IN", {
                       minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </td>
@@ -401,10 +467,11 @@ const InvoiceMain = ({
               </tr>
             </tfoot>
           </table>
+          )}
         </div>
 
         {/* --- Amount in Words and E&OE --- */}
-        {mode !== 'dc-bill' && (
+        {mode !== 'dc-bill' && mode !== 'slip-bill' && (
           <div className="flex border-x-1 justify-between p-2 text-xs">
             <div>
               <p className="font-semibold">Amount Chargeable (in words)</p>

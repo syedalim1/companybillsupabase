@@ -42,11 +42,11 @@ export default function InvoiceForm({
 
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className={`text-3xl font-bold tracking-tight ${currentMode === 'dc-bill' ? 'text-rose-600' : 'text-gray-900'}`}>
-          {currentMode === 'gst-bill' ? 'GST Invoice Generator' : (currentMode === 'dc-bill' ? 'Delivery Challan Generator' : 'Quotation Generator')}
+        <h1 className={`text-3xl font-bold tracking-tight ${currentMode === 'dc-bill' ? 'text-rose-600' : (currentMode === 'slip-bill' ? 'text-amber-600' : 'text-gray-900')}`}>
+          {currentMode === 'gst-bill' ? 'GST Invoice Generator' : (currentMode === 'dc-bill' ? 'Delivery Challan Generator' : (currentMode === 'slip-bill' ? 'Slip Bill Generator' : 'Quotation Generator'))}
         </h1>
         <p className="text-gray-500 mt-2">
-          {currentMode === 'gst-bill' ? 'Create professional compliant tax invoices.' : (currentMode === 'dc-bill' ? 'Create delivery challans for goods movement.' : 'Generate quick estimates for your clients.')}
+          {currentMode === 'gst-bill' ? 'Create professional compliant tax invoices.' : (currentMode === 'dc-bill' ? 'Create delivery challans for goods movement.' : (currentMode === 'slip-bill' ? 'Quick receipts for local business.' : 'Generate quick estimates for your clients.'))}
         </p>
       </div>
 

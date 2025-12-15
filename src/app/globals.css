@@ -59,3 +59,28 @@ body {
 #invoice-preview * {
   box-sizing: border-box;
 }
+
+/* 80mm Thermal Print Styles */
+@media print {
+  @page {
+    margin: 0;
+  }
+  
+  /* Specific class to enforce 80mm width behavior if needed, 
+     though usually controlled by printer settings. 
+     We can try to constrain the container. */
+  .w-80mm {
+      width: 78mm; /* Slightly less than 80mm to avoid overflow */
+      max-width: 78mm;
+  }
+}
+
+/* Screen preview for slip bill */
+.slip-preview {
+    width: 80mm;
+    margin: 0 auto;
+    border: 1px solid #eee;
+    background: white;
+    min-height: 100mm;
+    padding: 0;
+}

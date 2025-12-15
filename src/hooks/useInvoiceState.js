@@ -9,6 +9,7 @@ export function useInvoiceState() {
   const [editingInvoiceId, setEditingInvoiceId] = useState(null); // State to track editing invoice
   const [nextInvoiceNo, setNextInvoiceNo] = useState('1'); // Next invoice number
   const [nextDcNo, setNextDcNo] = useState('1'); // Next DC bill number
+  const [nextSlipNo, setNextSlipNo] = useState('1'); // Next Slip bill number
   const [showEmailModal, setShowEmailModal] = useState(false); // State for email modal
   const [showPaymentModal, setShowPaymentModal] = useState(false); // State for payment modal
   const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState(null); // Selected invoice for payment update
@@ -121,6 +122,27 @@ export function useInvoiceState() {
     }
   }, [currentMode, invoiceData.seller.stateCode, invoiceData.buyer.stateCode]);
 
+  // Update invoice/DC/Slip number when mode changes or next numbers update
+  useEffect(() => {
+    if (currentMode === 'dc-bill') {
+      setInvoiceData(prev => ({
+        ...prev,
+        dcDetails: { ...prev.dcDetails, dcNo: nextDcNo }
+      }));
+    } else if (currentMode === 'slip-bill') {
+      setInvoiceData(prev => ({
+        ...prev,
+        invoiceDetails: { ...prev.invoiceDetails, invoiceNo: nextSlipNo }
+      }));
+    } else {
+      // For gst-bill, quotation, landing, etc.
+      setInvoiceData(prev => ({
+        ...prev,
+        invoiceDetails: { ...prev.invoiceDetails, invoiceNo: nextInvoiceNo }
+      }));
+    }
+  }, [currentMode, nextInvoiceNo, nextDcNo, nextSlipNo]);
+
   const handleInputChange = (section, field, value) => {
     setInvoiceData(prev => ({
       ...prev,
@@ -181,6 +203,8 @@ export function useInvoiceState() {
     setNextInvoiceNo,
     nextDcNo,
     setNextDcNo,
+    nextSlipNo,
+    setNextSlipNo,
     showEmailModal,
     setShowEmailModal,
     showPaymentModal,

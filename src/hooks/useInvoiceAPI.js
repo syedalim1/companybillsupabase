@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, editingInvoiceId, setEditingInvoiceId, setSavedInvoices, setNextInvoiceNo, setNextDcNo, setCurrentMode, setQuotationGstOption, setInvoiceData, setShowPaymentModal, setSelectedInvoiceForPayment) {
+export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, editingInvoiceId, setEditingInvoiceId, setSavedInvoices, setNextInvoiceNo, setNextDcNo, setNextSlipNo, setCurrentMode, setQuotationGstOption, setInvoiceData, setShowPaymentModal, setSelectedInvoiceForPayment) {
   // Fetch saved invoices from database
   const fetchSavedInvoices = async () => {
     try {
@@ -11,6 +11,9 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         setNextInvoiceNo(data.nextInvoiceNo?.toString() || '1');
         if (setNextDcNo) {
           setNextDcNo(data.nextDcNo?.toString() || '1');
+        }
+        if (setNextSlipNo) {
+          setNextSlipNo(data.nextSlipNo?.toString() || '1');
         }
       }
     } catch (error) {
@@ -49,11 +52,13 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
       });
 
       if (response.ok) {
-        const docType = currentMode === 'dc-bill' ? 'DC Bill' : (currentMode === 'quotation' ? 'Quotation' : 'Invoice');
+        const docType = currentMode === 'dc-bill' ? 'DC Bill' : (currentMode === 'quotation' ? 'Quotation' : (currentMode === 'slip-bill' ? 'Slip Bill' : 'Invoice'));
         alert(`${docType} saved successfully!`);
         fetchSavedInvoices();
         if (currentMode === 'dc-bill') {
           setNextDcNo((prev) => (parseInt(prev) + 1).toString());
+        } else if (currentMode === 'slip-bill') {
+          setNextSlipNo((prev) => (parseInt(prev) + 1).toString());
         } else {
           setNextInvoiceNo((prev) => (parseInt(prev) + 1).toString());
         }

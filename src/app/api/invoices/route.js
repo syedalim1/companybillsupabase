@@ -158,8 +158,8 @@ export async function GET() {
       }
     });
 
-    // Get the highest invoice number (only for non-DC bills)
-    const invoicesOnly = invoices.filter(inv => inv.mode !== 'dc-bill');
+    // Get the highest invoice number (only for non-DC and non-Slip bills)
+    const invoicesOnly = invoices.filter(inv => inv.mode !== 'dc-bill' && inv.mode !== 'slip-bill');
     const maxInvoiceNo = invoicesOnly.length > 0 ? Math.max(...invoicesOnly.map(invoice => parseInt(invoice.invoiceNo) || 0)) : 0;
     const nextInvoiceNo = maxInvoiceNo + 1;
 
@@ -168,7 +168,12 @@ export async function GET() {
     const maxDcNo = dcBillsOnly.length > 0 ? Math.max(...dcBillsOnly.map(invoice => parseInt(invoice.dcNo?.replace('DC-', '')) || 0)) : 0;
     const nextDcNo = maxDcNo + 1;
 
-    return NextResponse.json({ invoices, nextInvoiceNo, nextDcNo });
+    // Get the highest Slip number (only for Slip bills)
+    const slipBillsOnly = invoices.filter(inv => inv.mode === 'slip-bill');
+    const maxSlipNo = slipBillsOnly.length > 0 ? Math.max(...slipBillsOnly.map(invoice => parseInt(invoice.invoiceNo) || 0)) : 0;
+    const nextSlipNo = maxSlipNo + 1;
+
+    return NextResponse.json({ invoices, nextInvoiceNo, nextDcNo, nextSlipNo });
   } catch (error) {
     console.error('Error fetching invoices:', error);
     return NextResponse.json({ error: 'Failed to fetch invoices' }, { status: 500 });
