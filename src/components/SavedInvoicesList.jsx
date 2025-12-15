@@ -69,12 +69,12 @@ export default function SavedInvoicesList({
             </button>
 
             {/* Buyer Name */}
-            <div className="hidden md:block text-sm text-gray-600 truncate max-w-[150px]">
+            <div className="  text-sm text-gray-600 truncate max-w-[150px]">
               {invoice.buyer?.name || 'No Buyer'}
             </div>
 
             {/* Payment Status Badge / DC Status Badge */}
-            <div className={`hidden md:flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+            <div className={` flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
               currentMode === 'dc-bill' ? (
                 invoice.dcStatus === 'delivered' ? 'bg-green-100 text-green-700' :
                 invoice.dcStatus === 'in-transit' ? 'bg-blue-100 text-blue-700' :
@@ -99,7 +99,7 @@ export default function SavedInvoicesList({
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1   transition-opacity">
               <button
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                 onClick={() => handleEditInvoice(invoice)}
