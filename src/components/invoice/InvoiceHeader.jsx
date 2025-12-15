@@ -39,12 +39,7 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                 {/* Invoice Number & Date */}
                 <div className="flex justify-between text-xs px-1">
                     <span>
-                        <span className="font-bold">No: </span>
-                        {(() => {
-                            const val = invoiceData.invoiceDetails.invoiceNo;
-                            const num = Number(val);
-                            return !isNaN(num) && val !== '' ? num.toLocaleString('en-IN') : val;
-                        })()}
+                        
                     </span>
                     <span><span className="font-bold">Date:</span> {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</span>
                 </div>

@@ -255,8 +255,10 @@ const InvoiceMain = ({
               </tbody>
               <tfoot>
                 <tr className="border-t-2 border-black font-bold text-xs">
-                  <td colSpan="4" className="py-2 text-right">Total:</td>
-                  <td className="py-2 text-center">Rs.{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}  </td>
+                  <td colSpan="4" className="py-2 text-right">Total: </td>
+                  <td className="py-2 text-center "><div className="px-2">
+                    Rs.{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </div>   </td>
                 </tr>
               </tfoot>
             </table>
