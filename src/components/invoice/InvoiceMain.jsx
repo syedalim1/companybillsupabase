@@ -30,6 +30,8 @@ const InvoiceMain = ({
   const shouldShowGST =
     (mode === "gst-bill" || (mode === "quotation" && gstOption === "with-gst")) && mode !== 'slip-bill';
   const isSlipBill = mode === 'slip-bill';
+  const isDCBill = mode === 'dc-bill';
+  const shouldShowBillShipTo = shouldShowGST || isDCBill; // DC Bill should also show Bill To / Ship To
 
   const minRows = isSlipBill ? 12 : 5; // Minimum number of rows for the items section
 
@@ -119,24 +121,24 @@ const InvoiceMain = ({
       {/* Billing Information */}
       {/* Billing Information */}
       {isSlipBill ? (
-          <div className="border-b border-dashed border-black p-2">
-            {/* Customer Name */}
-            <div className="mb-1">
-              <span className="font-bold text-xs">To: </span>
-              <span className="font-bold text-xs uppercase">{invoiceData.buyer.name}</span>
-            </div>
-            
-            {/* Phone & Address */}
-            <div className="text-xs mt-1">
-              {invoiceData.buyer.buyerNumber && (
-                <div className="mb-0.5"><span className="font-bold">Mobile:</span> {invoiceData.buyer.buyerNumber}</div>
-              )}
-              {invoiceData.buyer.address && (
-                <div><span className="font-bold">Address:</span> {invoiceData.buyer.address}</div>
-              )}
-            </div>
+        <div className="border-b border-dashed border-black p-2">
+          {/* Customer Name */}
+          <div className="mb-1">
+            <span className="font-bold text-xs">To: </span>
+            <span className="font-bold text-xs uppercase">{invoiceData.buyer.name}</span>
           </div>
-      ) : (shouldShowGST ? (
+
+          {/* Phone & Address */}
+          <div className="text-xs mt-1">
+            {invoiceData.buyer.buyerNumber && (
+              <div className="mb-0.5"><span className="font-bold">Mobile:</span> {invoiceData.buyer.buyerNumber}</div>
+            )}
+            {invoiceData.buyer.address && (
+              <div><span className="font-bold">Address:</span> {invoiceData.buyer.address}</div>
+            )}
+          </div>
+        </div>
+      ) : (shouldShowBillShipTo ? (
         <div className="grid grid-cols-2 border border-t-0 ">
           <div className=" p-2 border-r-1  bg-gray-50">
             <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
@@ -222,11 +224,11 @@ const InvoiceMain = ({
             <table className="w-full text-xs border-collapse">
               <thead>
                 <tr className="border-b-2 border-black">
-                  <th className="py-2 text-center font-bold" style={{width: '8%'}}>No</th>
-                  <th className="py-2 text-center font-bold" style={{width: '55%'}}>Item</th>
-                  <th className="py-2 text-center font-bold" style={{width: '7%'}}>Qty</th>
-                  <th className="py-2 text-center font-bold" style={{width: '15%'}}>Rate</th>
-                  <th className="py-2 text-center font-bold " style={{width: '15%'}}>Amount</th>
+                  <th className="py-2 text-center font-bold" style={{ width: '8%' }}>No</th>
+                  <th className="py-2 text-center font-bold" style={{ width: '55%' }}>Item</th>
+                  <th className="py-2 text-center font-bold" style={{ width: '7%' }}>Qty</th>
+                  <th className="py-2 text-center font-bold" style={{ width: '15%' }}>Rate</th>
+                  <th className="py-2 text-center font-bold " style={{ width: '15%' }}>Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -244,13 +246,13 @@ const InvoiceMain = ({
                 })}
                 {/* Empty rows */}
                 {Array.from({ length: Math.max(0, minRows - invoiceData.items.length) }).map((_, i) => (
-                    <tr key={`empty-${i}`}>
-                        <td className="py-1 text-center text-gray-400">{invoiceData.items.length + i + 1}</td>
-                        <td className="py-1">&nbsp;</td>
-                        <td className="py-1"></td>
-                        <td className="py-1"></td>
-                        <td className="py-1"></td>
-                    </tr>
+                  <tr key={`empty-${i}`}>
+                    <td className="py-1 text-center text-gray-400">{invoiceData.items.length + i + 1}</td>
+                    <td className="py-1">&nbsp;</td>
+                    <td className="py-1"></td>
+                    <td className="py-1"></td>
+                    <td className="py-1"></td>
+                  </tr>
                 ))}
               </tbody>
               <tfoot>
@@ -258,217 +260,234 @@ const InvoiceMain = ({
                   <td colSpan="4" className="py-2 text-right">Total: </td>
                   <td className="py-2 text-center "><div className="px-2">
                     Rs.{grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </div>   </td>
+                  </div>   </td>
                 </tr>
               </tfoot>
             </table>
 
           ) : (
-          <table className="w-full text-xs border-collapse border border-slate-400">
-            <thead className="bg-gray-50">
-              <tr className="">
-                <th className="p-2 text-center w-[5%] border ">SI No.</th>
-                <th className="p-2 text-left w-[35%] border ">
-                  Description of Goods
-                </th>
-                <th className="p-2 text-center w-[10%] border ">HSN/SAC</th>
-                <th className="p-2 text-center w-[10%] border ">Qty</th>
-                <th className="p-2 text-right w-[10%] border ">Rate</th>
-                <th className="p-2 text-right  border ">{mode === 'dc-bill' ? 'Value' : 'Amount'}</th>
-              </tr>
-            </thead>
-            <tbody className="align-top">
-              {/* --- Item Rows --- */}
-              {invoiceData.items.map((item, index) => {
-                const itemTotal =
-                  item.quantity * item.rate * (1 - item.discount / 100);
-                return (
-                  <tr key={item.id}>
-                    <td className="p-2 text-center border ">{index + 1}</td>
-                    <td className="p-2 text-left font-semibold border ">
-                      {item.description}
-                    </td>
-                    <td className="p-2 text-center border ">{item.hsn}</td>
-                    <td className="p-2 text-center border ">{item.quantity}</td>
-                    <td className="p-2 text-right border ">
-                      {item.rate.toLocaleString("en-IN", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </td>
-                    <td className="p-2 text-right font-semibold border ">
-                      {itemTotal.toLocaleString("en-IN", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </td>
+            <table className="w-full text-xs border-collapse border border-slate-400">
+              <thead className="bg-gray-50">
+                <tr className="">
+                  <th className="p-2 text-center w-[5%] border ">SI No.</th>
+                  <th className={`p-2 text-left border ${isDCBill ? 'w-[55%]' : 'w-[35%]'}`}>
+                    Description of Goods
+                  </th>
+                  <th className={`p-2 text-center border ${isDCBill ? 'w-[20%]' : 'w-[10%]'}`}>HSN/SAC</th>
+                  <th className={`p-2 text-center border ${isDCBill ? 'w-[20%]' : 'w-[10%]'}`}>Qty</th>
+                  {!isDCBill && <th className="p-2 text-right w-[10%] border ">Rate</th>}
+                  {!isDCBill && <th className="p-2 text-right  border ">Amount</th>}
+                </tr>
+              </thead>
+              <tbody className="align-top">
+                {/* --- Item Rows --- */}
+                {invoiceData.items.map((item, index) => {
+                  const itemTotal =
+                    item.quantity * item.rate * (1 - item.discount / 100);
+                  return (
+                    <tr key={item.id}>
+                      <td className="p-2 text-center border ">{index + 1}</td>
+                      <td className="p-2 text-left font-semibold border ">
+                        {item.description}
+                      </td>
+                      <td className="p-2 text-center border ">{item.hsn}</td>
+                      <td className="p-2 text-center border ">{item.quantity}</td>
+                      {!isDCBill && (
+                        <td className="p-2 text-right border ">
+                          {item.rate.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                      )}
+                      {!isDCBill && (
+                        <td className="p-2 text-right font-semibold border ">
+                          {itemTotal.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })}
+
+                {/* --- Empty rows to maintain table height --- */}
+                {Array.from({ length: emptyRowsCount }).map((_, i) => (
+                  <tr key={`empty-${i}`}>
+                    <td className="p-2 border  border-y-0">&nbsp;</td>
+                    <td className="p-2 border  border-y-0"></td>
+                    <td className="p-2 border  border-y-0"></td>
+                    <td className="p-2 border  border-y-0"></td>
+                    {!isDCBill && <td className="p-2 border  border-y-0"></td>}
+                    {!isDCBill && <td className="p-2 border  border-y-0"></td>}
                   </tr>
-                );
-              })}
+                ))}
+              </tbody>
 
-              {/* --- Empty rows to maintain table height --- */}
-              {Array.from({ length: emptyRowsCount }).map((_, i) => (
-                <tr key={`empty-${i}`}>
-                  <td className="p-2 border  border-y-0">&nbsp;</td>
-                  <td className="p-2 border  border-y-0"></td>
-                  <td className="p-2 border  border-y-0"></td>
-                  <td className="p-2 border  border-y-0"></td>
-                  <td className="p-2 border  border-y-0"></td>
-                  <td className="p-2 border  border-y-0"></td>
-                </tr>
-              ))}
-            </tbody>
-
-            {/* --- Footer with Totals --- */}
-            <tfoot>
-              {/* --- Subtotal Row --- */}
-              {/* --- Additional Charges Rows --- */}
-              {additionalRows.map((row) => (
-                <tr key={`additional-${row.type}`}>
-                  <td
-                    colSpan="5"
-                    className="p-2 text-right font-semibold border "
-                  >
-                    {row.description}
-                  </td>
-                  <td className="p-2 text-right border ">
-                    {row.amount.toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </td>
-                </tr>
-              ))}
-
-              {/* --- Subtotal Row --- */}
-              <tr>
-                <td
-                  colSpan="5"
-                  className="p-2 text-right font-semibold border "
-                >
-                  Subtotal
-                </td>
-                <td className="p-2 text-right font-semibold border ">
-                  {subtotal.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </td>
-              </tr>
-
-              {/* --- Discount Row --- */}
-              {invoiceData.additionalCharges.discount > 0 && (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="p-2 text-right font-semibold border "
-                  >
-                    Less: Discount @ {invoiceData.additionalCharges.discount}%
-                  </td>
-                  <td className="p-2 text-right border ">
-                    -
-                    {discountAmount.toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </td>
-                </tr>
-              )}
-              
-              {/* --- Less Amount Row --- */}
-              {invoiceData.additionalCharges.lessAmount > 0 && (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="p-2 text-right font-semibold border "
-                  >
-                    Less:{" "}
-                    {invoiceData.additionalCharges.lessDescription ||
-                      "Advance Paid"}
-                  </td>
-                  <td className="p-2 text-right border ">
-                    -
-                    {invoiceData.additionalCharges.lessAmount.toLocaleString(
-                      "en-IN",
-                      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-                    )}
-                  </td>
-                </tr>
-              )}
-
-              {/* --- Tax Rows --- */}
-              {shouldShowGST &&
-                (isCGST_SGST ? (
-                  <>
-                    {/* --- CGST Row --- */}
-                    <tr>
-                      <td
-                        colSpan="5"
-                        className="p-2 text-right font-semibold border "
-                      >
-                        CGST @ 9%
-                      </td>
-                      <td className="p-2 text-right border ">
-                        {cgstAmount.toLocaleString("en-IN", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                    </tr>
-                    {/* --- SGST Row --- */}
-                    <tr>
-                      <td
-                        colSpan="5"
-                        className="p-2 text-right font-semibold border "
-                      >
-                        SGST @ 9%
-                      </td>
-                      <td className="p-2 text-right border ">
-                        {sgstAmount.toLocaleString("en-IN", {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </td>
-                    </tr>
-                  </>
-                ) : (
-                  /* --- IGST Row --- */
-                  <tr>
+              {/* --- Footer with Totals --- */}
+              <tfoot>
+                {/* --- Subtotal Row --- */}
+                {/* --- Additional Charges Rows --- */}
+                {!isDCBill && additionalRows.map((row) => (
+                  <tr key={`additional-${row.type}`}>
                     <td
                       colSpan="5"
                       className="p-2 text-right font-semibold border "
                     >
-                      IGST @ 18%
+                      {row.description}
                     </td>
                     <td className="p-2 text-right border ">
-                      {igstAmount.toLocaleString("en-IN", {
+                      {row.amount.toLocaleString("en-IN", {
                         minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </td>
                   </tr>
                 ))}
-              {/* --- Grand Total Row --- */}
-              <tr className="font-bold bg-gray-50">
-                <td colSpan="3" className="p-2 text-left border-b ">
-                  {(invoiceData.additionalCharges.discount > 0 ||
-                    invoiceData.additionalCharges.lessAmount > 0)
-                    ? "Balance Amount"
-                    : mode === 'dc-bill' ? "Total Declared Value" : "Total"}
-                </td>
-                <td className="p-2 text-center border-b "></td>
-                <td className=" border-b"></td>
-                <td className="p-2 text-right border-b border-l">
-                  ₹
-                  {grandTotal.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+
+                {/* --- Subtotal Row --- */}
+                {!isDCBill && (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="p-2 text-right font-semibold border "
+                    >
+                      Subtotal
+                    </td>
+                    <td className="p-2 text-right font-semibold border ">
+                      {subtotal.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                  </tr>
+                )}
+
+                {/* --- Discount Row --- */}
+                {!isDCBill && invoiceData.additionalCharges.discount > 0 && (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="p-2 text-right font-semibold border "
+                    >
+                      Less: Discount @ {invoiceData.additionalCharges.discount}%
+                    </td>
+                    <td className="p-2 text-right border ">
+                      -
+                      {discountAmount.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                  </tr>
+                )}
+
+                {/* --- Less Amount Row --- */}
+                {!isDCBill && invoiceData.additionalCharges.lessAmount > 0 && (
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className="p-2 text-right font-semibold border "
+                    >
+                      Less:{" "}
+                      {invoiceData.additionalCharges.lessDescription ||
+                        "Advance Paid"}
+                    </td>
+                    <td className="p-2 text-right border ">
+                      -
+                      {invoiceData.additionalCharges.lessAmount.toLocaleString(
+                        "en-IN",
+                        { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                      )}
+                    </td>
+                  </tr>
+                )}
+
+                {/* --- Tax Rows --- */}
+                {shouldShowGST &&
+                  (isCGST_SGST ? (
+                    <>
+                      {/* --- CGST Row --- */}
+                      <tr>
+                        <td
+                          colSpan="5"
+                          className="p-2 text-right font-semibold border "
+                        >
+                          CGST @ 9%
+                        </td>
+                        <td className="p-2 text-right border ">
+                          {cgstAmount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                      </tr>
+                      {/* --- SGST Row --- */}
+                      <tr>
+                        <td
+                          colSpan="5"
+                          className="p-2 text-right font-semibold border "
+                        >
+                          SGST @ 9%
+                        </td>
+                        <td className="p-2 text-right border ">
+                          {sgstAmount.toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                      </tr>
+                    </>
+                  ) : (
+                    /* --- IGST Row --- */
+                    <tr>
+                      <td
+                        colSpan="5"
+                        className="p-2 text-right font-semibold border "
+                      >
+                        IGST @ 18%
+                      </td>
+                      <td className="p-2 text-right border ">
+                        {igstAmount.toLocaleString("en-IN", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                {/* --- Grand Total Row --- */}
+                {isDCBill ? (
+                  <tr className="font-bold bg-gray-50">
+                    <td colSpan="3" className="p-2 text-right border-b ">
+                      Total Quantity
+                    </td>
+                    <td className="p-2 text-center border-b border-l">
+                      {totalQuantity}
+                    </td>
+                  </tr>
+                ) : (
+                  <tr className="font-bold bg-gray-50">
+                    <td colSpan="3" className="p-2 text-left border-b ">
+                      {(invoiceData.additionalCharges.discount > 0 ||
+                        invoiceData.additionalCharges.lessAmount > 0)
+                        ? "Balance Amount"
+                        : "Total"}
+                    </td>
+                    <td className="p-2 text-center border-b "></td>
+                    <td className=" border-b"></td>
+                    <td className="p-2 text-right border-b border-l">
+                      ₹
+                      {grandTotal.toLocaleString("en-IN", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                  </tr>
+                )}
+              </tfoot>
+            </table>
           )}
         </div>
 
@@ -662,7 +681,7 @@ const InvoiceMain = ({
 
         {/* --- Receiver Signature Section for DC Bill --- */}
         {mode === 'dc-bill' && (
-          <div className="mt-6 p-4 border border-b-0 bg-gray-50 ">
+          <div className="mt-6 p-4 border bg-gray-50 ">
             <div className="grid grid-cols-2 gap-8">
               <div>
                 <p className="font-semibold text-xs mb-1">Goods Dispatched By:</p>
@@ -679,9 +698,6 @@ const InvoiceMain = ({
                 </div>
               </div>
             </div>
-            <p className="text-[10px] text-gray-500 mt-4 text-center italic">
-              This is a Delivery Challan and not a Tax Invoice. No GST is charged on this document.
-            </p>
           </div>
         )}
       </div>
