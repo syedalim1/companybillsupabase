@@ -111,7 +111,7 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
             </div>
             {copyType !== 'quotation' && copyType !== 'dc' && (
                 <div className="text-center text-sm font-extrabold px-2 print:px-0">
-                    {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : 'DUPLICATE FOR TRANSPORTER'}
+                    {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : copyType === 'duplicate' ? 'DUPLICATE FOR TRANSPORTER' : 'TRIPLICATE FOR SUPPLIER'}
                 </div>
             )}
         </header>

@@ -134,6 +134,62 @@ const InvoiceDetailsForm = ({ invoiceData, handleInputChange, hideBillNumber = f
         </>
       )}
 
+      {/* Transport Details - Show for GST bill mode */}
+      {!isDcBill && !hideBillNumber && (
+        <div className="mb-4">
+          <h4 className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <svg className="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+            Transport Details (For Transporter Copy)
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Vehicle Number</label>
+              <input
+                type="text"
+                value={invoiceData.invoiceDetails.vehicleNo || ''}
+                onChange={(e) => handleInputChange('invoiceDetails', 'vehicleNo', e.target.value)}
+                placeholder="TN 01 AB 1234"
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Driver Name</label>
+              <input
+                type="text"
+                value={invoiceData.invoiceDetails.transporterName || ''}
+                onChange={(e) => handleInputChange('invoiceDetails', 'transporterName', e.target.value)}
+                placeholder="Driver / Transporter Name"
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Mode of Transport</label>
+              <select
+                value={invoiceData.invoiceDetails.modeOfTransport || ''}
+                onChange={(e) => handleInputChange('invoiceDetails', 'modeOfTransport', e.target.value)}
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none"
+              >
+                <option value="">Select Mode</option>
+                <option value="Road">Road</option>
+                <option value="Rail">Rail</option>
+                <option value="Air">Air</option>
+                <option value="Ship">Ship</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">E-way Bill Number</label>
+              <input
+                type="text"
+                value={invoiceData.invoiceDetails.ewayBillNo || ''}
+                onChange={(e) => handleInputChange('invoiceDetails', 'ewayBillNo', e.target.value)}
+                placeholder="E-way Bill No"
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-mono"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* DC Bill specific fields */}
       {isDcBill && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

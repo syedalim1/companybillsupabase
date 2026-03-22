@@ -11,7 +11,7 @@ const InvoiceContent = ({ copyType, invoiceData, subtotal, cgstAmount, sgstAmoun
              style={isSlipBill ? { width: '130mm'} : {}}>
             <div className="flex flex-col">
                 <InvoiceHeader copyType={copyType} invoiceData={invoiceData} mode={mode} />
-                <InvoiceMain invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} mode={mode} gstOption={gstOption} />
+                <InvoiceMain copyType={copyType} invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} mode={mode} gstOption={gstOption} />
                 <InvoiceFooter invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} mode={mode} gstOption={gstOption} />
             </div>
         </div>

@@ -19,14 +19,19 @@ const InvoicePreview = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmo
                 </div>
              ) : (
                 <>
-                    {/* Original Copy */}
+                    {/* Original Copy - Page 1 */}
                     <div className="print:page-break-after-always">
                         <InvoiceContent copyType="original" invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} lessAmount={lessAmount} discountAmount={discountAmount} mode={mode} gstOption={gstOption} />
                     </div>
 
-                    {/* Duplicate Copy */}
-                    <div className='print:pt-10'>
+                    {/* Duplicate Copy - Page 2 (Transporter) */}
+                    <div className="print:page-break-after-always print:pt-10">
                         <InvoiceContent copyType="duplicate" invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} lessAmount={lessAmount} discountAmount={discountAmount} mode={mode} gstOption={gstOption} />
+                    </div>
+
+                    {/* Triplicate Copy - Page 3 (Supplier) */}
+                    <div className='print:pt-10'>
+                        <InvoiceContent copyType="triplicate" invoiceData={invoiceData} subtotal={subtotal} cgstAmount={cgstAmount} sgstAmount={sgstAmount} igstAmount={igstAmount} grandTotal={grandTotal} lessAmount={lessAmount} discountAmount={discountAmount} mode={mode} gstOption={gstOption} />
                     </div>
                 </>
              )}

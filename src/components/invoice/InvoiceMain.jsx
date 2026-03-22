@@ -10,6 +10,7 @@ const toWords = new ToWords({
 });
 
 const InvoiceMain = ({
+  copyType,
   invoiceData,
   subtotal,
   cgstAmount,
@@ -649,6 +650,27 @@ const InvoiceMain = ({
                 </tr>
               </tfoot>
             </table>
+          </div>
+        )}
+
+        {/* --- Transport Details Section (Duplicate/Transporter copy only) --- */}
+        {copyType === 'duplicate' && mode === 'gst-bill' && (
+          <div className="border border-t-0 p-3 bg-gray-50">
+            <h3 className="text-[11px] font-bold uppercase text-gray-600 mb-2 border-b pb-1">Transport Details</h3>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+              <p className="text-[12px]">
+                <strong>Vehicle No:</strong> {invoiceData.invoiceDetails.vehicleNo || '_______________'}
+              </p>
+              <p className="text-[12px]">
+                <strong>Driver Name:</strong> {invoiceData.invoiceDetails.transporterName || '_______________'}
+              </p>
+              <p className="text-[12px]">
+                <strong>Mode of Transport:</strong> {invoiceData.invoiceDetails.modeOfTransport || '_______________'}
+              </p>
+              <p className="text-[12px]">
+                <strong>E-way Bill No:</strong> {invoiceData.invoiceDetails.ewayBillNo || '_______________'}
+              </p>
+            </div>
           </div>
         )}
 
