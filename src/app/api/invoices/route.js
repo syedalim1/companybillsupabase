@@ -44,6 +44,8 @@ export async function POST(request) {
           gstin: data.buyer.gstin,
           state: data.buyer.state,
           stateCode: data.buyer.stateCode,
+          buyerNumber: data.buyer.buyerNumber || null,
+          email: data.buyer.email || null,
         }
       });
     } else {
@@ -57,6 +59,8 @@ export async function POST(request) {
           contact: data.buyer.contact,
           state: data.buyer.state,
           stateCode: data.buyer.stateCode,
+          buyerNumber: data.buyer.buyerNumber || null,
+          email: data.buyer.email || null,
         }
       });
     }
@@ -115,6 +119,7 @@ export async function POST(request) {
             quantity: item.quantity,
             rate: item.rate,
             discount: item.discount,
+            unit: item.unit || null,
           }))
         },
         additionalCharges: {
@@ -233,6 +238,8 @@ export async function PUT(request) {
           gstin: data.buyer.gstin,
           state: data.buyer.state,
           stateCode: data.buyer.stateCode,
+          buyerNumber: data.buyer.buyerNumber || null,
+          email: data.buyer.email || null,
         }
       });
     } else {
@@ -246,6 +253,8 @@ export async function PUT(request) {
           contact: data.buyer.contact,
           state: data.buyer.state,
           stateCode: data.buyer.stateCode,
+          buyerNumber: data.buyer.buyerNumber || null,
+          email: data.buyer.email || null,
         }
       });
     }
@@ -306,6 +315,7 @@ export async function PUT(request) {
             quantity: item.quantity,
             rate: item.rate,
             discount: item.discount,
+            unit: item.unit || null,
           }))
         },
         additionalCharges: {

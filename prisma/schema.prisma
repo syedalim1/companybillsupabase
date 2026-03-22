@@ -130,6 +130,7 @@ model Item {
   quantity    Float
   rate        Float
   discount    Float    @default(0)
+  unit        String?  // Unit of measurement (Nos, KG, MTR, etc.)
   invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId   String
 
