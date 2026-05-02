@@ -102,6 +102,8 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         ewayBillNo: invoice.ewayBillNo,
         vehicleNo: invoice.vehicleNo,
         transporterName: invoice.transporterName,
+        driverName: invoice.driverName || '',
+        driverMobile: invoice.driverMobile || '',
         transporterId: invoice.transporterId,
         distance: invoice.distance,
         modeOfTransport: invoice.modeOfTransport,

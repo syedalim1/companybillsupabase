@@ -28,6 +28,8 @@ model Invoice {
   ewayBillNo        String?
   vehicleNo         String?
   transporterName   String?
+  driverName        String?
+  driverMobile      String?
   transporterId     String?
   distance          String?
   modeOfTransport   String?

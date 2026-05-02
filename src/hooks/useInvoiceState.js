@@ -22,7 +22,7 @@ export function useInvoiceState() {
       gstin: '33FAXPM0581G1ZC',
       state: 'Tamil Nadu',
       stateCode: 33,
-      contact: '9585745303, 6379016686',
+      contact: '9585745303, 8300904920',
       email: 'indianmaksteel1982@gmail.com',
       bankName: 'Indian Overseas Bank',
       accNo: '356502000000347',
@@ -71,6 +71,8 @@ export function useInvoiceState() {
       ewayBillNo: '',
       vehicleNo: '',
       transporterName: '',
+      driverName: '',
+      driverMobile: '',
       transporterId: '',
       distance: '',
       modeOfTransport: '',
@@ -81,7 +83,7 @@ export function useInvoiceState() {
     items: [
       {
         id: 1,
-        description: "MS Table (3'*2')",
+        description: "MS Table \u2013 Metal Furniture (for Job Work)",
         hsn: '9403',
         sac: '',
         quantity: 8,
@@ -123,8 +125,17 @@ export function useInvoiceState() {
     }
   }, [currentMode, invoiceData.seller.stateCode, invoiceData.buyer.stateCode]);
 
+  // Reset editing mode when going back to landing page
+  useEffect(() => {
+    if (currentMode === 'landing') {
+      setEditingInvoiceId(null);
+    }
+  }, [currentMode]);
+
   // Update invoice/DC/Slip number when mode changes or next numbers update
   useEffect(() => {
+    if (editingInvoiceId) return; // Do not overwrite if we are editing an old invoice
+
     if (currentMode === 'dc-bill') {
       setInvoiceData(prev => ({
         ...prev,
@@ -142,7 +153,7 @@ export function useInvoiceState() {
         invoiceDetails: { ...prev.invoiceDetails, invoiceNo: nextInvoiceNo }
       }));
     }
-  }, [currentMode, nextInvoiceNo, nextDcNo, nextSlipNo]);
+  }, [currentMode, nextInvoiceNo, nextDcNo, nextSlipNo, editingInvoiceId]);
 
   const handleInputChange = (section, field, value) => {
     setInvoiceData(prev => ({

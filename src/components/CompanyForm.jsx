@@ -22,41 +22,71 @@ const CompanyBillHeader = ({ invoiceData, handleInputChange }) => {
                 Company Details
             </h3>
 
-            {/* Logo Upload */}
-            <div className="mb-6 flex items-center gap-6">
-                 {/* <div className="relative group cursor-pointer">
-                    <div className="w-24 h-24 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden hover:border-blue-500 transition-colors">
-                        {(logoPreview || invoiceData.seller.logo) ? (
-                            <img
-                                src={logoPreview || invoiceData.seller.logo}
-                                alt="Company Logo"
-                                className="w-full h-full object-contain"
-                            />
-                        ) : (
-                            <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        )}
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Company Name</label>
+                    <input
+                        type="text"
+                        value={invoiceData.seller.name}
+                        onChange={(e) => handleInputChange('seller', 'name', e.target.value)}
+                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-gray-900"
+                        placeholder="Your Company Name"
+                    />
+                </div>
+                <div>
+                    <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Company Address</label>
+                    <input
+                        type="text"
+                        value={invoiceData.seller.address}
+                        onChange={(e) => handleInputChange('seller', 'address', e.target.value)}
+                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                        placeholder="Company Full Address"
+                    />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">GSTIN</label>
                         <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleLogoUpload}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            type="text"
+                            value={invoiceData.seller.gstin}
+                            onChange={(e) => handleInputChange('seller', 'gstin', e.target.value)}
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-mono"
+                            placeholder="GSTIN Number"
                         />
                     </div>
-                    <p className="text-xs text-center mt-2 text-gray-500 font-medium group-hover:text-blue-600">Upload Logo</p>
-                 </div> */}
-                 
-                 <div className="flex-1">
-                     <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100">
-                        <div className="font-bold text-gray-900 text-lg mb-1">{invoiceData.seller.name}</div>
-                        <div className="text-sm text-gray-600 mb-2">{invoiceData.seller.address}</div>
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
-                             <div><span className="font-semibold text-gray-700">GSTIN:</span> {invoiceData.seller.gstin}</div>
-                             <div><span className="font-semibold text-gray-700">State:</span> {invoiceData.seller.state}</div>
-                             <div><span className="font-semibold text-gray-700">Phone:</span> {invoiceData.seller.contact}</div>
-                             <div><span className="font-semibold text-gray-700">Email:</span> {invoiceData.seller.email}</div>
-                        </div>
-                     </div>
-                 </div>
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">State</label>
+                        <input
+                            type="text"
+                            value={invoiceData.seller.state}
+                            onChange={(e) => handleInputChange('seller', 'state', e.target.value)}
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                            placeholder="State"
+                        />
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Phone</label>
+                        <input
+                            type="text"
+                            value={invoiceData.seller.contact}
+                            onChange={(e) => handleInputChange('seller', 'contact', e.target.value)}
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                            placeholder="Contact Numbers"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Email</label>
+                        <input
+                            type="email"
+                            value={invoiceData.seller.email}
+                            onChange={(e) => handleInputChange('seller', 'email', e.target.value)}
+                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                            placeholder="Email Address"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );
