@@ -12,134 +12,139 @@ const DCBillTemplate = ({
   const finalGrandTotal = Math.round(subtotal);
 
   return (
-    <div className="bg-white text-black font-sans p-8 mx-auto w-full max-w-[210mm] shadow-2xl print:shadow-none print:p-0">
+    <div className="bg-white text-gray-900 font-sans p-6 sm:p-8 mx-auto w-full max-w-[210mm] shadow-xl print:shadow-none print:p-0 print:m-0">
+      
       {/* Header Section */}
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
         <div className="flex-1">
-          <h1 className="font-bold text-[14px]">Company Name: {invoiceData.seller.name}</h1>
-          <div className="text-[12px] leading-relaxed mt-1">
-            <span className="font-semibold">Address: </span>
+          <h1 className="font-extrabold text-xl sm:text-2xl tracking-tight text-black mb-2 uppercase">{invoiceData.seller.name}</h1>
+          <div className="text-sm text-gray-700 leading-relaxed max-w-sm">
             <span dangerouslySetInnerHTML={{ __html: invoiceData.seller.address || 'NO.K-6, Sidco, Kurichi, <br/>Sidco Industrial Estate, Coimbatore - 641021' }} />
             <br />
             India
           </div>
-          <p className="text-[12px] mt-1">
-            <span className="font-semibold">GSTIN:</span> {invoiceData.seller.gstin}
-          </p>
-          <p className="text-[12px] mt-1">
-            <span className="font-semibold">Phone:</span> {invoiceData.seller.contact}
-          </p>
+          <div className="mt-2 text-sm flex flex-col gap-1 text-gray-600">
+            <p><span className="font-semibold text-gray-800">GSTIN:</span> {invoiceData.seller.gstin}</p>
+            <p><span className="font-semibold text-gray-800">Phone:</span> {invoiceData.seller.contact}</p>
+          </div>
         </div>
-        <div className="text-right flex-1">
-          <h2 className="text-3xl font-bold text-[#F5A623] mb-1">DELIVERY CHALLAN</h2>
-          <p className="text-[14px] font-semibold text-gray-800">
-            Delivery Challan# - {invoiceData.dcDetails?.dcNo || 'DC-001'}
+        <div className="text-left sm:text-right flex-1 sm:flex-none">
+          <h2 className="text-2xl sm:text-3xl font-black text-black tracking-widest uppercase mb-2">Delivery Challan</h2>
+          <p className="text-sm font-medium text-gray-500 mb-3">
+            Challan No: <span className="text-black font-bold">{invoiceData.dcDetails?.dcNo || 'DC-001'}</span>
           </p>
+          <div className="inline-block bg-gray-100 border border-gray-300 px-3 py-1.5 rounded text-xs font-bold text-gray-800 uppercase tracking-widest">
+            Job Work
+          </div>
         </div>
       </div>
 
-      <div className="border-t-2 border-black w-full mb-1"></div>
+      <div className="border-t-[3px] border-black w-full mb-5"></div>
 
-      {/* Grid Section */}
-      <div className="grid grid-cols-3 gap-4 mb-1">
+      {/* Meta Grid Section */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 bg-gray-50 p-3 rounded-md border border-gray-200">
         <div>
-          <p className="text-[#F5A623] font-bold text-[12px]">Delivery Challan #</p>
-          <p className="text-[12px] font-semibold">{invoiceData.dcDetails?.dcNo || 'DC-001'}</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Challan Date</p>
+          <p className="text-sm font-bold text-black">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
         </div>
         <div>
-          <p className="text-[#F5A623] font-bold text-[12px]">Order Date #</p>
-          <p className="text-[12px] font-semibold">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Order Date</p>
+          <p className="text-sm font-bold text-black">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
         </div>
         <div>
-          <p className="text-[#F5A623] font-bold text-[12px]">Dispatch Date #</p>
-          <p className="text-[12px] font-semibold">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Dispatch Date</p>
+          <p className="text-sm font-bold text-black">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
         </div>
-      </div>
-
-      <div className="border-t-2 border-black w-full mb-6"></div>
-
-      {/* Billing & Challan Details Section */}
-      <div className="grid grid-cols-2 gap-8 mb-6 text-[12px]">
-        {/* Left Side: Bill To */}
         <div>
-          <h3 className="mb-1 text-[13px] font-semibold">Bill To:</h3>
-          <p className="font-bold">{invoiceData.buyer.name || invoiceData.billing?.name}</p>
-          <p>{invoiceData.buyer.address || invoiceData.billing?.address}</p>
-          <p>{invoiceData.buyer.state} {invoiceData.buyer.stateCode ? `(${invoiceData.buyer.stateCode})` : ''}</p>
-          <p>India</p>
-          {invoiceData.buyer.contact && (
-            <p className="mt-1">
-              <span className="font-semibold">Phone:</span> {invoiceData.buyer.contact}
-            </p>
-          )}
-          {invoiceData.invoiceDetails.placeOfSupply && (
-            <p className="mt-1">
-              <span className="font-semibold">Place of Supply:</span> {invoiceData.invoiceDetails.placeOfSupply}
-            </p>
-          )}
-        </div>
-
-        {/* Right Side: Challan Details */}
-        <div>
-          <table className="w-full text-left border-collapse">
-            <tbody>
-              <tr>
-                <td className="py-1 font-semibold w-[40%]">Challan Date #</td>
-                <td className="py-1">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</td>
-              </tr>
-              <tr>
-                <td className="py-1 font-semibold">Ref #</td>
-                <td className="py-1">{invoiceData.invoiceDetails.reference || invoiceData.invoiceDetails.poNumber || 'N/A'}</td>
-              </tr>
-              <tr>
-                <td className="py-1 font-bold text-[#F5A623]">Challan Type:</td>
-                <td className="py-1 font-bold text-[14px] uppercase bg-yellow-100 px-1">Job Work</td>
-              </tr>
-              <tr>
-                <td className="py-1 font-semibold">GSTIN:</td>
-                <td className="py-1">{invoiceData.buyer.gstin || invoiceData.billing?.gstin || 'N/A'}</td>
-              </tr>
-            </tbody>
-          </table>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Ref / PO #</p>
+          <p className="text-sm font-bold text-black">{invoiceData.invoiceDetails.reference || invoiceData.invoiceDetails.poNumber || 'N/A'}</p>
         </div>
       </div>
 
-      {/* Transport Details Section */}
-      <div className="mb-6 text-[12px] border border-black p-2">
-        <h3 className="font-bold mb-2 border-b border-black pb-1">Transport Details:</h3>
-        <div className="grid grid-cols-4 gap-4">
-          <div><span className="font-semibold text-gray-600 block">Transport Name</span> <span className="font-bold">{invoiceData.invoiceDetails.transporterName || 'N/A'}</span></div>
-          <div><span className="font-semibold text-gray-600 block">Vehicle Number</span> <span className="font-bold">{invoiceData.invoiceDetails.vehicleNo || 'N/A'}</span></div>
-          <div><span className="font-semibold text-gray-600 block">Driver Name</span> <span className="font-bold">{invoiceData.invoiceDetails.driverName || 'N/A'}</span></div>
-          <div><span className="font-semibold text-gray-600 block">Driver Mobile</span> <span className="font-bold">{invoiceData.invoiceDetails.driverMobile || 'N/A'}</span></div>
+      {/* Billing & Transport Details Section */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+        {/* Bill To */}
+        <div className="flex flex-col">
+          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-2 mb-3">Bill To</h3>
+          <div className="text-sm text-gray-800 leading-relaxed">
+            <p className="font-bold text-base text-black mb-1">{invoiceData.buyer.name || invoiceData.billing?.name}</p>
+            <p className="mb-1">{invoiceData.buyer.address || invoiceData.billing?.address}</p>
+            <p className="mb-1">{invoiceData.buyer.state} {invoiceData.buyer.stateCode ? `(${invoiceData.buyer.stateCode})` : ''}, India</p>
+            
+            <div className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+              {invoiceData.buyer.contact && (
+                <>
+                  <span className="font-semibold text-gray-600">Phone:</span>
+                  <span>{invoiceData.buyer.contact}</span>
+                </>
+              )}
+              {invoiceData.buyer.gstin && (
+                <>
+                  <span className="font-semibold text-gray-600">GSTIN:</span>
+                  <span>{invoiceData.buyer.gstin || invoiceData.billing?.gstin || 'N/A'}</span>
+                </>
+              )}
+              {invoiceData.invoiceDetails.placeOfSupply && (
+                <>
+                  <span className="font-semibold text-gray-600">Supply Place:</span>
+                  <span>{invoiceData.invoiceDetails.placeOfSupply}</span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Transport Details */}
+        <div className="flex flex-col">
+          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-2 mb-3">Transport Details</h3>
+          <div className="bg-white border border-gray-300 rounded p-3 flex-grow">
+            <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-sm">
+              <div>
+                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Transporter</span>
+                <span className="font-bold text-black">{invoiceData.invoiceDetails.transporterName || 'N/A'}</span>
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Vehicle No</span>
+                <span className="font-bold text-black">{invoiceData.invoiceDetails.vehicleNo || 'N/A'}</span>
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Driver Name</span>
+                <span className="font-bold text-black">{invoiceData.invoiceDetails.driverName || 'N/A'}</span>
+              </div>
+              <div>
+                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Driver Mobile</span>
+                <span className="font-bold text-black">{invoiceData.invoiceDetails.driverMobile || 'N/A'}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Items Table */}
-      <div className="mb-8">
-        <table className="w-full border-collapse border border-black text-[10px]">
+      <div className="mb-6 overflow-x-auto">
+        <table className="w-full border-collapse border border-black text-sm">
           <thead>
-            <tr className="bg-[#F5A623] text-black">
-              <th className="border border-black p-1 text-center font-bold">SR No.</th>
-              <th className="border border-black p-1 text-left font-bold w-[40%]">ITEM DESCRIPTION</th>
-              <th className="border border-black p-1 text-center font-bold">HSN/SAC</th>
-              <th className="border border-black p-1 text-center font-bold">QTY</th>
-              <th className="border border-black p-1 text-center font-bold">PRICE/ ITEM</th>
-              <th className="border border-black p-1 text-center font-bold">TAXABLE VALUE</th>
+            <tr className="bg-gray-100 text-black border-b-2 border-black">
+              <th className="border-r border-black px-2 py-2 text-center font-bold w-10">#</th>
+              <th className="border-r border-black px-3 py-2 text-left font-bold">ITEM DESCRIPTION</th>
+              <th className="border-r border-black px-2 py-2 text-center font-bold w-24">HSN/SAC</th>
+              <th className="border-r border-black px-2 py-2 text-center font-bold w-20">QTY</th>
+              <th className="border-r border-black px-2 py-2 text-right font-bold w-32">RATE (₹)</th>
+              <th className="px-2 py-2 text-right font-bold w-36">AMOUNT (₹)</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-gray-800">
             {invoiceData.items.map((item, index) => {
               const itemTotal = item.quantity * item.rate * (1 - item.discount / 100);
 
               return (
-                <tr key={item.id} className="border-b border-black">
-                  <td className="border border-black p-1 text-center">{index + 1}</td>
-                  <td className="border border-black p-1 text-left font-medium">{item.description}</td>
-                  <td className="border border-black p-1 text-center">{item.hsn}</td>
-                  <td className="border border-black p-1 text-center">{item.quantity}</td>
-                  <td className="border border-black p-1 text-center">{item.rate.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
-                  <td className="border border-black p-1 text-center">{itemTotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
+                <tr key={item.id} className="border-b border-gray-300 last:border-b-black align-middle hover:bg-gray-50 transition-colors">
+                  <td className="border-r border-black px-2 py-2 text-center text-gray-600 font-medium">{index + 1}</td>
+                  <td className="border-r border-black px-3 py-2 text-left font-semibold text-black">{item.description}</td>
+                  <td className="border-r border-black px-2 py-2 text-center text-gray-600">{item.hsn}</td>
+                  <td className="border-r border-black px-2 py-2 text-center font-bold">{item.quantity}</td>
+                  <td className="border-r border-black px-2 py-2 text-right font-medium">{item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td className="px-2 py-2 text-right font-bold">{itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 </tr>
               );
             })}
@@ -148,33 +153,32 @@ const DCBillTemplate = ({
       </div>
 
       {/* Totals & Notes Section */}
-      <div className="flex justify-between items-start mt-12 text-[12px]">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mt-4">
         {/* Notes */}
-        <div className="w-1/2">
+        <div className="w-full sm:w-1/2 flex flex-col gap-3">
           {invoiceData.invoiceDetails.notes && (
-            <div className="mb-2">
-              <p className="font-semibold mb-1">Notes:</p>
-              <p>{invoiceData.invoiceDetails.notes}</p>
+            <div className="bg-gray-50 p-3 border-l-4 border-gray-400 text-sm">
+              <p className="font-bold text-gray-700 uppercase tracking-wider text-xs mb-1">Remarks / Notes</p>
+              <p className="text-gray-800">{invoiceData.invoiceDetails.notes}</p>
             </div>
           )}
-          <p className="font-semibold mt-2">Note: This document is issued for movement of goods only and does not represent a sale.</p>
         </div>
 
         {/* Totals */}
-        <div className="w-1/3">
-          <table className="w-full text-right border-collapse">
+        <div className="w-full sm:w-1/3">
+          <table className="w-full text-right border-collapse text-sm">
             <tbody>
-              <tr>
-                <td className="py-1 w-2/3">Sub Total:</td>
-                <td className="py-1 w-1/3 pr-2">{subtotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
+              <tr className="border-b border-gray-200">
+                <td className="py-1.5 text-gray-600 font-medium">Sub Total:</td>
+                <td className="py-1.5 font-semibold text-black w-32 pr-2">₹ {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               </tr>
-              <tr>
-                <td className="py-1">Rounded Off:</td>
-                <td className="py-1 pr-2">{roundedOff.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
+              <tr className="border-b border-gray-200">
+                <td className="py-1.5 text-gray-600 font-medium">Rounded Off:</td>
+                <td className="py-1.5 font-semibold text-black pr-2">₹ {roundedOff.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               </tr>
-              <tr>
-                <td className="py-1 font-bold">Grand Total:</td>
-                <td className="py-1 font-bold pr-2">{finalGrandTotal.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
+              <tr className="bg-gray-100 border-t-2 border-black border-b-2">
+                <td className="py-2.5 font-bold text-black uppercase tracking-wide px-2">Grand Total:</td>
+                <td className="py-2.5 font-bold text-lg text-black pr-2">₹ {finalGrandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               </tr>
             </tbody>
           </table>
@@ -182,30 +186,34 @@ const DCBillTemplate = ({
       </div>
       
       {/* Legal Declaration */}
-      <div className="mt-8 mb-8 text-center border-t border-b border-black py-2">
-        <p className="font-bold text-[12px] uppercase">
-          Goods are being transported under this delivery challan for job work purposes only and not for sale. This is not a tax invoice.
+      <div className="mt-6 text-center bg-gray-50 border border-gray-300 py-3 px-4 rounded-sm break-inside-avoid">
+        <p className="font-bold text-sm tracking-wide text-black uppercase mb-1">
+          This is not a tax invoice
+        </p>
+        <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
+          Goods are being transported under this delivery challan for job work purposes only and not for sale.
         </p>
       </div>
 
       {/* Signature Section */}
-      <div className="flex justify-between items-end mt-16 mb-4 text-[12px] font-semibold">
-        <div className="text-center">
-          <div className="border-t border-black w-32 pt-1">Prepared By</div>
+      <div className="flex flex-row justify-between items-end mt-16 text-sm font-semibold text-black break-inside-avoid pb-4">
+        <div className="text-center w-32">
+          <div className="border-t-2 border-black pt-2 uppercase tracking-wider text-xs">Prepared By</div>
         </div>
-        <div className="text-center">
-          <div className="border-t border-black w-32 pt-1">Checked By</div>
+        <div className="text-center w-32">
+          <div className="border-t-2 border-black pt-2 uppercase tracking-wider text-xs">Checked By</div>
         </div>
-        <div className="text-center">
-          <div className="h-16"></div> {/* Space for seal/stamp */}
-          <div className="border-t border-black w-48 pt-1">
-            Authorized Signatory<br />
-            <span className="text-[10px] font-normal">(With Seal/Stamp)</span>
+        <div className="text-center w-48">
+          <div className="border-t-2 border-black pt-2 uppercase tracking-wider text-xs">
+            Authorised Signatory
           </div>
+          <p className="text-[10px] font-medium text-gray-500 mt-1 uppercase tracking-widest">(With Seal/Stamp)</p>
         </div>
       </div>
+      
     </div>
   );
 };
 
 export default DCBillTemplate;
+
