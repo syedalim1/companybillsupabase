@@ -12,81 +12,81 @@ const DCBillTemplate = ({
   const finalGrandTotal = Math.round(subtotal);
 
   return (
-    <div className="bg-white text-gray-900 font-sans p-6 sm:p-8 mx-auto w-full max-w-[210mm] shadow-xl print:shadow-none print:p-0 print:m-0">
+    <div className="bg-white text-gray-900 font-sans p-4 sm:p-6 mx-auto w-full max-w-[210mm] shadow-xl print:shadow-none print:p-0 print:m-0">
       
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
         <div className="flex-1">
-          <h1 className="font-extrabold text-xl sm:text-2xl tracking-tight text-black mb-2 uppercase">{invoiceData.seller.name}</h1>
-          <div className="text-sm text-gray-700 leading-relaxed max-w-sm">
+          <h1 className="font-bold text-xl sm:text-2xl tracking-wide text-black mb-1 uppercase">{invoiceData.seller.name}</h1>
+          <div className="text-sm text-gray-800 leading-snug max-w-sm">
             <span dangerouslySetInnerHTML={{ __html: invoiceData.seller.address || 'NO.K-6, Sidco, Kurichi, <br/>Sidco Industrial Estate, Coimbatore - 641021' }} />
             <br />
             India
           </div>
-          <div className="mt-2 text-sm flex flex-col gap-1 text-gray-600">
-            <p><span className="font-semibold text-gray-800">GSTIN:</span> {invoiceData.seller.gstin}</p>
-            <p><span className="font-semibold text-gray-800">Phone:</span> {invoiceData.seller.contact}</p>
+          <div className="mt-2 text-sm flex flex-col gap-0.5 text-gray-800">
+            <p><span className="font-semibold text-black">GSTIN:</span> {invoiceData.seller.gstin}</p>
+            <p><span className="font-semibold text-black">Phone:</span> {invoiceData.seller.contact}</p>
           </div>
         </div>
         <div className="text-left sm:text-right flex-1 sm:flex-none">
-          <h2 className="text-2xl sm:text-3xl font-black text-black tracking-widest uppercase mb-2">Delivery Challan</h2>
-          <p className="text-sm font-medium text-gray-500 mb-3">
-            Challan No: <span className="text-black font-bold">{invoiceData.dcDetails?.dcNo || 'DC-001'}</span>
-          </p>
-          <div className="inline-block bg-gray-100 border border-gray-300 px-3 py-1.5 rounded text-xs font-bold text-gray-800 uppercase tracking-widest">
-            Job Work
+          <h2 className="text-xl sm:text-2xl font-bold text-black tracking-wider uppercase mb-1">DELIVERY CHALLAN</h2>
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-widest mb-3">(Job Work / Material Movement)</p>
+          <div className="flex flex-col sm:items-end gap-1">
+            <p className="text-sm font-medium text-gray-600">
+              Challan No: <span className="text-black font-bold">{invoiceData.dcDetails?.dcNo || 'DC-001'}</span>
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="border-t-[3px] border-black w-full mb-5"></div>
+      <div className="border-t-2 border-black w-full mb-4"></div>
 
       {/* Meta Grid Section */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 bg-gray-50 p-3 rounded-md border border-gray-200">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 border-b border-black pb-4">
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Challan Date</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-0.5">Challan Date</p>
           <p className="text-sm font-bold text-black">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
         </div>
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Order Date</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-0.5">Order Date</p>
           <p className="text-sm font-bold text-black">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
         </div>
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Dispatch Date</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-0.5">Dispatch Date</p>
           <p className="text-sm font-bold text-black">{new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}</p>
         </div>
         <div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Ref / PO #</p>
-          <p className="text-sm font-bold text-black">{invoiceData.invoiceDetails.reference || invoiceData.invoiceDetails.poNumber || 'N/A'}</p>
+          <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-0.5">Ref / PO #</p>
+          <p className="text-sm font-bold text-black">{invoiceData.invoiceDetails.reference || invoiceData.invoiceDetails.poNumber || '\u00A0'}</p>
         </div>
       </div>
 
       {/* Billing & Transport Details Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-4">
         {/* Bill To */}
         <div className="flex flex-col">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-2 mb-3">Bill To</h3>
-          <div className="text-sm text-gray-800 leading-relaxed">
+          <h3 className="text-xs font-bold text-black uppercase tracking-widest border-b border-black pb-1 mb-2">Bill To</h3>
+          <div className="text-sm text-gray-800 leading-snug">
             <p className="font-bold text-base text-black mb-1">{invoiceData.buyer.name || invoiceData.billing?.name}</p>
-            <p className="mb-1">{invoiceData.buyer.address || invoiceData.billing?.address}</p>
+            <p className="mb-0.5">{invoiceData.buyer.address || invoiceData.billing?.address}</p>
             <p className="mb-1">{invoiceData.buyer.state} {invoiceData.buyer.stateCode ? `(${invoiceData.buyer.stateCode})` : ''}, India</p>
             
-            <div className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+            <div className="mt-2 grid grid-cols-[auto_1fr] gap-x-2 gap-y-1 text-sm">
               {invoiceData.buyer.contact && (
                 <>
-                  <span className="font-semibold text-gray-600">Phone:</span>
+                  <span className="font-semibold text-black">Phone:</span>
                   <span>{invoiceData.buyer.contact}</span>
                 </>
               )}
               {invoiceData.buyer.gstin && (
                 <>
-                  <span className="font-semibold text-gray-600">GSTIN:</span>
-                  <span>{invoiceData.buyer.gstin || invoiceData.billing?.gstin || 'N/A'}</span>
+                  <span className="font-semibold text-black">GSTIN:</span>
+                  <span>{invoiceData.buyer.gstin || invoiceData.billing?.gstin || '\u00A0'}</span>
                 </>
               )}
               {invoiceData.invoiceDetails.placeOfSupply && (
                 <>
-                  <span className="font-semibold text-gray-600">Supply Place:</span>
+                  <span className="font-semibold text-black">Supply Place:</span>
                   <span>{invoiceData.invoiceDetails.placeOfSupply}</span>
                 </>
               )}
@@ -96,54 +96,52 @@ const DCBillTemplate = ({
 
         {/* Transport Details */}
         <div className="flex flex-col">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-2 mb-3">Transport Details</h3>
-          <div className="bg-white border border-gray-300 rounded p-3 flex-grow">
-            <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-sm">
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Transporter</span>
-                <span className="font-bold text-black">{invoiceData.invoiceDetails.transporterName || 'N/A'}</span>
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Vehicle No</span>
-                <span className="font-bold text-black">{invoiceData.invoiceDetails.vehicleNo || 'N/A'}</span>
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Driver Name</span>
-                <span className="font-bold text-black">{invoiceData.invoiceDetails.driverName || 'N/A'}</span>
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Driver Mobile</span>
-                <span className="font-bold text-black">{invoiceData.invoiceDetails.driverMobile || 'N/A'}</span>
-              </div>
+          <h3 className="text-xs font-bold text-black uppercase tracking-widest border-b border-black pb-1 mb-2">Transport Details</h3>
+          <div className="grid grid-cols-2 gap-y-2 gap-x-2 text-sm">
+            <div>
+              <span className="text-xs font-semibold text-gray-600 uppercase block mb-0.5">Transporter</span>
+              <span className="font-bold text-black">{invoiceData.invoiceDetails.transporterName || '\u00A0'}</span>
+            </div>
+            <div>
+              <span className="text-xs font-semibold text-gray-600 uppercase block mb-0.5">Vehicle No</span>
+              <span className="font-bold text-black">{invoiceData.invoiceDetails.vehicleNo || '\u00A0'}</span>
+            </div>
+            <div>
+              <span className="text-xs font-semibold text-gray-600 uppercase block mb-0.5">Driver Name</span>
+              <span className="font-bold text-black">{invoiceData.invoiceDetails.driverName || '\u00A0'}</span>
+            </div>
+            <div>
+              <span className="text-xs font-semibold text-gray-600 uppercase block mb-0.5">Driver Mobile</span>
+              <span className="font-bold text-black">{invoiceData.invoiceDetails.driverMobile || '\u00A0'}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Items Table */}
-      <div className="mb-6 overflow-x-auto">
+      <div className="mb-4">
         <table className="w-full border-collapse border border-black text-sm">
           <thead>
-            <tr className="bg-gray-100 text-black border-b-2 border-black">
-              <th className="border-r border-black px-2 py-2 text-center font-bold w-10">#</th>
-              <th className="border-r border-black px-3 py-2 text-left font-bold">ITEM DESCRIPTION</th>
-              <th className="border-r border-black px-2 py-2 text-center font-bold w-24">HSN/SAC</th>
-              <th className="border-r border-black px-2 py-2 text-center font-bold w-20">QTY</th>
-              <th className="border-r border-black px-2 py-2 text-right font-bold w-32">RATE (₹)</th>
-              <th className="px-2 py-2 text-right font-bold w-36">AMOUNT (₹)</th>
+            <tr className="bg-gray-100 text-black border-b border-black">
+              <th className="border-r border-black px-2 py-1.5 text-center font-bold w-10">#</th>
+              <th className="border-r border-black px-3 py-1.5 text-left font-bold">ITEM DESCRIPTION</th>
+              <th className="border-r border-black px-2 py-1.5 text-center font-bold w-24">HSN/SAC</th>
+              <th className="border-r border-black px-2 py-1.5 text-center font-bold w-20">QTY</th>
+              <th className="border-r border-black px-2 py-1.5 text-right font-bold w-28">RATE (₹)</th>
+              <th className="px-2 py-1.5 text-right font-bold w-32">AMOUNT (₹)</th>
             </tr>
           </thead>
-          <tbody className="text-gray-800">
+          <tbody className="text-gray-900">
             {invoiceData.items.map((item, index) => {
-              const itemTotal = item.quantity * item.rate * (1 - item.discount / 100);
+              const itemTotal = item.quantity * item.rate * (1 - (item.discount || 0) / 100);
 
               return (
-                <tr key={item.id} className="border-b border-gray-300 last:border-b-black align-middle hover:bg-gray-50 transition-colors">
-                  <td className="border-r border-black px-2 py-2 text-center text-gray-600 font-medium">{index + 1}</td>
-                  <td className="border-r border-black px-3 py-2 text-left font-semibold text-black">{item.description}</td>
-                  <td className="border-r border-black px-2 py-2 text-center text-gray-600">{item.hsn}</td>
+                <tr key={item.id} className="border-b border-black align-top last:border-b-0">
+                  <td className="border-r border-black px-2 py-2 text-center font-medium">{index + 1}</td>
+                  <td className="border-r border-black px-3 py-2 text-left font-semibold">{item.description}</td>
+                  <td className="border-r border-black px-2 py-2 text-center">{item.hsn || '-'}</td>
                   <td className="border-r border-black px-2 py-2 text-center font-bold">{item.quantity}</td>
-                  <td className="border-r border-black px-2 py-2 text-right font-medium">{item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td className="border-r border-black px-2 py-2 text-right">{item.rate.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className="px-2 py-2 text-right font-bold">{itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 </tr>
               );
@@ -153,13 +151,13 @@ const DCBillTemplate = ({
       </div>
 
       {/* Totals & Notes Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mt-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mt-2 mb-4">
         {/* Notes */}
-        <div className="w-full sm:w-1/2 flex flex-col gap-3">
+        <div className="w-full sm:w-1/2">
           {invoiceData.invoiceDetails.notes && (
-            <div className="bg-gray-50 p-3 border-l-4 border-gray-400 text-sm">
-              <p className="font-bold text-gray-700 uppercase tracking-wider text-xs mb-1">Remarks / Notes</p>
-              <p className="text-gray-800">{invoiceData.invoiceDetails.notes}</p>
+            <div className="p-2 border border-black text-sm">
+              <p className="font-bold text-black uppercase tracking-wider text-xs mb-1">Remarks / Notes</p>
+              <p className="text-gray-900">{invoiceData.invoiceDetails.notes}</p>
             </div>
           )}
         </div>
@@ -168,46 +166,59 @@ const DCBillTemplate = ({
         <div className="w-full sm:w-1/3">
           <table className="w-full text-right border-collapse text-sm">
             <tbody>
-              <tr className="border-b border-gray-200">
-                <td className="py-1.5 text-gray-600 font-medium">Sub Total:</td>
-                <td className="py-1.5 font-semibold text-black w-32 pr-2">₹ {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <tr className="border-b border-gray-300">
+                <td className="py-1 text-gray-800 font-medium">Sub Total:</td>
+                <td className="py-1 font-semibold text-black w-32 pr-2">₹ {subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               </tr>
-              <tr className="border-b border-gray-200">
-                <td className="py-1.5 text-gray-600 font-medium">Rounded Off:</td>
-                <td className="py-1.5 font-semibold text-black pr-2">₹ {roundedOff.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <tr className="border-b border-gray-300">
+                <td className="py-1 text-gray-800 font-medium">Rounded Off:</td>
+                <td className="py-1 font-semibold text-black pr-2">₹ {roundedOff.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               </tr>
-              <tr className="bg-gray-100 border-t-2 border-black border-b-2">
-                <td className="py-2.5 font-bold text-black uppercase tracking-wide px-2">Grand Total:</td>
-                <td className="py-2.5 font-bold text-lg text-black pr-2">₹ {finalGrandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+              <tr className="border-t border-black border-b border-black">
+                <td className="py-2 font-bold text-black uppercase tracking-wide px-2">Grand Total:</td>
+                <td className="py-2 font-bold text-base text-black pr-2">₹ {finalGrandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      
+
       {/* Legal Declaration */}
-      <div className="mt-6 text-center bg-gray-50 border border-gray-300 py-3 px-4 rounded-sm break-inside-avoid">
-        <p className="font-bold text-sm tracking-wide text-black uppercase mb-1">
-          This is not a tax invoice
-        </p>
-        <p className="text-xs text-gray-600 font-medium uppercase tracking-wider">
-          Goods are being transported under this delivery challan for job work purposes only and not for sale.
+      <div className="mb-4 text-center border-t border-b border-black py-1.5 break-inside-avoid">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-black">
+          Material sent for job work purpose only. Not for sale.
         </p>
       </div>
 
       {/* Signature Section */}
-      <div className="flex flex-row justify-between items-end mt-16 text-sm font-semibold text-black break-inside-avoid pb-4">
-        <div className="text-center w-32">
-          <div className="border-t-2 border-black pt-2 uppercase tracking-wider text-xs">Prepared By</div>
-        </div>
-        <div className="text-center w-32">
-          <div className="border-t-2 border-black pt-2 uppercase tracking-wider text-xs">Checked By</div>
-        </div>
-        <div className="text-center w-48">
-          <div className="border-t-2 border-black pt-2 uppercase tracking-wider text-xs">
-            Authorised Signatory
+      <div className="border border-black flex flex-col break-inside-avoid text-sm">
+        <div className="grid grid-cols-2 min-h-[140px]">
+          {/* Receiver / Client Side */}
+          <div className="border-r border-black p-4 flex flex-col justify-between">
+            <div>
+              <p className="font-bold uppercase tracking-wider text-black border-b border-black pb-1 inline-block mb-4">Received By</p>
+            </div>
+            <div className="text-xs space-y-4 font-semibold text-black">
+              <p className="flex items-end gap-2"><span>Name:</span><span className="border-b border-black flex-1 border-dotted"></span></p>
+              <p className="flex items-end gap-2"><span>Date:</span><span className="border-b border-black flex-1 border-dotted"></span></p>
+              <p className="flex items-end gap-2"><span>Sign:</span><span className="border-b border-black flex-1 border-dotted"></span></p>
+            </div>
           </div>
-          <p className="text-[10px] font-medium text-gray-500 mt-1 uppercase tracking-widest">(With Seal/Stamp)</p>
+
+          {/* Sender / Company Side */}
+          <div className="p-4 flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <p className="font-bold uppercase tracking-wider text-black">For {invoiceData.seller.name}</p>
+            </div>
+            <div className="flex justify-between items-end mt-4">
+              <div className="w-20 h-20 border border-black flex items-center justify-center text-black text-[10px] text-center uppercase font-semibold">
+                Company<br/>Seal
+              </div>
+              <div className="text-center pb-2">
+                <p className="border-t border-black pt-1 text-xs font-bold uppercase px-4">Authorised Signatory</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
