@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, description, hsn, sac, rate, category, unit, gstRate, minStock } = body;
+    const { name, description, hsn, sac, rate, category, unit, gstRate, minStock, stock } = body;
 
     if (!name || !rate) {
       return NextResponse.json({ error: 'Name and rate are required' }, { status: 400 });
@@ -36,6 +36,7 @@ export async function POST(request) {
         unit: unit || null,
         gstRate: gstRate ? parseFloat(gstRate) : null,
         minStock: minStock ? parseInt(minStock) : null,
+        stock: stock ? parseInt(stock) : 0,
       },
     });
 
@@ -50,7 +51,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const body = await request.json();
-    const { id, name, description, hsn, sac, rate, category, unit, gstRate, minStock } = body;
+    const { id, name, description, hsn, sac, rate, category, unit, gstRate, minStock, stock } = body;
 
     if (!id || !name || !rate) {
       return NextResponse.json({ error: 'ID, name and rate are required' }, { status: 400 });
@@ -68,6 +69,7 @@ export async function PUT(request) {
         unit: unit || null,
         gstRate: gstRate ? parseFloat(gstRate) : null,
         minStock: minStock ? parseInt(minStock) : null,
+        stock: stock !== undefined ? parseInt(stock) : 0,
       },
     });
 

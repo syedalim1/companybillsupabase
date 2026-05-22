@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 
 const ProductForm = ({ product, onSave, onCancel }) => {
@@ -11,6 +12,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
     unit: '',
     gstRate: '',
     minStock: '',
+    stock: '', // NEW: live stock level
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,6 +29,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         unit: product.unit || '',
         gstRate: product.gstRate?.toString() || '',
         minStock: product.minStock?.toString() || '',
+        stock: product.stock?.toString() || '0', // NEW
       });
     }
   }, [product]);
@@ -48,6 +51,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         rate: parseFloat(formData.rate) || 0,
         gstRate: formData.gstRate ? parseFloat(formData.gstRate) : null,
         minStock: formData.minStock ? parseInt(formData.minStock) : null,
+        stock: formData.stock ? parseInt(formData.stock) : 0, // NEW
       };
 
       if (product) {
@@ -85,6 +89,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
             unit: '',
             gstRate: '',
             minStock: '',
+            stock: '0',
           });
         } else {
           throw new Error('Failed to create product');
@@ -110,21 +115,21 @@ const ProductForm = ({ product, onSave, onCancel }) => {
   const units = ['PCS', 'KG', 'MTR', 'LTR', 'SQM', 'BOX', 'SET', 'BAG', 'NOS'];
 
   return (
-    <div className="p-6">
-      <h3 className="text-lg font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">
-        {product ? 'Edit Product' : 'Add New Product'}
+    <div className="p-6 bg-white dark:bg-slate-900 text-text-body transition-colors duration-200">
+      <h3 className="text-lg font-bold text-text-title mb-6 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+        {product ? 'Edit Product details' : 'Add New Product to Catalog'}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Product Name */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Product Name *</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Product Name *</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="Enter product name"
               required
             />
@@ -132,11 +137,11 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Category */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Category</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Category</label>
             <select
               value={formData.category}
               onChange={(e) => handleInputChange('category', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm appearance-none"
             >
               <option value="">Select Category</option>
               {categories.map(category => (
@@ -147,25 +152,25 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Rate */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Rate (₹) *</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Rate (₹) *</label>
             <input
               type="number"
               step="0.01"
               value={formData.rate}
               onChange={(e) => handleInputChange('rate', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm font-bold"
               placeholder="0.00"
               required
             />
           </div>
 
-          {/* Unit - NEW */}
+          {/* Unit */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Unit</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Unit</label>
             <select
               value={formData.unit}
               onChange={(e) => handleInputChange('unit', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm appearance-none"
             >
               <option value="">Select Unit</option>
               {units.map(unit => (
@@ -176,49 +181,62 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* HSN Code */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">HSN Code</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">HSN Code</label>
             <input
               type="text"
               value={formData.hsn}
               onChange={(e) => handleInputChange('hsn', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all font-mono text-text-title text-sm"
               placeholder="e.g., 7308"
             />
           </div>
 
           {/* SAC Code */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">SAC Code</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">SAC Code</label>
             <input
               type="text"
               value={formData.sac}
               onChange={(e) => handleInputChange('sac', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-mono"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all font-mono text-text-title text-sm"
               placeholder="e.g., 9954"
             />
           </div>
 
-          {/* Default GST Rate - NEW */}
+          {/* Default GST Rate */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Default GST Rate (%)</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Default GST Rate (%)</label>
             <input
               type="number"
               step="0.01"
               value={formData.gstRate}
               onChange={(e) => handleInputChange('gstRate', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="18"
             />
           </div>
 
-          {/* Minimum Stock - NEW */}
+          {/* Current Stock - NEW */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Min Stock Alert</label>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1 font-bold text-brand-primary">Stock Quantity (In-Hand) *</label>
+            <input
+              type="number"
+              value={formData.stock}
+              onChange={(e) => handleInputChange('stock', e.target.value)}
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-brand-primary/30 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm font-bold"
+              placeholder="e.g., 100"
+              required
+            />
+          </div>
+
+          {/* Minimum Stock Alert threshold */}
+          <div>
+            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Min Stock Alert threshold</label>
             <input
               type="number"
               value={formData.minStock}
               onChange={(e) => handleInputChange('minStock', e.target.value)}
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="Low stock threshold"
             />
           </div>
@@ -226,22 +244,22 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1 ml-1">Description</label>
+          <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
-            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all resize-none text-text-title text-sm"
             placeholder="Enter product description"
             rows={3}
           />
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-3 pt-4 border-t border-gray-100">
+        <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800/80">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg hover:shadow-indigo-200 transition-all disabled:bg-gray-400"
+            className="flex-1 py-3 bg-brand-primary text-white font-bold rounded-xl hover:bg-brand-primary-hover shadow-lg hover:shadow-brand-primary/20 transition-all disabled:bg-slate-400 cursor-pointer"
           >
             {isSubmitting ? 'Saving...' : (product ? 'Update Product' : 'Add Product')}
           </button>
@@ -249,7 +267,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition-all"
+            className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-text-body font-bold rounded-xl transition-all cursor-pointer"
           >
             Cancel
           </button>

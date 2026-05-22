@@ -48,15 +48,15 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
     }
 
     return (
-        <header className="p-1 border text-black">
+        <header className="p-1 border text-black" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>
             {/* TAX INVOICE/QUOTATION/DELIVERY CHALLAN Title */}
-            <div className="text-center mb-2 ">
-                <h2 className={`font-extrabold tracking-wider ${isDcBill ? 'text-rose-700' : ''}`}>{getTitle()}</h2>
+            <div className="text-center mb-2 py-0.5" style={{ backgroundColor: 'color-mix(in srgb, var(--brand-primary) 8%, white)' }}>
+                <h2 className="font-extrabold tracking-wider text-base uppercase" style={{ color: 'var(--brand-primary)' }}>{getTitle()}</h2>
             </div>
             <div className="flex justify-between items-start px-2 ">
                 {/* Company Details */}
                 <div className="flex-1">
-                    <h1 className=" font-bold text-[15px] ">
+                    <h1 className=" font-bold text-[16px] uppercase" style={{ color: 'var(--brand-primary)' }}>
                         {invoiceData.seller.name}
                     </h1>
                     <p className="text-[12px] max-w-sm">
@@ -89,17 +89,17 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                             <span className="font-bold">Invoice No:</span> {invoiceData.invoiceDetails.invoiceNo}
                         </p>
                     )}
-                    <p className="text-md text-[15px]">
+                    <div className="text-md text-[15px]">
                         <div>
                             <div>
-<span className="font-bold">{isDcBill ? 'DC' : (isQuotation ? 'Quotation' : 'Invoice')} Date</span>
+                                <span className="font-bold">{isDcBill ? 'DC' : (isQuotation ? 'Quotation' : 'Invoice')} Date</span>
                             </div>
                             <div>
- {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
+                                {new Date(invoiceData.invoiceDetails.date).toLocaleDateString('en-GB')}
                             </div>
                         </div>
 
-                    </p>
+                    </div>
                     {/* Vehicle Number for DC Bill */}
                     {isDcBill && invoiceData.invoiceDetails.vehicleNo && (
                         <p className="text-[12px] mt-1">
@@ -110,7 +110,7 @@ const InvoiceHeader = ({ copyType, invoiceData, mode }) => {
                 </div>
             </div>
             {copyType !== 'quotation' && copyType !== 'dc' && (
-                <div className="text-center text-sm font-extrabold px-2 print:px-0">
+                <div className="text-center text-xs font-bold py-0.5 border-t border-b uppercase my-1" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)', color: 'var(--brand-primary)' }}>
                     {copyType === 'original' ? 'ORIGINAL FOR RECIPIENT' : copyType === 'duplicate' ? 'DUPLICATE FOR TRANSPORTER' : 'TRIPLICATE FOR SUPPLIER'}
                 </div>
             )}

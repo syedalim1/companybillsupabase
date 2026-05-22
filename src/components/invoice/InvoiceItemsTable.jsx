@@ -110,20 +110,20 @@ const InvoiceItemsTable = ({
     return (
         <div className={`pt-2 border-b-0 bg-white`}>
             <div className="overflow-hidden">
-                <table className={`w-full text-xs border-collapse border border-slate-400 ${isDCBill ? 'shadow-sm' : ''}`}>
-                    <thead className={`${isDCBill ? 'bg-indigo-50 text-indigo-900 border-indigo-200' : 'bg-gray-50'}`}>
-                        <tr className="">
-                            <th className={`p-2 text-center w-[5%] border ${isDCBill ? 'border-indigo-200' : ''}`}>SI No.</th>
-                            <th className={`p-2 text-left border ${isDCBill ? 'w-[50%] border-indigo-200' : 'w-[35%]'}`}>
+                <table className="w-full text-xs border-collapse border" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}>
+                    <thead style={{ backgroundColor: 'color-mix(in srgb, var(--brand-primary) 8%, white)', color: 'var(--brand-primary)' }}>
+                        <tr className="border-b" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}>
+                            <th className="p-2 text-center w-[5%] border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>SI No.</th>
+                            <th className="p-2 text-left border-r w-[35%]" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>
                                 Description of Goods
                             </th>
-                            <th className={`p-2 text-center border ${isDCBill ? 'w-[15%] border-indigo-200' : 'w-[10%]'}`}>HSN/SAC</th>
-                            <th className={`p-2 text-center border ${isDCBill ? 'w-[15%] border-indigo-200' : 'w-[10%]'}`}>Qty</th>
+                            <th className="p-2 text-center border-r w-[10%]" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>HSN/SAC</th>
+                            <th className="p-2 text-center border-r w-[10%]" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>Qty</th>
                             {/* NEW Unit Column */}
-                            <th className={`p-2 text-center border ${isDCBill ? 'w-[15%] border-indigo-200' : 'w-[10%]'}`}>Unit</th>
+                            <th className="p-2 text-center border-r w-[10%]" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>Unit</th>
 
-                            {!isDCBill && <th className="p-2 text-right w-[10%] border ">Rate</th>}
-                            {!isDCBill && <th className="p-2 text-right  border ">Amount</th>}
+                            {!isDCBill && <th className="p-2 text-right w-[10%] border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>Rate</th>}
+                            {!isDCBill && <th className="p-2 text-right">Amount</th>}
                         </tr>
                     </thead>
                     <tbody className="align-top">
@@ -132,18 +132,21 @@ const InvoiceItemsTable = ({
                             const itemTotal =
                                 item.quantity * item.rate * (1 - item.discount / 100);
                             return (
-                                <tr key={item.id} className={isDCBill ? (index % 2 === 0 ? 'bg-white' : 'bg-indigo-50/30') : ''}>
-                                    <td className={`p-2 text-center border ${isDCBill ? 'border-indigo-100' : ''}`}>{index + 1}</td>
-                                    <td className={`p-2 text-left font-semibold border ${isDCBill ? 'border-indigo-100' : ''}`}>
+                                <tr key={item.id} className="border-b font-medium" style={{ 
+                                    borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)',
+                                    backgroundColor: index % 2 === 1 ? 'color-mix(in srgb, var(--brand-primary) 3%, white)' : 'white'
+                                }}>
+                                    <td className="p-2 text-center border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>{index + 1}</td>
+                                    <td className="p-2 text-left font-semibold border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>
                                         {item.description}
                                     </td>
-                                    <td className={`p-2 text-center border ${isDCBill ? 'border-indigo-100' : ''}`}>{item.hsn}</td>
-                                    <td className={`p-2 text-center border ${isDCBill ? 'border-indigo-100 font-bold' : ''}`}>{item.quantity}</td>
+                                    <td className="p-2 text-center border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>{item.hsn}</td>
+                                    <td className="p-2 text-center border-r font-bold" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>{item.quantity}</td>
                                     {/* NEW Unit Cell */}
-                                    <td className={`p-2 text-center border ${isDCBill ? 'border-indigo-100' : ''}`}>{item.unit || 'Nos'}</td>
+                                    <td className="p-2 text-center border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>{item.unit || 'Nos'}</td>
 
                                     {!isDCBill && (
-                                        <td className="p-2 text-right border ">
+                                        <td className="p-2 text-right border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>
                                             {item.rate.toLocaleString("en-IN", {
                                                 minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2,
@@ -151,7 +154,7 @@ const InvoiceItemsTable = ({
                                         </td>
                                     )}
                                     {!isDCBill && (
-                                        <td className="p-2 text-right font-semibold border ">
+                                        <td className="p-2 text-right font-semibold">
                                             {itemTotal.toLocaleString("en-IN", {
                                                 minimumFractionDigits: 2,
                                                 maximumFractionDigits: 2,
@@ -164,14 +167,17 @@ const InvoiceItemsTable = ({
 
                         {/* --- Empty rows to maintain table height --- */}
                         {Array.from({ length: emptyRowsCount }).map((_, i) => (
-                            <tr key={`empty-${i}`} className={isDCBill ? 'bg-white' : ''}>
-                                <td className={`p-2 border border-y-0 ${isDCBill ? 'border-indigo-100' : ''}`}>&nbsp;</td>
-                                <td className={`p-2 border border-y-0 ${isDCBill ? 'border-indigo-100' : ''}`}></td>
-                                <td className={`p-2 border border-y-0 ${isDCBill ? 'border-indigo-100' : ''}`}></td>
-                                <td className={`p-2 border border-y-0 ${isDCBill ? 'border-indigo-100' : ''}`}></td>
-                                <td className={`p-2 border border-y-0 ${isDCBill ? 'border-indigo-100' : ''}`}></td>
-                                {!isDCBill && <td className="p-2 border  border-y-0"></td>}
-                                {!isDCBill && <td className="p-2 border  border-y-0"></td>}
+                            <tr key={`empty-${i}`} className="border-b last:border-b-0" style={{ 
+                                borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)',
+                                backgroundColor: (invoiceData.items.length + i) % 2 === 1 ? 'color-mix(in srgb, var(--brand-primary) 3%, white)' : 'white'
+                            }}>
+                                <td className="p-2 border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}>&nbsp;</td>
+                                <td className="p-2 border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}></td>
+                                <td className="p-2 border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}></td>
+                                <td className="p-2 border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}></td>
+                                <td className="p-2 border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}></td>
+                                {!isDCBill && <td className="p-2 border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 20%, black)' }}></td>}
+                                {!isDCBill && <td className="p-2"></td>}
                             </tr>
                         ))}
                     </tbody>
@@ -313,29 +319,28 @@ const InvoiceItemsTable = ({
                             ))}
                         {/* --- Grand Total Row --- */}
                         {isDCBill ? (
-                            <tr className={`font-bold ${isDCBill ? 'bg-indigo-100 text-indigo-900' : 'bg-gray-50'}`}>
-                                <td colSpan="3" className={`p-2 text-right border-b ${isDCBill ? 'border-indigo-200' : ''}`}>
+                            <tr className="font-bold" style={{ backgroundColor: 'color-mix(in srgb, var(--brand-primary) 12%, white)', color: 'var(--brand-primary)' }}>
+                                <td colSpan="3" className="p-2 text-right border-b border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}>
                                     Total Quantity
                                 </td>
-                                <td className={`p-2 text-center border-b border-l ${isDCBill ? 'border-indigo-200' : ''}`}>
+                                <td className="p-2 text-center border-b border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}>
                                     {totalQuantity}
                                 </td>
-                                <td className={`border-b ${isDCBill ? 'border-indigo-200' : ''}`}></td>
+                                <td className="border-b" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}></td>
                             </tr>
                         ) : (
-                            <tr className="font-bold bg-gray-50">
-                                <td colSpan="3" className="p-2 text-left border-b ">
+                            <tr className="font-bold" style={{ backgroundColor: 'color-mix(in srgb, var(--brand-primary) 12%, white)', color: 'var(--brand-primary)' }}>
+                                <td colSpan="3" className="p-2 text-left border-b border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}>
                                     {(invoiceData.additionalCharges.discount > 0 ||
                                         invoiceData.additionalCharges.lessAmount > 0)
                                         ? "Balance Amount"
                                         : "Total"}
                                 </td>
-                                <td className="p-2 text-center border-b "></td>
-                                <td className=" border-b"></td>
-                                <td className=" border-b"></td>
-                                <td className="p-2 text-right border-b border-l">
-                                    ₹
-                                    {grandTotal.toLocaleString("en-IN", {
+                                <td className="p-2 text-center border-b border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}></td>
+                                <td className=" border-b border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}></td>
+                                <td className=" border-b border-r" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}></td>
+                                <td className="p-2 text-right border-b font-extrabold text-base" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 35%, black)' }}>
+                                    ₹ {grandTotal.toLocaleString("en-IN", {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,
                                     })}

@@ -144,6 +144,23 @@ export async function POST(request) {
       }
     });
 
+    // Deduct stock for new invoice items if not quotation
+    if (data.mode !== 'quotation') {
+      for (const item of data.items) {
+        if (item.description) {
+          const product = await prisma.product.findFirst({
+            where: { name: { equals: item.description, mode: 'insensitive' } }
+          });
+          if (product) {
+            await prisma.product.update({
+              where: { id: product.id },
+              data: { stock: { decrement: parseFloat(item.quantity) || 0 } }
+            });
+          }
+        }
+      }
+    }
+
     return NextResponse.json(invoice, { status: 201 });
   } catch (error) {
     console.error('Error creating invoice:', error);
@@ -199,6 +216,23 @@ export async function PUT(request) {
 
     if (!existingInvoice) {
       return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
+    }
+
+    // Restore stock from old items if it wasn't a quotation
+    if (existingInvoice.mode !== 'quotation') {
+      for (const item of existingInvoice.items) {
+        if (item.description) {
+          const product = await prisma.product.findFirst({
+            where: { name: { equals: item.description, mode: 'insensitive' } }
+          });
+          if (product) {
+            await prisma.product.update({
+              where: { id: product.id },
+              data: { stock: { increment: parseFloat(item.quantity) || 0 } }
+            });
+          }
+        }
+      }
     }
 
     // Update or find seller
@@ -342,6 +376,23 @@ export async function PUT(request) {
       }
     });
 
+    // Deduct stock for new items if not a quotation
+    if (data.mode !== 'quotation') {
+      for (const item of data.items) {
+        if (item.description) {
+          const product = await prisma.product.findFirst({
+            where: { name: { equals: item.description, mode: 'insensitive' } }
+          });
+          if (product) {
+            await prisma.product.update({
+              where: { id: product.id },
+              data: { stock: { decrement: parseFloat(item.quantity) || 0 } }
+            });
+          }
+        }
+      }
+    }
+
     return NextResponse.json(invoice);
   } catch (error) {
     console.error('Error updating invoice:', error);
@@ -356,6 +407,28 @@ export async function DELETE(request) {
 
     if (!id) {
       return NextResponse.json({ error: 'Invoice ID is required' }, { status: 400 });
+    }
+
+    const invoiceToDelete = await prisma.invoice.findUnique({
+      where: { id },
+      include: { items: true }
+    });
+
+    if (invoiceToDelete && invoiceToDelete.mode !== 'quotation') {
+      // Restore stock
+      for (const item of invoiceToDelete.items) {
+        if (item.description) {
+          const product = await prisma.product.findFirst({
+            where: { name: { equals: item.description, mode: 'insensitive' } }
+          });
+          if (product) {
+            await prisma.product.update({
+              where: { id: product.id },
+              data: { stock: { increment: parseFloat(item.quantity) || 0 } }
+            });
+          }
+        }
+      }
     }
 
     await prisma.invoice.delete({

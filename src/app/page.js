@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect } from "react";
 import InvoicePreview from "@/components/InvoicePreview";
 import LandingPage from "@/components/LandingPage";
 import MonthlyGSTReport from "@/components/MonthlyGSTReport";
@@ -8,12 +9,27 @@ import CustomerManager from "@/components/CustomerManager";
 import EmailInvoiceModal from "@/components/EmailInvoiceModal";
 import PaymentStatusModal from "@/components/PaymentStatusModal";
 import InvoiceForm from "@/components/InvoiceForm";
+import LoginScreen from "@/components/LoginScreen";
 import { useInvoiceState } from "@/hooks/useInvoiceState";
 import { useInvoiceAPI } from "@/hooks/useInvoiceAPI";
 import { useInvoiceCalculations } from "@/hooks/useInvoiceCalculations";
 import * as XLSX from 'xlsx';
 
 export default function Home() {
+  const [authenticated, setAuthenticated] = useState(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth');
+        const data = await res.json();
+        setAuthenticated(!!data.authenticated);
+      } catch (err) {
+        setAuthenticated(false);
+      }
+    }
+    checkAuth();
+  }, []);
   const state = useInvoiceState();
   const {
     currentMode,
@@ -192,6 +208,17 @@ const handleGeneratePDF = async () => {
           return element.classList.contains('print:hidden');
         },
         onclone: (clonedDoc) => {
+          // Propagate active theme configuration to the cloned context
+          const activeTheme = document.documentElement.getAttribute('data-theme') || 'default';
+          const isDark = document.documentElement.classList.contains('dark');
+          const clonedHtml = clonedDoc.documentElement;
+          clonedHtml.setAttribute('data-theme', activeTheme);
+          if (isDark) {
+            clonedHtml.classList.add('dark');
+          } else {
+            clonedHtml.classList.remove('dark');
+          }
+
           // Remove problematic CSS that html2canvas can't handle
           const styles = clonedDoc.querySelectorAll('style');
           styles.forEach(style => {
@@ -222,11 +249,23 @@ const handleGeneratePDF = async () => {
   }
 };
 
+  if (authenticated === null) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#090b11]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return <LoginScreen onLoginSuccess={() => setAuthenticated(true)} />;
+  }
+
   const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal, lessAmount, discountAmount } = calculations;
 
   // Show landing page
   if (currentMode === 'landing') {
-    return <LandingPage onSelectGenerator={handleSelectGenerator} />;
+    return <LandingPage onSelectGenerator={handleSelectGenerator} setAuthenticated={setAuthenticated} />;
   }
 
   // Show GST Monthly Report interface

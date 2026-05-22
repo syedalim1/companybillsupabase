@@ -165,6 +165,7 @@ model Product {
   unit        String?  // NEW: Unit of measurement (KG, PCS, MTR, etc.)
   gstRate     Float?   // NEW: Default GST rate for this product
   minStock    Int?     // NEW: Minimum stock level for alerts
+  stock       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

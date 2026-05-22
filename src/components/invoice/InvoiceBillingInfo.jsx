@@ -24,9 +24,9 @@ const InvoiceBillingInfo = ({ invoiceData, mode, shouldShowBillShipTo, isSlipBil
     }
 
     return shouldShowBillShipTo ? (
-        <div className="grid grid-cols-2 border border-t-0 ">
-            <div className=" p-2 border-r-1  bg-gray-50">
-                <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
+        <div className="grid grid-cols-2 border border-t-0 " style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>
+            <div className=" p-2 border-r " style={{ borderRightColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)', backgroundColor: 'color-mix(in srgb, var(--brand-primary) 1.5%, white)' }}>
+                <h3 className="text-[10px] font-bold uppercase  mb-2" style={{ color: 'var(--brand-primary)' }}>Bill To</h3>
                 <p className="font-bold  text-[13px]">
                     {invoiceData.billing?.name || invoiceData.buyer.name}
                 </p>
@@ -48,8 +48,8 @@ const InvoiceBillingInfo = ({ invoiceData, mode, shouldShowBillShipTo, isSlipBil
                     {invoiceData.billing?.stateCode || invoiceData.buyer.stateCode})
                 </p>
             </div>
-            <div className=" p-2   bg-gray-50">
-                <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
+            <div className=" p-2 " style={{ backgroundColor: 'color-mix(in srgb, var(--brand-primary) 1.5%, white)' }}>
+                <h3 className="text-[10px] font-bold uppercase  mb-2" style={{ color: 'var(--brand-primary)' }}>Ship To</h3>
                 <p className="font-bold text-gray-800 text-[13px]">
                     {invoiceData.shipping?.name || invoiceData.buyer.name}
                 </p>
@@ -80,8 +80,8 @@ const InvoiceBillingInfo = ({ invoiceData, mode, shouldShowBillShipTo, isSlipBil
             </div>
         </div>
     ) : (
-        <div className=" p-2  bg-gray-50 border border-t-0">
-            <h3 className="text-[10px] font-bold uppercase text-gray-500 mb-2">
+        <div className=" p-2 border border-t-0" style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)', backgroundColor: 'color-mix(in srgb, var(--brand-primary) 1.5%, white)' }}>
+            <h3 className="text-[10px] font-bold uppercase mb-2" style={{ color: 'var(--brand-primary)' }}>
                 Party Details
             </h3>
             <p className="font-bold  text-[13px]">{invoiceData.buyer.name}</p>

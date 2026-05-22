@@ -34,12 +34,12 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
     }
 
     return (
-        <footer className=" border border-t-0 p-2 ">
+        <footer className=" border border-t-0 p-2 " style={{ borderColor: 'color-mix(in srgb, var(--brand-primary) 30%, black)' }}>
 
 
               <div className=" flex gap-2 items-center ">
                 <div className='items-center text-center '>
-                        <p className="text-[11px]  font-bold uppercase  mb-1">
+                        <p className="text-[11px]  font-bold uppercase  mb-1" style={{ color: 'var(--brand-primary)' }}>
                             {isQuotationWithoutGST ? 'Payment Details :' : 'Bank Details :'}
                         </p>
                 </div>
@@ -72,7 +72,7 @@ const InvoiceFooter = ({ invoiceData, subtotal, cgstAmount, sgstAmount, igstAmou
                         <p className="font-bold text-[10px] ">SUBJECT TO COIMBATORE JURISDICTION.</p>
                     </div>
                     <div className="text-center">
-                        <p className="font-bold text-[12px]">For {invoiceData.seller.name}</p>
+                        <p className="font-bold text-[12px]" style={{ color: 'var(--brand-primary)' }}>For {invoiceData.seller.name}</p>
                         <div className="mt-6  w-56">
                            <p className="pt-2 text-[10px] ">Authorised Signatory</p>
                         </div>
