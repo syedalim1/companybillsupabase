@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getStateFromGstin, validateGstin } from '../utils/gstStateHelper';
 
 // --- Icons Components ---
 const SearchIcon = () => (
@@ -47,6 +48,18 @@ const CloseIcon = () => (
 const CustomerManager = () => {
   const [buyers, setBuyers] = useState([]);
   const [editingBuyer, setEditingBuyer] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newBuyer, setNewBuyer] = useState({
+    name: '',
+    address: '',
+    destination: '',
+    gstin: '',
+    state: '',
+    stateCode: '',
+    contact: '',
+    buyerNumber: '',
+    email: ''
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -112,6 +125,47 @@ const CustomerManager = () => {
     }
   };
 
+  // Handle create new buyer
+  const handleCreateBuyer = async () => {
+    if (!newBuyer.name || !newBuyer.gstin) {
+      alert('Name and GSTIN are required');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/buyers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newBuyer),
+      });
+
+      if (response.ok) {
+        alert('Customer added successfully!');
+        setShowAddModal(false);
+        setNewBuyer({
+          name: '',
+          address: '',
+          destination: '',
+          gstin: '',
+          state: '',
+          stateCode: '',
+          contact: '',
+          buyerNumber: '',
+          email: ''
+        });
+        fetchBuyers();
+      } else {
+        const error = await response.json();
+        alert(`Failed to add customer: ${error.error || error.details}`);
+      }
+    } catch (error) {
+      console.error('Error adding customer:', error);
+      alert('Failed to add customer. Please try again.');
+    }
+  };
+
   // Handle delete buyer
   const handleDeleteBuyer = async (buyerId) => {
     if (!confirm('Are you sure you want to delete this buyer?')) {
@@ -138,7 +192,41 @@ const CustomerManager = () => {
 
   // Handle input change for editing
   const handleEditChange = (field, value) => {
+    if (field === 'gstin') {
+      const gstinVal = value.toUpperCase();
+      const stateInfo = getStateFromGstin(gstinVal);
+      if (stateInfo) {
+        setEditingBuyer(prev => ({
+          ...prev,
+          gstin: gstinVal,
+          state: stateInfo.name,
+          stateCode: stateInfo.code
+        }));
+        return;
+      }
+    }
     setEditingBuyer(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Handle input change for adding
+  const handleNewBuyerChange = (field, value) => {
+    if (field === 'gstin') {
+      const gstinVal = value.toUpperCase();
+      const stateInfo = getStateFromGstin(gstinVal);
+      if (stateInfo) {
+        setNewBuyer(prev => ({
+          ...prev,
+          gstin: gstinVal,
+          state: stateInfo.name,
+          stateCode: stateInfo.code
+        }));
+        return;
+      }
+    }
+    setNewBuyer(prev => ({
       ...prev,
       [field]: value
     }));
@@ -164,9 +252,20 @@ const CustomerManager = () => {
             Manage your customer database with ease.
           </p>
         </div>
-        <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200">
-          <span className="text-sm font-medium text-gray-500">Total Customers:</span>
-          <span className="ml-2 text-lg font-bold text-blue-600">{buyers.length}</span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition-all cursor-pointer"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add New Customer
+          </button>
+          <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-200">
+            <span className="text-sm font-medium text-gray-500">Total:</span>
+            <span className="ml-2 text-lg font-bold text-blue-600">{buyers.length}</span>
+          </div>
         </div>
       </div>
 
@@ -207,6 +306,14 @@ const CustomerManager = () => {
                 <PhoneIcon />
                 <span>{buyer.contact || "N/A"}</span>
               </div>
+              {buyer.email && (
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>{buyer.email}</span>
+                </div>
+              )}
               <div className="flex items-start">
                 <MapPinIcon />
                 <span className="truncate">{buyer.address || "N/A"}</span>
@@ -245,9 +352,9 @@ const CustomerManager = () => {
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">GSTIN</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact / Email</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">State</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider font-medium">Address</th>
                 <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -264,6 +371,9 @@ const CustomerManager = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-600">{buyer.contact || "N/A"}</div>
+                    {buyer.email && (
+                      <div className="text-xs text-gray-400 mt-0.5">{buyer.email}</div>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-600">
@@ -279,14 +389,14 @@ const CustomerManager = () => {
                     <div className="flex justify-end gap-3">
                       <button
                         onClick={() => handleEditBuyer(buyer)}
-                        className="text-indigo-600 hover:text-indigo-900 p-1 hover:bg-indigo-50 rounded transition-colors"
+                        className="text-indigo-600 hover:text-indigo-900 p-1 hover:bg-indigo-50 rounded transition-colors cursor-pointer"
                         title="Edit"
                       >
                         <EditIcon />
                       </button>
                       <button
                         onClick={() => handleDeleteBuyer(buyer.id)}
-                        className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors"
+                        className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded transition-colors cursor-pointer"
                         title="Delete"
                       >
                         <TrashIcon />
@@ -309,16 +419,16 @@ const CustomerManager = () => {
         )}
       </div>
 
-      {/* Edit Modal */}
-      {editingBuyer && (
+      {/* Add Modal */}
+      {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-              <h2 className="text-xl font-bold text-gray-900">Edit Customer</h2>
+              <h2 className="text-xl font-bold text-gray-900">Add New Customer</h2>
               <button 
-                onClick={() => setEditingBuyer(null)}
-                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-200"
+                onClick={() => setShowAddModal(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-200 cursor-pointer"
               >
                 <CloseIcon />
               </button>
@@ -328,13 +438,165 @@ const CustomerManager = () => {
             <div className="p-6 overflow-y-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="col-span-1 md:col-span-2 space-y-2">
-                  <label className="text-sm font-medium text-gray-700">Customer Name</label>
+                  <label className="text-sm font-medium text-gray-700">Customer Name <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    value={newBuyer.name}
+                    onChange={(e) => handleNewBuyerChange("name", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Enter customer name"
+                    required
+                  />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Address</label>
+                  <input
+                    type="text"
+                    value={newBuyer.address}
+                    onChange={(e) => handleNewBuyerChange("address", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Enter complete address"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Destination</label>
+                  <input
+                    type="text"
+                    value={newBuyer.destination}
+                    onChange={(e) => handleNewBuyerChange("destination", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="e.g. Local"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <label className="text-sm font-medium text-gray-700">GSTIN <span className="text-red-500">*</span></label>
+                    {newBuyer.gstin && (
+                      <span className={`text-xs font-semibold ${validateGstin(newBuyer.gstin) ? "text-emerald-600" : "text-rose-500"}`}>
+                        {validateGstin(newBuyer.gstin) ? "Valid GSTIN format" : "Invalid GSTIN format"}
+                      </span>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    value={newBuyer.gstin}
+                    onChange={(e) => handleNewBuyerChange("gstin", e.target.value)}
+                    className={`w-full p-3 border rounded-lg focus:ring-2 outline-none transition-all font-mono ${
+                      newBuyer.gstin 
+                        ? (validateGstin(newBuyer.gstin) ? "border-emerald-500 focus:ring-emerald-500/50" : "border-rose-400 focus:ring-rose-500/50") 
+                        : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    }`}
+                    placeholder="e.g. 33AACJ5553C1Z0"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">State</label>
+                  <input
+                    type="text"
+                    value={newBuyer.state}
+                    onChange={(e) => handleNewBuyerChange("state", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Auto-populated from GSTIN"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">State Code</label>
+                  <input
+                    type="number"
+                    value={newBuyer.stateCode || ""}
+                    onChange={(e) => handleNewBuyerChange("stateCode", parseInt(e.target.value) || null)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="Auto-populated"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Contact Number</label>
+                  <input
+                    type="text"
+                    value={newBuyer.contact}
+                    onChange={(e) => handleNewBuyerChange("contact", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="e.g. +91 9999999999"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Email Address</label>
+                  <input
+                    type="email"
+                    value={newBuyer.email || ""}
+                    onChange={(e) => handleNewBuyerChange("email", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="customer@domain.com"
+                  />
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
+                  <label className="text-sm font-medium text-gray-700">Customer Reference Code (Optional)</label>
+                  <input
+                    type="text"
+                    value={newBuyer.buyerNumber || ""}
+                    onChange={(e) => handleNewBuyerChange("buyerNumber", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="e.g. CUST-102"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex gap-3">
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateBuyer}
+                className="flex-1 py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all cursor-pointer"
+              >
+                Add Customer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {editingBuyer && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h2 className="text-xl font-bold text-gray-900">Edit Customer</h2>
+              <button 
+                onClick={() => setEditingBuyer(null)}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-200 cursor-pointer"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Customer Name <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     value={editingBuyer.name}
                     onChange={(e) => handleEditChange("name", e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     placeholder="Enter customer name"
+                    required
                   />
                 </div>
 
@@ -360,12 +622,24 @@ const CustomerManager = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">GSTIN</label>
+                  <div className="flex justify-between">
+                    <label className="text-sm font-medium text-gray-700">GSTIN <span className="text-red-500">*</span></label>
+                    {editingBuyer.gstin && (
+                      <span className={`text-xs font-semibold ${validateGstin(editingBuyer.gstin) ? "text-emerald-600" : "text-rose-500"}`}>
+                        {validateGstin(editingBuyer.gstin) ? "Valid GSTIN format" : "Invalid GSTIN format"}
+                      </span>
+                    )}
+                  </div>
                   <input
                     type="text"
                     value={editingBuyer.gstin}
                     onChange={(e) => handleEditChange("gstin", e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono"
+                    className={`w-full p-3 border rounded-lg focus:ring-2 outline-none transition-all font-mono ${
+                      editingBuyer.gstin 
+                        ? (validateGstin(editingBuyer.gstin) ? "border-emerald-500 focus:ring-emerald-500/50" : "border-rose-400 focus:ring-rose-500/50") 
+                        : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                    }`}
+                    required
                   />
                 </div>
 
@@ -400,6 +674,17 @@ const CustomerManager = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">Email Address</label>
+                  <input
+                    type="email"
+                    value={editingBuyer.email || ""}
+                    onChange={(e) => handleEditChange("email", e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                    placeholder="customer@domain.com"
+                  />
+                </div>
+
+                <div className="space-y-2 col-span-1 md:col-span-2">
                   <label className="text-sm font-medium text-gray-700">Buyer Number</label>
                   <input
                     type="text"
@@ -416,13 +701,13 @@ const CustomerManager = () => {
             <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex gap-3">
               <button
                 onClick={() => setEditingBuyer(null)}
-                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all"
+                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveEdit}
-                className="flex-1 py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all"
+                className="flex-1 py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all cursor-pointer"
               >
                 Save Changes
               </button>
