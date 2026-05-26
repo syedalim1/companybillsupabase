@@ -5,13 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start",
-    "postinstall": "prisma generate",
-    "migrate": "prisma db push"
+    "start": "next start"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
-    "@prisma/client": "^6.17.1",
+    "@supabase/supabase-js": "^2.106.2",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.12.1",
     "jspdf": "^3.0.3",
@@ -24,7 +21,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "prisma": "^6.17.1",
     "tailwindcss": "^4"
   }
 }

@@ -1,43 +1,48 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 
+// GET /api/buyers - Get all buyers
 export async function GET() {
   try {
-    const buyers = await prisma.buyer.findMany({
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+    const { data: buyers, error } = await supabase
+      .from('buyers')
+      .select('*')
+      .order('createdAt', { ascending: false });
 
-    return NextResponse.json(buyers);
+    if (error) throw error;
+
+    return NextResponse.json(buyers || []);
   } catch (error) {
     console.error('Error fetching buyers:', error);
-    return NextResponse.json({ error: 'Failed to fetch buyers' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch buyers', details: error.message }, { status: 500 });
   }
 }
 
+// POST /api/buyers - Create or update buyer by GSTIN
 export async function POST(request) {
   try {
     const data = await request.json();
-
     console.log('Received buyer data:', data);
 
-    // Validate required fields
     if (!data.name || !data.gstin) {
       return NextResponse.json({ error: 'Name and GSTIN are required' }, { status: 400 });
     }
 
     // Check if buyer already exists by GSTIN
-    const existingBuyer = await prisma.buyer.findFirst({
-      where: { gstin: data.gstin }
-    });
+    const { data: existingBuyer, error: findError } = await supabase
+      .from('buyers')
+      .select('*')
+      .eq('gstin', data.gstin)
+      .limit(1)
+      .maybeSingle();
+
+    if (findError) throw findError;
 
     if (existingBuyer) {
       console.log('Updating existing buyer:', existingBuyer.id);
-      // Update existing buyer
-      const buyer = await prisma.buyer.update({
-        where: { id: existingBuyer.id },
-        data: {
+      const { data: buyer, error: updateError } = await supabase
+        .from('buyers')
+        .update({
           name: data.name,
           address: data.address,
           destination: data.destination,
@@ -46,26 +51,37 @@ export async function POST(request) {
           stateCode: data.stateCode,
           buyerNumber: data.buyerNumber,
           email: data.email || null,
-        }
-      });
+          updatedAt: new Date().toISOString(),
+        })
+        .eq('id', existingBuyer.id)
+        .select()
+        .single();
+
+      if (updateError) throw updateError;
       console.log('Buyer updated successfully:', buyer.id);
       return NextResponse.json(buyer);
     } else {
       console.log('Creating new buyer');
-      // Create new buyer
-      const buyer = await prisma.buyer.create({
-        data: {
-          name: data.name,
-          address: data.address,
-          destination: data.destination,
-          contact: data.contact,
-          gstin: data.gstin,
-          state: data.state,
-          stateCode: data.stateCode,
-          buyerNumber: data.buyerNumber,
-          email: data.email || null,
-        }
-      });
+      const { data: buyer, error: createError } = await supabase
+        .from('buyers')
+        .insert([
+          {
+            id: crypto.randomUUID(),
+            name: data.name,
+            address: data.address,
+            destination: data.destination,
+            contact: data.contact,
+            gstin: data.gstin,
+            state: data.state,
+            stateCode: data.stateCode,
+            buyerNumber: data.buyerNumber,
+            email: data.email || null,
+          }
+        ])
+        .select()
+        .single();
+
+      if (createError) throw createError;
       console.log('Buyer created successfully:', buyer.id);
       return NextResponse.json(buyer, { status: 201 });
     }
@@ -78,6 +94,7 @@ export async function POST(request) {
   }
 }
 
+// PUT /api/buyers - Update a buyer
 export async function PUT(request) {
   try {
     const data = await request.json();
@@ -87,10 +104,17 @@ export async function PUT(request) {
       return NextResponse.json({ error: 'Buyer ID is required' }, { status: 400 });
     }
 
-    const buyer = await prisma.buyer.update({
-      where: { id }, // ID is a CUID string, not an integer
-      data: updateData
-    });
+    const { data: buyer, error } = await supabase
+      .from('buyers')
+      .update({
+        ...updateData,
+        updatedAt: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
 
     return NextResponse.json(buyer);
   } catch (error) {
@@ -102,7 +126,7 @@ export async function PUT(request) {
   }
 }
 
-
+// DELETE /api/buyers - Delete a buyer
 export async function DELETE(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -112,9 +136,12 @@ export async function DELETE(request) {
       return NextResponse.json({ error: 'Buyer ID is required' }, { status: 400 });
     }
 
-    await prisma.buyer.delete({
-      where: { id } // ID is a CUID string, not an integer
-    });
+    const { error } = await supabase
+      .from('buyers')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
 
     return NextResponse.json({ message: 'Buyer deleted successfully' });
   } catch (error) {
