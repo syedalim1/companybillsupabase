@@ -56,6 +56,31 @@ model Invoice {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
+  // Seller Snapshot (frozen at invoice creation time — ensures data isolation)
+  sellerName        String?
+  sellerAddress     String?
+  sellerGstin       String?
+  sellerState       String?
+  sellerStateCode   Int?
+  sellerContact     String?
+  sellerEmail       String?
+  sellerBankName    String?
+  sellerAccNo       String?
+  sellerBranch      String?
+  sellerIfsc        String?
+  sellerLogo        String?
+
+  // Buyer Snapshot (frozen at invoice creation time — ensures data isolation)
+  buyerName         String?
+  buyerAddress      String?
+  buyerDestination  String?
+  buyerContact      String?
+  buyerGstin        String?
+  buyerState        String?
+  buyerStateCode    Int?
+  buyerNumber       String?
+  buyerEmail        String?
+
   // Billing Address
   billingName       String?
   billingAddress    String?
@@ -70,7 +95,7 @@ model Invoice {
   shippingState     String?
   shippingStateCode Int?
 
-  // Relations
+  // Relations (kept for backward compatibility / analytics queries)
   seller            Seller   @relation(fields: [sellerId], references: [id])
   sellerId          String
   buyer             Buyer    @relation(fields: [buyerId], references: [id])

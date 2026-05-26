@@ -23,10 +23,12 @@ const InvoiceMain = ({
   gstOption,
 }) => {
   const totalQuantity = invoiceData.items.reduce(
-    (acc, item) => acc + item.quantity,
+    (acc, item) => acc + (parseFloat(item.quantity) || 0),
     0
   );
-  const amountInWords = toWords.convert(grandTotal);
+  // Safety: ensure grandTotal is a valid positive number for toWords
+  const safeGrandTotal = Math.max(0, Math.round(parseFloat(grandTotal) || 0));
+  const amountInWords = safeGrandTotal > 0 ? toWords.convert(safeGrandTotal) : 'Zero';
   const isCGST_SGST = invoiceData.invoiceDetails.taxType === "cgst_sgst";
   const shouldShowGST =
     (mode === "gst-bill" || (mode === "quotation" && gstOption === "with-gst")) && mode !== 'slip-bill';
@@ -333,9 +335,8 @@ const InvoiceMain = ({
                     {row.description}
                   </td>
                   <td className="p-2 text-right border ">
-                    {row.amount.toLocaleString("en-IN", {
+                    {(parseFloat(row.amount) || 0).toLocaleString("en-IN", {
                       minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </td>

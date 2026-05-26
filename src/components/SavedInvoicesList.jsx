@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 
 export default function SavedInvoicesList({
   savedInvoices,
@@ -6,28 +6,110 @@ export default function SavedInvoicesList({
   handleEditInvoice,
   handleOpenPaymentModal,
   handleDeleteInvoice,
-  currentMode, // NEW: Filter by current mode
+  currentMode, // Filter by current mode
 }) {
-  // Filter invoices based on current mode
-  const filteredInvoices = savedInvoices.filter(invoice => invoice.mode === currentMode);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  if (filteredInvoices.length === 0) {
-    return (
-      <div className="bg-gray-50 rounded-xl p-8 text-center border border-gray-100">
-        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
-        </div>
-        <p className="text-gray-500 text-sm">
-          No {currentMode === 'gst-bill' ? 'invoices' : currentMode === 'dc-bill' ? 'delivery challans' : 'quotations'} saved yet.
-        </p>
-      </div>
-    );
-  }
+  // Filter invoices based on current mode
+  const filteredByMode = useMemo(() => {
+    return savedInvoices.filter(invoice => invoice.mode === currentMode);
+  }, [savedInvoices, currentMode]);
+
+  // Apply search filter
+  const filteredInvoices = useMemo(() => {
+    if (!searchQuery.trim()) return filteredByMode;
+
+    const query = searchQuery.toLowerCase().trim();
+    return filteredByMode.filter(invoice => {
+      // Search in snapshot data first, fall back to relation data
+      const buyerName = (invoice.buyerName || invoice.buyer?.name || '').toLowerCase();
+      const invoiceNo = (invoice.invoiceNo || '').toLowerCase();
+      const dcNo = (invoice.dcNo || '').toLowerCase();
+      const grandTotal = (invoice.grandTotal || 0).toString();
+      const date = (invoice.date || '').toLowerCase();
+
+      return (
+        buyerName.includes(query) ||
+        invoiceNo.includes(query) ||
+        dcNo.includes(query) ||
+        grandTotal.includes(query) ||
+        date.includes(query)
+      );
+    });
+  }, [filteredByMode, searchQuery]);
+
+  // Get buyer name from snapshot fields with fallback to relation
+  const getBuyerName = (invoice) => {
+    return invoice.buyerName || invoice.buyer?.name || 'No Buyer';
+  };
 
   return (
     <div className="space-y-3">
+      {/* Search Bar */}
+      {filteredByMode.length > 0 && (
+        <div className="relative">
+          <svg
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
+          <input
+            type="text"
+            placeholder="Search by name, invoice no, amount..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Results count */}
+      {searchQuery && filteredByMode.length > 0 && (
+        <p className="text-xs text-gray-500 px-1">
+          {filteredInvoices.length} of {filteredByMode.length} results
+        </p>
+      )}
+
+      {/* Empty State */}
+      {filteredByMode.length === 0 && (
+        <div className="bg-gray-50 rounded-xl p-8 text-center border border-gray-100">
+          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <p className="text-gray-500 text-sm">
+            No {currentMode === 'gst-bill' ? 'invoices' : currentMode === 'dc-bill' ? 'delivery challans' : 'quotations'} saved yet.
+          </p>
+        </div>
+      )}
+
+      {/* No search results */}
+      {filteredByMode.length > 0 && filteredInvoices.length === 0 && searchQuery && (
+        <div className="bg-gray-50 rounded-xl p-6 text-center border border-gray-100">
+          <p className="text-gray-500 text-sm">No matching records found for "{searchQuery}"</p>
+        </div>
+      )}
+
+      {/* Invoice List */}
       {filteredInvoices.map((invoice) => (
         <div 
           key={invoice.id} 
@@ -62,15 +144,15 @@ export default function SavedInvoicesList({
                   <div className="text-xs text-gray-500 flex items-center gap-2">
                     <span>{new Date(invoice.date).toLocaleDateString('en-GB')}</span>
                     <span>•</span>
-                    <span className="font-medium">₹{invoice.grandTotal?.toLocaleString()}</span>
+                    <span className="font-medium">₹{(invoice.grandTotal || 0).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
             </button>
 
-            {/* Buyer Name */}
+            {/* Buyer Name — from snapshot data */}
             <div className="  text-sm text-gray-600 truncate max-w-[150px]">
-              {invoice.buyer?.name || 'No Buyer'}
+              {getBuyerName(invoice)}
             </div>
 
             {/* Payment Status Badge / DC Status Badge */}

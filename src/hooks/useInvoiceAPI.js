@@ -1,13 +1,40 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
-export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, editingInvoiceId, setEditingInvoiceId, setSavedInvoices, setNextInvoiceNo, setNextDcNo, setNextSlipNo, setCurrentMode, setQuotationGstOption, setInvoiceData, setShowPaymentModal, setSelectedInvoiceForPayment) {
-  // Fetch saved invoices from database
-  const fetchSavedInvoices = async () => {
+/**
+ * Deep clone utility to ensure complete data isolation between invoices.
+ */
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export function useInvoiceAPI(
+  invoiceData,
+  currentMode,
+  quotationGstOption,
+  editingInvoiceId,
+  setEditingInvoiceId,
+  setSavedInvoices,
+  setNextInvoiceNo,
+  setNextDcNo,
+  setNextSlipNo,
+  setCurrentMode,
+  setQuotationGstOption,
+  setInvoiceData,
+  setShowPaymentModal,
+  setSelectedInvoiceForPayment,
+  setIsSaving,
+  calculationResults // { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal }
+) {
+  // ==========================================================================
+  // FETCH — Load all saved invoices from the database
+  // ==========================================================================
+  const fetchSavedInvoices = useCallback(async () => {
     try {
       const response = await fetch('/api/invoices');
       if (response.ok) {
         const data = await response.json();
         setSavedInvoices(data.invoices || []);
+        // Server is the SINGLE SOURCE OF TRUTH for next numbers
         setNextInvoiceNo(data.nextInvoiceNo?.toString() || '1');
         if (setNextDcNo) {
           setNextDcNo(data.nextDcNo?.toString() || '1');
@@ -19,20 +46,30 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
     } catch (error) {
       console.error('Error fetching invoices:', error);
     }
-  };
+  }, [setSavedInvoices, setNextInvoiceNo, setNextDcNo, setNextSlipNo]);
 
   // Load saved invoices on component mount
   useEffect(() => {
     fetchSavedInvoices();
-  }, []);
+  }, [fetchSavedInvoices]);
 
-  // Save invoice to database
-  const handleSaveInvoice = async () => {
-    const subtotal = calculateSubtotal();
-    const { cgstAmount, sgstAmount, igstAmount, grandTotal } = calculateGST(subtotal);
+  // ==========================================================================
+  // SAVE — Create a new invoice
+  // ==========================================================================
+  const handleSaveInvoice = useCallback(async () => {
+    if (!calculationResults) {
+      alert('Calculation error. Please try again.');
+      return;
+    }
+
+    // Prevent double-save
+    if (setIsSaving) setIsSaving(true);
 
     try {
-      const invoiceToSave = {
+      const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal } = calculationResults;
+
+      // Deep clone to prevent any reference issues
+      const invoiceToSave = deepClone({
         ...invoiceData,
         mode: currentMode,
         quotationGstOption: quotationGstOption,
@@ -41,125 +78,279 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         sgstAmount,
         igstAmount,
         grandTotal,
-      };
+      });
 
       const response = await fetch('/api/invoices', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(invoiceToSave),
       });
 
       if (response.ok) {
-        const docType = currentMode === 'dc-bill' ? 'DC Bill' : (currentMode === 'quotation' ? 'Quotation' : (currentMode === 'slip-bill' ? 'Slip Bill' : 'Invoice'));
+        const result = await response.json();
+        const docType =
+          currentMode === 'dc-bill'
+            ? 'DC Bill'
+            : currentMode === 'quotation'
+            ? 'Quotation'
+            : currentMode === 'slip-bill'
+            ? 'Slip Bill'
+            : 'Invoice';
         alert(`${docType} saved successfully!`);
-        fetchSavedInvoices();
-        if (currentMode === 'dc-bill') {
-          setNextDcNo((prev) => (parseInt(prev) + 1).toString());
-        } else if (currentMode === 'slip-bill') {
-          setNextSlipNo((prev) => (parseInt(prev) + 1).toString());
-        } else {
-          setNextInvoiceNo((prev) => (parseInt(prev) + 1).toString());
-        }
+
+        // Re-fetch from server — server is the single source of truth for next numbers
+        await fetchSavedInvoices();
       } else {
-        throw new Error('Failed to save invoice');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to save invoice');
       }
     } catch (error) {
       console.error('Error saving invoice:', error);
-      alert('Failed to save invoice. Please try again.');
+      alert(error.message || 'Failed to save invoice. Please try again.');
+    } finally {
+      if (setIsSaving) setIsSaving(false);
     }
-  };
+  }, [invoiceData, currentMode, quotationGstOption, calculationResults, fetchSavedInvoices, setIsSaving]);
 
-  // Load invoice from database
-  const handleLoadInvoice = (invoice) => {
+  // ==========================================================================
+  // LOAD — Load an invoice for viewing (does NOT enable edit mode)
+  // ==========================================================================
+  const handleLoadInvoice = useCallback((invoice) => {
+    // DEEP CLONE everything to prevent shared references
+    const clonedInvoice = deepClone(invoice);
+
+    // Build seller data from snapshot fields (fall back to relation data for backward compatibility)
+    const sellerData = {
+      name: clonedInvoice.sellerName || clonedInvoice.seller?.name || '',
+      address: clonedInvoice.sellerAddress || clonedInvoice.seller?.address || '',
+      gstin: clonedInvoice.sellerGstin || clonedInvoice.seller?.gstin || '',
+      state: clonedInvoice.sellerState || clonedInvoice.seller?.state || '',
+      stateCode: clonedInvoice.sellerStateCode || clonedInvoice.seller?.stateCode || null,
+      contact: clonedInvoice.sellerContact || clonedInvoice.seller?.contact || '',
+      email: clonedInvoice.sellerEmail || clonedInvoice.seller?.email || '',
+      bankName: clonedInvoice.sellerBankName || clonedInvoice.seller?.bankName || '',
+      accNo: clonedInvoice.sellerAccNo || clonedInvoice.seller?.accNo || '',
+      branch: clonedInvoice.sellerBranch || clonedInvoice.seller?.branch || '',
+      ifsc: clonedInvoice.sellerIfsc || clonedInvoice.seller?.ifsc || '',
+      logo: clonedInvoice.sellerLogo || clonedInvoice.seller?.logo || null,
+    };
+
+    // Build buyer data from snapshot fields (fall back to relation data for backward compatibility)
+    const buyerData = {
+      name: clonedInvoice.buyerName || clonedInvoice.buyer?.name || '',
+      address: clonedInvoice.buyerAddress || clonedInvoice.buyer?.address || '',
+      destination: clonedInvoice.buyerDestination || clonedInvoice.buyer?.destination || '',
+      contact: clonedInvoice.buyerContact || clonedInvoice.buyer?.contact || '',
+      gstin: clonedInvoice.buyerGstin || clonedInvoice.buyer?.gstin || '',
+      state: clonedInvoice.buyerState || clonedInvoice.buyer?.state || '',
+      stateCode: clonedInvoice.buyerStateCode || clonedInvoice.buyer?.stateCode || null,
+      buyerNumber: clonedInvoice.buyerNumber || clonedInvoice.buyer?.buyerNumber || '',
+      email: clonedInvoice.buyerEmail || clonedInvoice.buyer?.email || '',
+    };
+
     const loadedInvoice = {
-      seller: invoice.seller,
-      buyer: invoice.buyer,
+      seller: sellerData,
+      buyer: buyerData,
       billing: {
-        name: invoice.billingName || '',
-        address: invoice.billingAddress || '',
-        gstin: invoice.billingGstin || '',
-        state: invoice.billingState || '',
-        stateCode: invoice.billingStateCode || null,
+        name: clonedInvoice.billingName || '',
+        address: clonedInvoice.billingAddress || '',
+        gstin: clonedInvoice.billingGstin || '',
+        state: clonedInvoice.billingState || '',
+        stateCode: clonedInvoice.billingStateCode || null,
       },
       shipping: {
-        name: invoice.shippingName || '',
-        address: invoice.shippingAddress || '',
-        gstin: invoice.shippingGstin || '',
-        state: invoice.shippingState || '',
-        stateCode: invoice.shippingStateCode || null,
+        name: clonedInvoice.shippingName || '',
+        address: clonedInvoice.shippingAddress || '',
+        gstin: clonedInvoice.shippingGstin || '',
+        state: clonedInvoice.shippingState || '',
+        stateCode: clonedInvoice.shippingStateCode || null,
       },
       invoiceDetails: {
-        invoiceNo: invoice.invoiceNo,
-        date: invoice.date,
-        taxType: invoice.taxType,
-        dueDate: invoice.dueDate,
-        poNumber: invoice.poNumber,
-        reference: invoice.reference,
-        placeOfSupply: invoice.placeOfSupply,
-        reverseCharge: invoice.reverseCharge,
-        ewayBillNo: invoice.ewayBillNo,
-        vehicleNo: invoice.vehicleNo,
-        transporterName: invoice.transporterName,
-        driverName: invoice.driverName || '',
-        driverMobile: invoice.driverMobile || '',
-        transporterId: invoice.transporterId,
-        distance: invoice.distance,
-        modeOfTransport: invoice.modeOfTransport,
-        terms: invoice.terms,
-        paymentTerms: invoice.paymentTerms,
-        notes: invoice.notes,
+        invoiceNo: clonedInvoice.invoiceNo || '',
+        date: clonedInvoice.date || '',
+        taxType: clonedInvoice.taxType || 'cgst_sgst',
+        dueDate: clonedInvoice.dueDate || '',
+        poNumber: clonedInvoice.poNumber || '',
+        reference: clonedInvoice.reference || '',
+        placeOfSupply: clonedInvoice.placeOfSupply || '',
+        reverseCharge: clonedInvoice.reverseCharge || false,
+        ewayBillNo: clonedInvoice.ewayBillNo || '',
+        vehicleNo: clonedInvoice.vehicleNo || '',
+        transporterName: clonedInvoice.transporterName || '',
+        driverName: clonedInvoice.driverName || '',
+        driverMobile: clonedInvoice.driverMobile || '',
+        transporterId: clonedInvoice.transporterId || '',
+        distance: clonedInvoice.distance || '',
+        modeOfTransport: clonedInvoice.modeOfTransport || '',
+        terms: clonedInvoice.terms || '',
+        paymentTerms: clonedInvoice.paymentTerms || '',
+        notes: clonedInvoice.notes || '',
       },
-      items: invoice.items,
+      // Deep clone items — each item is a new object
+      items: (clonedInvoice.items || []).map(item => ({
+        id: item.id,
+        description: item.description || '',
+        hsn: item.hsn || '',
+        sac: item.sac || '',
+        quantity: parseFloat(item.quantity) || 0,
+        unit: item.unit || 'Nos',
+        rate: parseFloat(item.rate) || 0,
+        discount: parseFloat(item.discount) || 0,
+      })),
       additionalCharges: {
-        freight: invoice.additionalCharges?.freight || 0,
-        insurance: invoice.additionalCharges?.insurance || 0,
-        packing: invoice.additionalCharges?.packing || 0,
-        other: invoice.additionalCharges?.other || 0,
-        discount: invoice.additionalCharges?.discount || 0,
-        lessAmount: invoice.additionalCharges?.lessAmount || 0,
-        lessDescription: invoice.additionalCharges?.lessDescription || '',
+        freight: clonedInvoice.additionalCharges?.freight || 0,
+        insurance: clonedInvoice.additionalCharges?.insurance || 0,
+        packing: clonedInvoice.additionalCharges?.packing || 0,
+        other: clonedInvoice.additionalCharges?.other || 0,
+        discount: clonedInvoice.additionalCharges?.discount || 0,
+        lessAmount: clonedInvoice.additionalCharges?.lessAmount || 0,
+        lessDescription: clonedInvoice.additionalCharges?.lessDescription || '',
       },
       dcDetails: {
-        dcNo: invoice.dcNo || '',
-        dcStatus: invoice.dcStatus || 'pending',
-        receiverName: invoice.receiverName || '',
+        dcNo: clonedInvoice.dcNo || '',
+        dcStatus: clonedInvoice.dcStatus || 'pending',
+        receiverName: clonedInvoice.receiverName || '',
       },
-      taxRate: invoice.taxRate,
+      taxRate: parseFloat(clonedInvoice.taxRate) || 18,
     };
+
     setInvoiceData(loadedInvoice);
-    setCurrentMode(invoice.mode);
-    setQuotationGstOption(invoice.quotationGstOption);
+    setCurrentMode(clonedInvoice.mode || 'gst-bill');
+    setQuotationGstOption(clonedInvoice.quotationGstOption || 'with-gst');
     alert('Invoice loaded successfully!');
-  };
+  }, [setInvoiceData, setCurrentMode, setQuotationGstOption]);
 
-  // Edit invoice
-  const handleEditInvoice = (invoice) => {
-    handleLoadInvoice(invoice);
+  // ==========================================================================
+  // EDIT — Load an invoice for editing (enables edit mode)
+  // ==========================================================================
+  const handleEditInvoice = useCallback((invoice) => {
+    // IMPORTANT: Set editing ID FIRST, before loading data
+    // This ensures the useEffect guard in useInvoiceState prevents invoice number overwrite
     setEditingInvoiceId(invoice.id);
-  };
 
-  // Handle payment status update
-  const handlePaymentUpdate = (updatedInvoice) => {
-    setSavedInvoices(prev => prev.map(inv => inv.id === updatedInvoice.id ? updatedInvoice : inv));
-    setShowPaymentModal(false);
-    setSelectedInvoiceForPayment(null);
-  };
+    // Then load the data (uses deep clone internally)
+    // We inline the load logic here to avoid the alert and ensure correct order
+    const clonedInvoice = deepClone(invoice);
 
-  // Open payment modal
-  const handleOpenPaymentModal = (invoice) => {
-    setSelectedInvoiceForPayment(invoice);
-    setShowPaymentModal(true);
-  };
+    const sellerData = {
+      name: clonedInvoice.sellerName || clonedInvoice.seller?.name || '',
+      address: clonedInvoice.sellerAddress || clonedInvoice.seller?.address || '',
+      gstin: clonedInvoice.sellerGstin || clonedInvoice.seller?.gstin || '',
+      state: clonedInvoice.sellerState || clonedInvoice.seller?.state || '',
+      stateCode: clonedInvoice.sellerStateCode || clonedInvoice.seller?.stateCode || null,
+      contact: clonedInvoice.sellerContact || clonedInvoice.seller?.contact || '',
+      email: clonedInvoice.sellerEmail || clonedInvoice.seller?.email || '',
+      bankName: clonedInvoice.sellerBankName || clonedInvoice.seller?.bankName || '',
+      accNo: clonedInvoice.sellerAccNo || clonedInvoice.seller?.accNo || '',
+      branch: clonedInvoice.sellerBranch || clonedInvoice.seller?.branch || '',
+      ifsc: clonedInvoice.sellerIfsc || clonedInvoice.seller?.ifsc || '',
+      logo: clonedInvoice.sellerLogo || clonedInvoice.seller?.logo || null,
+    };
 
-  // Update invoice
-  const handleUpdateInvoice = async () => {
-    const subtotal = calculateSubtotal();
-    const { cgstAmount, sgstAmount, igstAmount, grandTotal } = calculateGST(subtotal);
+    const buyerData = {
+      name: clonedInvoice.buyerName || clonedInvoice.buyer?.name || '',
+      address: clonedInvoice.buyerAddress || clonedInvoice.buyer?.address || '',
+      destination: clonedInvoice.buyerDestination || clonedInvoice.buyer?.destination || '',
+      contact: clonedInvoice.buyerContact || clonedInvoice.buyer?.contact || '',
+      gstin: clonedInvoice.buyerGstin || clonedInvoice.buyer?.gstin || '',
+      state: clonedInvoice.buyerState || clonedInvoice.buyer?.state || '',
+      stateCode: clonedInvoice.buyerStateCode || clonedInvoice.buyer?.stateCode || null,
+      buyerNumber: clonedInvoice.buyerNumber || clonedInvoice.buyer?.buyerNumber || '',
+      email: clonedInvoice.buyerEmail || clonedInvoice.buyer?.email || '',
+    };
+
+    const loadedInvoice = {
+      seller: sellerData,
+      buyer: buyerData,
+      billing: {
+        name: clonedInvoice.billingName || '',
+        address: clonedInvoice.billingAddress || '',
+        gstin: clonedInvoice.billingGstin || '',
+        state: clonedInvoice.billingState || '',
+        stateCode: clonedInvoice.billingStateCode || null,
+      },
+      shipping: {
+        name: clonedInvoice.shippingName || '',
+        address: clonedInvoice.shippingAddress || '',
+        gstin: clonedInvoice.shippingGstin || '',
+        state: clonedInvoice.shippingState || '',
+        stateCode: clonedInvoice.shippingStateCode || null,
+      },
+      invoiceDetails: {
+        invoiceNo: clonedInvoice.invoiceNo || '',
+        date: clonedInvoice.date || '',
+        taxType: clonedInvoice.taxType || 'cgst_sgst',
+        dueDate: clonedInvoice.dueDate || '',
+        poNumber: clonedInvoice.poNumber || '',
+        reference: clonedInvoice.reference || '',
+        placeOfSupply: clonedInvoice.placeOfSupply || '',
+        reverseCharge: clonedInvoice.reverseCharge || false,
+        ewayBillNo: clonedInvoice.ewayBillNo || '',
+        vehicleNo: clonedInvoice.vehicleNo || '',
+        transporterName: clonedInvoice.transporterName || '',
+        driverName: clonedInvoice.driverName || '',
+        driverMobile: clonedInvoice.driverMobile || '',
+        transporterId: clonedInvoice.transporterId || '',
+        distance: clonedInvoice.distance || '',
+        modeOfTransport: clonedInvoice.modeOfTransport || '',
+        terms: clonedInvoice.terms || '',
+        paymentTerms: clonedInvoice.paymentTerms || '',
+        notes: clonedInvoice.notes || '',
+      },
+      items: (clonedInvoice.items || []).map(item => ({
+        id: item.id,
+        description: item.description || '',
+        hsn: item.hsn || '',
+        sac: item.sac || '',
+        quantity: parseFloat(item.quantity) || 0,
+        unit: item.unit || 'Nos',
+        rate: parseFloat(item.rate) || 0,
+        discount: parseFloat(item.discount) || 0,
+      })),
+      additionalCharges: {
+        freight: clonedInvoice.additionalCharges?.freight || 0,
+        insurance: clonedInvoice.additionalCharges?.insurance || 0,
+        packing: clonedInvoice.additionalCharges?.packing || 0,
+        other: clonedInvoice.additionalCharges?.other || 0,
+        discount: clonedInvoice.additionalCharges?.discount || 0,
+        lessAmount: clonedInvoice.additionalCharges?.lessAmount || 0,
+        lessDescription: clonedInvoice.additionalCharges?.lessDescription || '',
+      },
+      dcDetails: {
+        dcNo: clonedInvoice.dcNo || '',
+        dcStatus: clonedInvoice.dcStatus || 'pending',
+        receiverName: clonedInvoice.receiverName || '',
+      },
+      taxRate: parseFloat(clonedInvoice.taxRate) || 18,
+    };
+
+    setInvoiceData(loadedInvoice);
+    setCurrentMode(clonedInvoice.mode || 'gst-bill');
+    setQuotationGstOption(clonedInvoice.quotationGstOption || 'with-gst');
+  }, [setEditingInvoiceId, setInvoiceData, setCurrentMode, setQuotationGstOption]);
+
+  // ==========================================================================
+  // UPDATE — Save changes to an existing invoice
+  // ==========================================================================
+  const handleUpdateInvoice = useCallback(async () => {
+    if (!editingInvoiceId) {
+      alert('No invoice selected for update.');
+      return;
+    }
+
+    if (!calculationResults) {
+      alert('Calculation error. Please try again.');
+      return;
+    }
+
+    // Prevent double-save
+    if (setIsSaving) setIsSaving(true);
 
     try {
-      const invoiceToUpdate = {
+      const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal } = calculationResults;
+
+      // Deep clone to prevent reference issues
+      const invoiceToUpdate = deepClone({
         ...invoiceData,
         mode: currentMode,
         quotationGstOption: quotationGstOption,
@@ -168,34 +359,41 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
         sgstAmount,
         igstAmount,
         grandTotal,
-      };
+      });
 
       const response = await fetch('/api/invoices', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: editingInvoiceId, ...invoiceToUpdate }),
       });
 
       if (response.ok) {
         alert('Invoice updated successfully!');
         setEditingInvoiceId(null);
-        fetchSavedInvoices();
+        // Re-fetch from server
+        await fetchSavedInvoices();
       } else {
-        throw new Error('Failed to update invoice');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to update invoice');
       }
     } catch (error) {
       console.error('Error updating invoice:', error);
-      alert('Failed to update invoice. Please try again.');
+      alert(error.message || 'Failed to update invoice. Please try again.');
+    } finally {
+      if (setIsSaving) setIsSaving(false);
     }
-  };
+  }, [editingInvoiceId, invoiceData, currentMode, quotationGstOption, calculationResults, setEditingInvoiceId, fetchSavedInvoices, setIsSaving]);
 
-  // Delete invoice
-  const handleDeleteInvoice = async (invoiceId) => {
+  // ==========================================================================
+  // DELETE — Delete an invoice with optimistic update
+  // ==========================================================================
+  const handleDeleteInvoice = useCallback(async (invoiceId) => {
     if (!confirm('Are you sure you want to delete this invoice?')) {
       return;
     }
+
+    // Optimistic removal from local state
+    setSavedInvoices(prev => prev.filter(inv => inv.id !== invoiceId));
 
     try {
       const response = await fetch(`/api/invoices?id=${invoiceId}`, {
@@ -203,49 +401,42 @@ export function useInvoiceAPI(invoiceData, currentMode, quotationGstOption, edit
       });
 
       if (response.ok) {
+        const result = await response.json();
         alert('Invoice deleted successfully!');
-        fetchSavedInvoices();
+        // Update next numbers from server response
+        if (result.nextInvoiceNo) setNextInvoiceNo(result.nextInvoiceNo.toString());
+        if (result.nextDcNo && setNextDcNo) setNextDcNo(result.nextDcNo.toString());
+        if (result.nextSlipNo && setNextSlipNo) setNextSlipNo(result.nextSlipNo.toString());
+        // Re-fetch to ensure consistency
+        await fetchSavedInvoices();
       } else {
+        // Rollback optimistic update on failure
+        await fetchSavedInvoices();
         throw new Error('Failed to delete invoice');
       }
     } catch (error) {
       console.error('Error deleting invoice:', error);
       alert('Failed to delete invoice. Please try again.');
+      // Rollback: re-fetch from server
+      await fetchSavedInvoices();
     }
-  };
+  }, [setSavedInvoices, setNextInvoiceNo, setNextDcNo, setNextSlipNo, fetchSavedInvoices]);
 
-  // Helper functions for calculations (will be moved to useInvoiceCalculations)
-  const calculateSubtotal = () => {
-    const itemTotal = invoiceData.items.reduce((acc, item) => {
-      const itemAmount = item.quantity * item.rate * (1 - item.discount / 100);
-      return acc + itemAmount;
-    }, 0);
+  // ==========================================================================
+  // PAYMENT — Handle payment status updates
+  // ==========================================================================
+  const handlePaymentUpdate = useCallback((updatedInvoice) => {
+    setSavedInvoices(prev =>
+      prev.map(inv => (inv.id === updatedInvoice.id ? deepClone(updatedInvoice) : inv))
+    );
+    setShowPaymentModal(false);
+    setSelectedInvoiceForPayment(null);
+  }, [setSavedInvoices, setShowPaymentModal, setSelectedInvoiceForPayment]);
 
-    const additionalChargesTotal = Object.values(invoiceData.additionalCharges).reduce((acc, charge, index) => {
-      const chargeValue = parseFloat(charge) || 0;
-      if (index === 4) return acc; // discount is the 5th item (index 4)
-      return acc + chargeValue;
-    }, 0);
-
-    const subtotalBeforeDiscount = itemTotal + additionalChargesTotal;
-    const overallDiscountAmount = (subtotalBeforeDiscount * invoiceData.additionalCharges.discount) / 100;
-    return subtotalBeforeDiscount - overallDiscountAmount;
-  };
-
-  const calculateGST = (subtotal) => {
-    const shouldCalculateGST = currentMode === 'gst-bill' || (currentMode === 'quotation' && quotationGstOption === 'with-gst');
-
-    const isCGST_SGST = shouldCalculateGST && invoiceData.invoiceDetails.taxType === 'cgst_sgst';
-    const cgstRate = isCGST_SGST ? invoiceData.taxRate / 2 : 0;
-    const sgstRate = isCGST_SGST ? invoiceData.taxRate / 2 : 0;
-    const igstRate = shouldCalculateGST && !isCGST_SGST ? invoiceData.taxRate : 0;
-    const cgstAmount = (subtotal * cgstRate) / 100;
-    const sgstAmount = (subtotal * sgstRate) / 100;
-    const igstAmount = (subtotal * igstRate) / 100;
-    const grandTotal = subtotal + cgstAmount + sgstAmount + igstAmount;
-
-    return { cgstAmount, sgstAmount, igstAmount, grandTotal };
-  };
+  const handleOpenPaymentModal = useCallback((invoice) => {
+    setSelectedInvoiceForPayment(deepClone(invoice));
+    setShowPaymentModal(true);
+  }, [setSelectedInvoiceForPayment, setShowPaymentModal]);
 
   return {
     fetchSavedInvoices,

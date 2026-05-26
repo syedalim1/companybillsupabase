@@ -1,35 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-export function useInvoiceState() {
-  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'dc-bill', 'gst-monthly-report', 'products', 'analytics'
-  const [quotationGstOption, setQuotationGstOption] = useState('with-gst'); // 'with-gst', 'without-gst'
-  const [nextId, setNextId] = useState(2);
-  const [isGenerating, setIsGenerating] = useState(false); // State to track PDF generation
-  const [savedInvoices, setSavedInvoices] = useState([]); // State to store saved invoices
-  const [editingInvoiceId, setEditingInvoiceId] = useState(null); // State to track editing invoice
-  const [nextInvoiceNo, setNextInvoiceNo] = useState('1'); // Next invoice number
-  const [nextDcNo, setNextDcNo] = useState('1'); // Next DC bill number
-  const [nextSlipNo, setNextSlipNo] = useState('1'); // Next Slip bill number
-  const [showEmailModal, setShowEmailModal] = useState(false); // State for email modal
-  const [showPaymentModal, setShowPaymentModal] = useState(false); // State for payment modal
-  const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState(null); // Selected invoice for payment update
+// ============================================================================
+// DEFAULT INVOICE DATA — Single source of truth for initial/reset state
+// ============================================================================
+const DEFAULT_SELLER = {
+  name: 'INDIAN MAKE STEEL INDUSTRIES',
+  address: '',
+  gstin: '33FAXPM0581G1ZC',
+  state: 'Tamil Nadu',
+  stateCode: 33,
+  contact: '9585745303, 8300904920',
+  email: 'indianmaksteel1982@gmail.com',
+  bankName: 'Indian Overseas Bank',
+  accNo: '356502000000347',
+  branch: 'Podanur',
+  ifsc: 'IOBA0003565',
+  logo: null,
+};
 
-  // --- State to hold all invoice data ---
-  const [invoiceData, setInvoiceData] = useState({
-    seller: {
-      name: 'INDIAN MAKE STEEL INDUSTRIES',
-      address: '',
-      gstin: '33FAXPM0581G1ZC',
-      state: 'Tamil Nadu',
-      stateCode: 33,
-      contact: '9585745303, 8300904920',
-      email: 'indianmaksteel1982@gmail.com',
-      bankName: 'Indian Overseas Bank',
-      accNo: '356502000000347',
-      branch: 'Podanur',
-      ifsc: 'IOBA0003565',
-      logo: null,
-    },
+function getDefaultInvoiceData(invoiceNo = '1') {
+  return {
+    seller: { ...DEFAULT_SELLER },
     buyer: {
       name: '',
       address: '',
@@ -53,14 +44,13 @@ export function useInvoiceState() {
       state: '',
       stateCode: null,
     },
-    // DC Bill specific fields
     dcDetails: {
       dcNo: '',
-      dcStatus: 'pending', // 'pending', 'in-transit', 'delivered', 'returned'
+      dcStatus: 'pending',
       receiverName: '',
     },
     invoiceDetails: {
-      invoiceNo: nextInvoiceNo,
+      invoiceNo: invoiceNo,
       date: new Date().toISOString().split('T')[0],
       taxType: 'cgst_sgst',
       dueDate: '',
@@ -102,7 +92,36 @@ export function useInvoiceState() {
       lessDescription: '',
     },
     taxRate: 18,
-  });
+  };
+}
+
+// ============================================================================
+// DEEP CLONE utility — ensures complete isolation
+// ============================================================================
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+// ============================================================================
+// HOOK
+// ============================================================================
+export function useInvoiceState() {
+  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'dc-bill', 'gst-monthly-report', 'products', 'analytics'
+  const [quotationGstOption, setQuotationGstOption] = useState('with-gst'); // 'with-gst', 'without-gst'
+  const [nextId, setNextId] = useState(2);
+  const [isGenerating, setIsGenerating] = useState(false); // State to track PDF generation
+  const [isSaving, setIsSaving] = useState(false); // Prevent double-save
+  const [savedInvoices, setSavedInvoices] = useState([]); // State to store saved invoices
+  const [editingInvoiceId, setEditingInvoiceId] = useState(null); // State to track editing invoice
+  const [nextInvoiceNo, setNextInvoiceNo] = useState('1'); // Next invoice number
+  const [nextDcNo, setNextDcNo] = useState('1'); // Next DC bill number
+  const [nextSlipNo, setNextSlipNo] = useState('1'); // Next Slip bill number
+  const [showEmailModal, setShowEmailModal] = useState(false); // State for email modal
+  const [showPaymentModal, setShowPaymentModal] = useState(false); // State for payment modal
+  const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState(null); // Selected invoice for payment update
+
+  // --- State to hold all invoice data ---
+  const [invoiceData, setInvoiceData] = useState(getDefaultInvoiceData());
 
   // Handle generator selection
   const handleSelectGenerator = (generatorType) => {
@@ -133,8 +152,9 @@ export function useInvoiceState() {
   }, [currentMode]);
 
   // Update invoice/DC/Slip number when mode changes or next numbers update
+  // CRITICAL: Skip this entirely when editing — the loaded invoice number must be preserved
   useEffect(() => {
-    if (editingInvoiceId) return; // Do not overwrite if we are editing an old invoice
+    if (editingInvoiceId) return; // GUARD: Never overwrite when editing
 
     if (currentMode === 'dc-bill') {
       setInvoiceData(prev => ({
@@ -146,8 +166,7 @@ export function useInvoiceState() {
         ...prev,
         invoiceDetails: { ...prev.invoiceDetails, invoiceNo: nextSlipNo }
       }));
-    } else {
-      // For gst-bill, quotation, landing, etc.
+    } else if (currentMode === 'gst-bill' || currentMode === 'quotation') {
       setInvoiceData(prev => ({
         ...prev,
         invoiceDetails: { ...prev.invoiceDetails, invoiceNo: nextInvoiceNo }
@@ -155,49 +174,58 @@ export function useInvoiceState() {
     }
   }, [currentMode, nextInvoiceNo, nextDcNo, nextSlipNo, editingInvoiceId]);
 
-  const handleInputChange = (section, field, value) => {
+  // --- IMMUTABLE input change handler ---
+  const handleInputChange = useCallback((section, field, value) => {
     setInvoiceData(prev => ({
       ...prev,
       [section]: { ...prev[section], [field]: value },
     }));
-  };
+  }, []);
 
-  const handleItemChange = (index, field, value) => {
-    const newItems = [...invoiceData.items];
-    newItems[index][field] = value;
-    setInvoiceData(prev => ({ ...prev, items: newItems }));
-  };
+  // --- FIXED: Deep-clone items to prevent mutation across invoices ---
+  const handleItemChange = useCallback((index, field, value) => {
+    setInvoiceData(prev => {
+      const newItems = prev.items.map((item, i) => {
+        if (i === index) {
+          // Create a new item object (not a reference) with the changed field
+          return { ...item, [field]: value };
+        }
+        return { ...item }; // Clone each item to prevent shared references
+      });
+      return { ...prev, items: newItems };
+    });
+  }, []);
 
-  const addItem = () => {
-    const newItem = {
-      id: nextId,
-      description: '',
-      hsn: '',
-      sac: '',
-      quantity: 1,
-      unit: 'Nos',
-      rate: 0,
-      discount: 0,
-    };
+  const addItem = useCallback(() => {
+    setInvoiceData(prev => {
+      // Compute next ID from existing items to prevent collisions
+      const maxId = prev.items.reduce((max, item) => Math.max(max, item.id || 0), 0);
+      const newItem = {
+        id: maxId + 1,
+        description: '',
+        hsn: '',
+        sac: '',
+        quantity: 1,
+        unit: 'Nos',
+        rate: 0,
+        discount: 0,
+      };
+      return { ...prev, items: [...prev.items, newItem] };
+    });
+  }, []);
+
+  const removeItem = useCallback((index) => {
     setInvoiceData(prev => ({
       ...prev,
-      items: [...prev.items, newItem],
+      items: prev.items.filter((_, i) => i !== index),
     }));
-    setNextId(prev => prev + 1);
-  };
+  }, []);
 
-  const removeItem = (index) => {
-    const newItems = invoiceData.items.filter((_, i) => i !== index);
-    setInvoiceData(prev => ({ ...prev, items: newItems }));
-  };
-
-  // Update next invoice number when saved invoices change (fallback logic)
-  useEffect(() => {
-    if (savedInvoices.length > 0 && !nextInvoiceNo) {
-      const maxInvoiceNo = Math.max(...savedInvoices.map(invoice => parseInt(invoice.invoiceNo) || 0));
-      setNextInvoiceNo((maxInvoiceNo + 1).toString());
-    }
-  }, [savedInvoices.length, nextInvoiceNo]);
+  // --- Centralized reset function ---
+  const resetToDefault = useCallback(() => {
+    setEditingInvoiceId(null);
+    setInvoiceData(getDefaultInvoiceData(nextInvoiceNo));
+  }, [nextInvoiceNo]);
 
   return {
     currentMode,
@@ -208,6 +236,8 @@ export function useInvoiceState() {
     setNextId,
     isGenerating,
     setIsGenerating,
+    isSaving,
+    setIsSaving,
     savedInvoices,
     setSavedInvoices,
     editingInvoiceId,
@@ -232,5 +262,8 @@ export function useInvoiceState() {
     handleItemChange,
     addItem,
     removeItem,
+    resetToDefault,
+    getDefaultInvoiceData,
+    deepClone,
   };
 }

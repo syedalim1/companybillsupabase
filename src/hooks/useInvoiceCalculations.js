@@ -5,7 +5,10 @@ export function useInvoiceCalculations(
 ) {
   // --- Calculations ---
   const itemTotal = invoiceData.items.reduce((acc, item) => {
-    const itemAmount = (parseFloat(item.quantity) || 0) * (parseFloat(item.rate) || 0) * (1 - (parseFloat(item.discount) || 0) / 100);
+    const qty = parseFloat(item.quantity) || 0;
+    const rate = parseFloat(item.rate) || 0;
+    const disc = parseFloat(item.discount) || 0;
+    const itemAmount = qty * rate * (1 - disc / 100);
     return acc + itemAmount;
   }, 0);
 
@@ -43,10 +46,13 @@ export function useInvoiceCalculations(
   const grandTotal = taxableAmount + taxAmount;
 
   return {
+    itemTotal,
     subtotal,
+    taxableAmount,
     cgstAmount,
     sgstAmount,
     igstAmount,
+    taxAmount,
     grandTotal,
     lessAmount,
     discountAmount,

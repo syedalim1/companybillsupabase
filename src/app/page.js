@@ -40,6 +40,8 @@ export default function Home() {
     setNextId,
     isGenerating,
     setIsGenerating,
+    isSaving,
+    setIsSaving,
     savedInvoices,
     setSavedInvoices,
     editingInvoiceId,
@@ -64,8 +66,13 @@ export default function Home() {
     handleItemChange,
     addItem,
     removeItem,
+    resetToDefault,
   } = state;
 
+  // Calculations — single source of truth
+  const calculations = useInvoiceCalculations(invoiceData, currentMode, quotationGstOption);
+
+  // API operations — pass calculation results to avoid duplicate calculations
   const api = useInvoiceAPI(
     invoiceData,
     currentMode,
@@ -80,10 +87,10 @@ export default function Home() {
     setQuotationGstOption,
     setInvoiceData,
     setShowPaymentModal,
-    setSelectedInvoiceForPayment
+    setSelectedInvoiceForPayment,
+    setIsSaving,
+    calculations // Pass calculation results directly
   );
-
-  const calculations = useInvoiceCalculations(invoiceData, currentMode, quotationGstOption);
 
   const {
     fetchSavedInvoices,
@@ -98,6 +105,8 @@ export default function Home() {
 
   // Export to Excel
   const handleExportToExcel = () => {
+    const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal } = calculations;
+
     const data = [
       // Invoice Details
       ['Invoice Details'],
@@ -377,6 +386,8 @@ const handleGeneratePDF = async () => {
         handleEditInvoice={handleEditInvoice}
         handleOpenPaymentModal={handleOpenPaymentModal}
         handleDeleteInvoice={handleDeleteInvoice}
+        isSaving={isSaving}
+        resetToDefault={resetToDefault}
       />
 
       <InvoicePreview
