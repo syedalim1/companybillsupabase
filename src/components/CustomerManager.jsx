@@ -62,6 +62,66 @@ const CustomerManager = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isFetchingGst, setIsFetchingGst] = useState(false);
+
+  const fetchGstDetails = async (isEditing = false) => {
+    const gstin = isEditing ? editingBuyer.gstin : newBuyer.gstin;
+    
+    if (!gstin || gstin.length !== 15) {
+      alert("Please enter a valid 15-character GSTIN");
+      return;
+    }
+
+    setIsFetchingGst(true);
+    try {
+      const response = await fetch(`/api/gst-lookup?gstin=${gstin}`);
+      if (!response.ok) {
+        throw new Error("Invalid GST Number or API Error");
+      }
+      
+      const data = await response.json();
+      
+      let gstInfo = data;
+      if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+        gstInfo = data.data[0];
+      }
+      
+      const legalName = gstInfo?.tradeName || gstInfo?.legalName || gstInfo?.lgnm || "";
+      
+      let address = "";
+      if (gstInfo?.principalAddress?.address) {
+        const addrObj = gstInfo.principalAddress.address;
+        address = [addrObj.buildingNumber, addrObj.street, addrObj.location, addrObj.district, addrObj.pincode].filter(Boolean).join(', ');
+      } else {
+        address = gstInfo?.pradr?.adr || gstInfo?.pradr?.addr?.bno || gstInfo?.address || "";
+      }
+      const stateCode = parseInt(gstin.substring(0, 2), 10);
+      
+      if (isEditing) {
+        setEditingBuyer(prev => ({
+          ...prev,
+          name: legalName || prev.name,
+          address: address || prev.address,
+          stateCode: isNaN(stateCode) ? prev.stateCode : stateCode
+        }));
+      } else {
+        handleNewBuyerChange("name", legalName || newBuyer.name);
+        handleNewBuyerChange("address", address || newBuyer.address);
+        if (!isNaN(stateCode)) {
+          handleNewBuyerChange("stateCode", stateCode);
+        }
+      }
+      
+      if (!legalName) {
+        alert("Could not extract company name from GST response.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Invalid GST Number");
+    } finally {
+      setIsFetchingGst(false);
+    }
+  };
 
   // Fetch buyers from database
   useEffect(() => {
@@ -489,18 +549,30 @@ const CustomerManager = () => {
                       </span>
                     )}
                   </div>
-                  <input
-                    type="text"
-                    value={newBuyer.gstin}
-                    onChange={(e) => handleNewBuyerChange("gstin", e.target.value)}
-                    className={`w-full p-3 border rounded-lg focus:ring-2 outline-none transition-all font-mono ${
-                      newBuyer.gstin 
-                        ? (validateGstin(newBuyer.gstin) ? "border-emerald-500 focus:ring-emerald-500/50" : "border-rose-400 focus:ring-rose-500/50") 
-                        : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                    }`}
-                    placeholder="e.g. 33AACJ5553C1Z0"
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newBuyer.gstin}
+                      onChange={(e) => handleNewBuyerChange("gstin", e.target.value)}
+                      className={`flex-1 p-3 border rounded-lg focus:ring-2 outline-none transition-all font-mono ${
+                        newBuyer.gstin 
+                          ? (validateGstin(newBuyer.gstin) ? "border-emerald-500 focus:ring-emerald-500/50" : "border-rose-400 focus:ring-rose-500/50") 
+                          : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      }`}
+                      placeholder="e.g. 33AACJ5553C1Z0"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fetchGstDetails(false)}
+                      disabled={isFetchingGst || !newBuyer.gstin || newBuyer.gstin.length !== 15}
+                      className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300 font-semibold transition-colors flex items-center justify-center whitespace-nowrap"
+                    >
+                      {isFetchingGst ? (
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      ) : "Fetch"}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -639,17 +711,29 @@ const CustomerManager = () => {
                       </span>
                     )}
                   </div>
-                  <input
-                    type="text"
-                    value={editingBuyer.gstin}
-                    onChange={(e) => handleEditChange("gstin", e.target.value)}
-                    className={`w-full p-3 border rounded-lg focus:ring-2 outline-none transition-all font-mono ${
-                      editingBuyer.gstin 
-                        ? (validateGstin(editingBuyer.gstin) ? "border-emerald-500 focus:ring-emerald-500/50" : "border-rose-400 focus:ring-rose-500/50") 
-                        : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                    }`}
-                    required
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={editingBuyer.gstin}
+                      onChange={(e) => handleEditChange("gstin", e.target.value)}
+                      className={`flex-1 p-3 border rounded-lg focus:ring-2 outline-none transition-all font-mono ${
+                        editingBuyer.gstin 
+                          ? (validateGstin(editingBuyer.gstin) ? "border-emerald-500 focus:ring-emerald-500/50" : "border-rose-400 focus:ring-rose-500/50") 
+                          : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      }`}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fetchGstDetails(true)}
+                      disabled={isFetchingGst || !editingBuyer.gstin || editingBuyer.gstin.length !== 15}
+                      className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-300 font-semibold transition-colors flex items-center justify-center whitespace-nowrap"
+                    >
+                      {isFetchingGst ? (
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      ) : "Fetch"}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
