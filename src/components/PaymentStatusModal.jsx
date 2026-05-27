@@ -93,7 +93,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
             <h3 className="font-semibold text-gray-800 mb-2">Invoice Details</h3>
             <div className="text-sm text-gray-600 space-y-1">
               <p><strong>Invoice No:</strong> {invoice.invoiceNo}</p>
-              <p><strong>Customer:</strong> {invoice.buyer?.name}</p>
+              <p><strong>Customer:</strong> {invoice.buyerName || invoice.buyer?.name || 'N/A'}</p>
               <p><strong>Total Amount:</strong> ₹{invoice.grandTotal?.toLocaleString('en-IN')}</p>
               <p><strong>Current Status:</strong>
                 <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(invoice.paymentStatus)}`}>

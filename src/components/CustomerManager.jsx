@@ -92,13 +92,22 @@ const CustomerManager = () => {
 
   // Handle edit buyer
   const handleEditBuyer = (buyer) => {
-    setEditingBuyer({ ...buyer });
+    setEditingBuyer({
+      ...buyer,
+      destination: buyer.destination || '',
+      contact: buyer.contact || '',
+      address: buyer.address || '',
+      state: buyer.state || '',
+      gstin: buyer.gstin || '',
+      email: buyer.email || '',
+      buyerNumber: buyer.buyerNumber || '',
+    });
   };
 
   // Handle save edited buyer
   const handleSaveEdit = async () => {
-    if (!editingBuyer.name || !editingBuyer.gstin) {
-      alert('Name and GSTIN are required');
+    if (!editingBuyer.name) {
+      alert('Name is required');
       return;
     }
 
@@ -127,8 +136,8 @@ const CustomerManager = () => {
 
   // Handle create new buyer
   const handleCreateBuyer = async () => {
-    if (!newBuyer.name || !newBuyer.gstin) {
-      alert('Name and GSTIN are required');
+    if (!newBuyer.name) {
+      alert('Name is required');
       return;
     }
 
@@ -473,7 +482,7 @@ const CustomerManager = () => {
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <label className="text-sm font-medium text-gray-700">GSTIN <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-medium text-gray-700">GSTIN</label>
                     {newBuyer.gstin && (
                       <span className={`text-xs font-semibold ${validateGstin(newBuyer.gstin) ? "text-emerald-600" : "text-rose-500"}`}>
                         {validateGstin(newBuyer.gstin) ? "Valid GSTIN format" : "Invalid GSTIN format"}
@@ -623,7 +632,7 @@ const CustomerManager = () => {
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <label className="text-sm font-medium text-gray-700">GSTIN <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-medium text-gray-700">GSTIN</label>
                     {editingBuyer.gstin && (
                       <span className={`text-xs font-semibold ${validateGstin(editingBuyer.gstin) ? "text-emerald-600" : "text-rose-500"}`}>
                         {validateGstin(editingBuyer.gstin) ? "Valid GSTIN format" : "Invalid GSTIN format"}

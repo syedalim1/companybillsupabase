@@ -3,7 +3,7 @@ export function useInvoiceCalculations(
   currentMode,
   quotationGstOption
 ) {
-  // --- Calculations ---
+  // --- Item-level calculations ---
   const itemTotal = invoiceData.items.reduce((acc, item) => {
     const qty = parseFloat(item.quantity) || 0;
     const rate = parseFloat(item.rate) || 0;
@@ -12,20 +12,25 @@ export function useInvoiceCalculations(
     return acc + itemAmount;
   }, 0);
 
+  // --- Additional charges: use explicit named fields, not fragile index iteration ---
   const freight = parseFloat(invoiceData.additionalCharges.freight) || 0;
-  const additionalChargesTotal = Object.values(
-    invoiceData.additionalCharges
-  ).reduce((acc, charge, index) => {
-    const chargeValue = parseFloat(charge) || 0;
-    // Skip freight, discount and lessAmount for now, we'll handle them separately
-    if (index === 0 || index === 4 || index === 5) return acc; // freight is the 1st item (index 0), discount is the 5th (index 4), lessAmount is the 6th (index 5)
-    return acc + chargeValue;
-  }, 0);
+  const insurance = parseFloat(invoiceData.additionalCharges.insurance) || 0;
+  const packing = parseFloat(invoiceData.additionalCharges.packing) || 0;
+  const otherCharges = parseFloat(invoiceData.additionalCharges.other) || 0;
 
-  const subtotal = itemTotal + freight;
+  // BUG FIX: Previously only freight was added to subtotal.
+  // Insurance, packing, and other charges were calculated but never included.
+  const additionalChargesTotal = freight + insurance + packing + otherCharges;
+
+  const subtotal = itemTotal + additionalChargesTotal;
+
+  // Discount is a percentage of subtotal
   const discountAmount =
     (subtotal * parseFloat(invoiceData.additionalCharges.discount || 0)) / 100;
+
+  // Less amount is a flat deduction
   const lessAmount = parseFloat(invoiceData.additionalCharges.lessAmount) || 0;
+
   const taxableAmount = subtotal - discountAmount - lessAmount;
 
   // GST calculations based on mode and quotation GST option

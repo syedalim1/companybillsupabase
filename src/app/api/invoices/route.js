@@ -5,6 +5,17 @@ import { supabase } from '@/lib/supabase';
 // HELPERS
 // ============================================================================
 
+// Guard: return 503 if Supabase is not configured (Bug 12 fix)
+function guardSupabase() {
+  if (!supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please check environment variables.' },
+      { status: 503 }
+    );
+  }
+  return null;
+}
+
 /**
  * Safely parse a string to an integer, returning 0 if it fails.
  */
@@ -148,32 +159,33 @@ async function findOrCreateBuyer(buyerData) {
 
 /**
  * Build snapshot fields for the invoice from buyer/seller data.
+ * Bug 9 fix: Use ?? instead of || to preserve empty strings and falsy values.
  */
 function buildSnapshotFields(data) {
   return {
     // Seller snapshot
-    sellerName: data.seller?.name || null,
-    sellerAddress: data.seller?.address || null,
-    sellerGstin: data.seller?.gstin || null,
-    sellerState: data.seller?.state || null,
-    sellerStateCode: data.seller?.stateCode || null,
-    sellerContact: data.seller?.contact || null,
-    sellerEmail: data.seller?.email || null,
-    sellerBankName: data.seller?.bankName || null,
-    sellerAccNo: data.seller?.accNo || null,
-    sellerBranch: data.seller?.branch || null,
-    sellerIfsc: data.seller?.ifsc || null,
-    sellerLogo: data.seller?.logo || null,
+    sellerName: data.seller?.name ?? null,
+    sellerAddress: data.seller?.address ?? null,
+    sellerGstin: data.seller?.gstin ?? null,
+    sellerState: data.seller?.state ?? null,
+    sellerStateCode: data.seller?.stateCode ?? null,
+    sellerContact: data.seller?.contact ?? null,
+    sellerEmail: data.seller?.email ?? null,
+    sellerBankName: data.seller?.bankName ?? null,
+    sellerAccNo: data.seller?.accNo ?? null,
+    sellerBranch: data.seller?.branch ?? null,
+    sellerIfsc: data.seller?.ifsc ?? null,
+    sellerLogo: data.seller?.logo ?? null,
     // Buyer snapshot
-    buyerName: data.buyer?.name || null,
-    buyerAddress: data.buyer?.address || null,
-    buyerDestination: data.buyer?.destination || null,
-    buyerContact: data.buyer?.contact || null,
-    buyerGstin: data.buyer?.gstin || null,
-    buyerState: data.buyer?.state || null,
-    buyerStateCode: data.buyer?.stateCode || null,
-    buyerNumber: data.buyer?.buyerNumber || null,
-    buyerEmail: data.buyer?.email || null,
+    buyerName: data.buyer?.name ?? null,
+    buyerAddress: data.buyer?.address ?? null,
+    buyerDestination: data.buyer?.destination ?? null,
+    buyerContact: data.buyer?.contact ?? null,
+    buyerGstin: data.buyer?.gstin ?? null,
+    buyerState: data.buyer?.state ?? null,
+    buyerStateCode: data.buyer?.stateCode ?? null,
+    buyerNumber: data.buyer?.buyerNumber ?? null,
+    buyerEmail: data.buyer?.email ?? null,
   };
 }
 
@@ -217,6 +229,9 @@ async function restoreStock(items) {
 // POST — Create a new invoice
 // ============================================================================
 export async function POST(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const data = await request.json();
 
@@ -393,14 +408,32 @@ export async function POST(request) {
     };
 
     // --- Deduct stock for non-quotation invoices ---
+    // Bug 10 fix: Deduct stock before building response so errors are caught
+    let stockWarnings = [];
     if (mode !== 'quotation') {
-      await deductStock(data.items);
+      for (const item of data.items) {
+        if (item.description) {
+          const deduction = parseFloat(item.quantity) || 0;
+          const { error } = await supabase.rpc('adjust_product_stock', {
+            product_name: item.description,
+            quantity_change: -deduction
+          });
+          if (error) {
+            console.error(`Error deducting stock for "${item.description}":`, error);
+            stockWarnings.push(`Stock deduction failed for "${item.description}"`);
+          }
+        }
+      }
     }
 
     // --- Get updated next numbers ---
     const nextNumbers = await getNextNumbers();
 
-    return NextResponse.json({ invoice: formattedInvoice, ...nextNumbers }, { status: 201 });
+    const response = { invoice: formattedInvoice, ...nextNumbers };
+    if (stockWarnings.length > 0) {
+      response.stockWarnings = stockWarnings;
+    }
+    return NextResponse.json(response, { status: 201 });
   } catch (error) {
     console.error('Error creating invoice:', error);
     return NextResponse.json(
@@ -414,6 +447,9 @@ export async function POST(request) {
 // GET — Fetch all invoices + next numbers
 // ============================================================================
 export async function GET() {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const { data: invoices, error } = await supabase
       .from('invoices')
@@ -449,6 +485,9 @@ export async function GET() {
 // PUT — Update an existing invoice
 // ============================================================================
 export async function PUT(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const { id, ...data } = await request.json();
 
@@ -644,6 +683,9 @@ export async function PUT(request) {
 // DELETE — Delete an invoice
 // ============================================================================
 export async function DELETE(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
@@ -704,6 +746,9 @@ export async function DELETE(request) {
 // PATCH — Partial update for payment status
 // ============================================================================
 export async function PATCH(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const body = await request.json();
     const { id, paymentStatus, paymentDate, paymentAmount, paymentNotes } = body;

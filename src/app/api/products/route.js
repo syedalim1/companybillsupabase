@@ -1,8 +1,22 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+// Guard: return 503 if Supabase is not configured (Bug 12 fix)
+function guardSupabase() {
+  if (!supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please check environment variables.' },
+      { status: 503 }
+    );
+  }
+  return null;
+}
+
 // GET /api/products - Get all products
 export async function GET() {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const { data: products, error } = await supabase
       .from('products')
@@ -19,7 +33,11 @@ export async function GET() {
 }
 
 // POST /api/products - Create a new product
+// Bug 8 fix: Use parseFloat for stock instead of parseInt
 export async function POST(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const body = await request.json();
     const { name, description, hsn, sac, rate, category, unit, gstRate, minStock, stock } = body;
@@ -42,7 +60,7 @@ export async function POST(request) {
           unit: unit || null,
           gstRate: gstRate ? parseFloat(gstRate) : null,
           minStock: minStock ? parseInt(minStock) : null,
-          stock: stock ? parseInt(stock) : 0,
+          stock: stock ? parseFloat(stock) : 0,
         }
       ])
       .select()
@@ -58,7 +76,11 @@ export async function POST(request) {
 }
 
 // PUT /api/products - Update a product
+// Bug 7 fix: Use parseFloat for stock instead of parseInt
 export async function PUT(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const body = await request.json();
     const { id, name, description, hsn, sac, rate, category, unit, gstRate, minStock, stock } = body;
@@ -79,7 +101,7 @@ export async function PUT(request) {
         unit: unit || null,
         gstRate: gstRate ? parseFloat(gstRate) : null,
         minStock: minStock ? parseInt(minStock) : null,
-        stock: stock !== undefined ? parseInt(stock) : 0,
+        stock: stock !== undefined ? parseFloat(stock) : 0,
         updatedAt: new Date().toISOString(),
       })
       .eq('id', id)
@@ -97,6 +119,9 @@ export async function PUT(request) {
 
 // DELETE /api/products - Delete a product
 export async function DELETE(request) {
+  const guard = guardSupabase();
+  if (guard) return guard;
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

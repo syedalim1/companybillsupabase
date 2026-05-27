@@ -67,32 +67,46 @@ export async function POST(request) {
 function generateInvoiceEmailHTML(invoiceData, customMessage) {
   const { seller, buyer, invoiceDetails, items, additionalCharges, taxRate } = invoiceData;
 
-  // Calculate totals (same logic as in your main component)
+  // Calculate totals — must match useInvoiceCalculations logic exactly
   const itemTotal = items.reduce((acc, item) => {
-    const itemAmount = item.quantity * item.rate * (1 - item.discount / 100);
+    const qty = parseFloat(item.quantity) || 0;
+    const rate = parseFloat(item.rate) || 0;
+    const disc = parseFloat(item.discount) || 0;
+    const itemAmount = qty * rate * (1 - disc / 100);
     return acc + itemAmount;
   }, 0);
 
-  const additionalChargesTotal = Object.values(additionalCharges || {}).reduce((acc, charge) => {
-    return acc + (parseFloat(charge) || 0);
-  }, 0);
+  // Additional charges: use named fields, not Object.values iteration
+  const freight = parseFloat(additionalCharges?.freight) || 0;
+  const insurance = parseFloat(additionalCharges?.insurance) || 0;
+  const packing = parseFloat(additionalCharges?.packing) || 0;
+  const otherCharges = parseFloat(additionalCharges?.other) || 0;
+  const additionalChargesTotal = freight + insurance + packing + otherCharges;
 
-  const subtotalBeforeDiscount = itemTotal + additionalChargesTotal;
-  const overallDiscountAmount = (subtotalBeforeDiscount * (additionalCharges?.discount || 0)) / 100;
-  const subtotal = subtotalBeforeDiscount - overallDiscountAmount;
+  const subtotal = itemTotal + additionalChargesTotal;
+
+  // Discount is a percentage of subtotal
+  const discountPercent = parseFloat(additionalCharges?.discount) || 0;
+  const overallDiscountAmount = (subtotal * discountPercent) / 100;
+
+  // Less amount is a flat deduction
+  const lessAmount = parseFloat(additionalCharges?.lessAmount) || 0;
+
+  const taxableValue = subtotal - overallDiscountAmount - lessAmount;
 
   const shouldCalculateGST = invoiceDetails?.mode === 'gst-bill' ||
     (invoiceDetails?.mode === 'quotation' && invoiceDetails?.quotationGstOption === 'with-gst');
 
   const isCGST_SGST = shouldCalculateGST && invoiceDetails?.taxType === 'cgst_sgst';
-  const cgstRate = isCGST_SGST ? taxRate / 2 : 0;
-  const sgstRate = isCGST_SGST ? taxRate / 2 : 0;
-  const igstRate = shouldCalculateGST && !isCGST_SGST ? taxRate : 0;
+  const parsedTaxRate = parseFloat(taxRate) || 0;
+  const cgstRate = isCGST_SGST ? parsedTaxRate / 2 : 0;
+  const sgstRate = isCGST_SGST ? parsedTaxRate / 2 : 0;
+  const igstRate = shouldCalculateGST && !isCGST_SGST ? parsedTaxRate : 0;
 
-  const cgstAmount = (subtotal * cgstRate) / 100;
-  const sgstAmount = (subtotal * sgstRate) / 100;
-  const igstAmount = (subtotal * igstRate) / 100;
-  const grandTotal = subtotal + cgstAmount + sgstAmount + igstAmount;
+  const cgstAmount = (taxableValue * cgstRate) / 100;
+  const sgstAmount = (taxableValue * sgstRate) / 100;
+  const igstAmount = (taxableValue * igstRate) / 100;
+  const grandTotal = taxableValue + cgstAmount + sgstAmount + igstAmount;
 
   return `
     <!DOCTYPE html>
@@ -209,9 +223,15 @@ function generateInvoiceEmailHTML(invoiceData, customMessage) {
                 <td style="text-align: right;">-₹${overallDiscountAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
               </tr>
             ` : ''}
+            ${lessAmount > 0 ? `
+              <tr>
+                <td>Less Amount:</td>
+                <td style="text-align: right;">-₹${lessAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              </tr>
+            ` : ''}
             <tr>
               <td>Taxable Value:</td>
-              <td style="text-align: right;">₹${subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+              <td style="text-align: right;">₹${taxableValue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
             </tr>
             ${cgstAmount > 0 ? `
               <tr>
