@@ -94,7 +94,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                     onChange={(e) => handleDescriptionChange(index, e.target.value)}
                     onBlur={() => setTimeout(() => setShowProductDropdown(null), 250)}
                     placeholder="Enter item description..."
-                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm font-semibold text-text-title"
+                    className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm font-semibold text-text-title"
                   />
                   
                   {/* Stock Warnings */}
@@ -144,7 +144,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                       value={item.hsn || ''}
                       onChange={(e) => handleItemChange(index, 'hsn', e.target.value)}
                       placeholder="HSN Code"
-                      className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
+                      className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
                     />
                   </div>
                   <div>
@@ -154,7 +154,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                       value={item.sac || ''}
                       onChange={(e) => handleItemChange(index, 'sac', e.target.value)}
                       placeholder="SAC Code"
-                      className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
+                      className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
                     />
                   </div>
                 </div>
@@ -167,7 +167,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                     type="number"
                     value={item.quantity}
                     onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value) || 0)}
-                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-bold text-text-title"
+                    className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-bold text-text-title"
                   />
                 </div>
                 <div className="col-span-1">
@@ -177,7 +177,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                     value={item.unit || 'Nos'}
                     onChange={(e) => handleItemChange(index, 'unit', e.target.value)}
                     placeholder="Unit"
-                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
+                    className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
                   />
                 </div>
                 <div className="col-span-1">
@@ -186,7 +186,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                     type="number"
                     value={item.rate}
                     onChange={(e) => handleItemChange(index, 'rate', parseFloat(e.target.value) || 0)}
-                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
+                    className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
                   />
                 </div>
                 <div className="col-span-1">
@@ -195,7 +195,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                     type="number"
                     value={item.discount}
                     onChange={(e) => handleItemChange(index, 'discount', parseFloat(e.target.value) || 0)}
-                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-rose-500 font-bold"
+                    className="w-full border p-2.5 border-gray-200 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-rose-500 font-bold"
                   />
                 </div>
               </div>
