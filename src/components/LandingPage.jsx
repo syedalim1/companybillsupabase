@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import ThemeSelector from "./ThemeSelector";
 
 const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }) => {
   const [stats, setStats] = useState({ products: 0, customers: 0, lowStock: 0 });
@@ -44,9 +43,9 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
   };
 
   return (
-    <div className="min-h-screen bg-bg-base dark:bg-bg-base text-text-body transition-colors duration-300 font-sans">
+    <div className="min-h-screen bg-bg-base text-text-body transition-colors duration-300 font-sans">
       {/* Premium Top Navigation Bar */}
-      <header className="sticky top-0 z-40 w-full glassmorphism border-b border-slate-200/50 dark:border-slate-800/50">
+      <header className="sticky top-0 z-40 w-full glassmorphism border-b border-slate-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-accent flex items-center justify-center shadow-md shadow-brand-primary/20">
@@ -58,15 +57,13 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <span className="text-xl font-black text-text-title tracking-tight bg-clip-text">
                 Business Suite
               </span>
-              <span className="text-[10px] block font-medium text-text-desc tracking-wider uppercase">
+              <span className="text-[10px] block font-medium   tracking-wider uppercase">
                 Pro Dashboard
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <ThemeSelector />
-            
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 hover:text-rose-600 transition duration-200 focus:outline-none cursor-pointer"
@@ -110,7 +107,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           <h1 className="text-4xl md:text-5xl font-extrabold text-text-title tracking-tight mb-3">
             Welcome back, Admin
           </h1>
-          <p className="text-text-desc max-w-2xl mx-auto text-base sm:text-lg">
+          <p className="  max-w-2xl mx-auto text-base sm:text-lg">
             Manage your customers, billing workflows, catalog, and insights through a highly interactive suite.
           </p>
         </div>
@@ -118,15 +115,15 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
         {/* Quick Metrics Ribbon */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-12">
           <div className="glassmorphism-card rounded-2xl p-4 text-center">
-            <p className="text-xs font-semibold text-text-desc uppercase tracking-wider">Total Customers</p>
+            <p className="text-xs font-semibold   uppercase tracking-wider">Total Customers</p>
             <p className="text-2xl font-bold text-text-title mt-1">{stats.customers}</p>
           </div>
           <div className="glassmorphism-card rounded-2xl p-4 text-center">
-            <p className="text-xs font-semibold text-text-desc uppercase tracking-wider">Catalog Products</p>
+            <p className="text-xs font-semibold   uppercase tracking-wider">Catalog Products</p>
             <p className="text-2xl font-bold text-text-title mt-1">{stats.products}</p>
           </div>
           <div className="glassmorphism-card rounded-2xl p-4 text-center col-span-2 md:col-span-1">
-            <p className="text-xs font-semibold text-text-desc uppercase tracking-wider">Low Stock Warnings</p>
+            <p className="text-xs font-semibold   uppercase tracking-wider">Low Stock Warnings</p>
             <p className={`text-2xl font-bold mt-1 ${stats.lowStock > 0 ? "text-amber-500" : "text-text-title"}`}>{stats.lowStock}</p>
           </div>
         </div>
@@ -148,12 +145,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-orange-500 transition-colors">
                 Customer Manager
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Complete database for client details, GSTIN tracking, and contact management.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["GST Details Database", "One-click Edit/Delete", "Quick Search & Filter"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-orange-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -179,12 +176,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-emerald-500 transition-colors">
                 Product Catalog
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Organize inventory items, pricing rules, HSN codes, and current stock tracking.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["Stock & Inventory Level", "HSN/SAC Management", "Default GST Tax Preset"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -210,12 +207,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-indigo-500 transition-colors">
                 Analytics & Insights
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Visual reports on revenue flow, top performing products, and sales performance.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["Visual Revenue Trends", "Sales by Product & Customer", "Tax collected reports"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-indigo-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -241,12 +238,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-blue-500 transition-colors">
                 GST Invoicing
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Generate compliant tax invoices with automatic CGST, SGST, and IGST calculations.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["Auto-Tax Calculation", "PDF & Invoice Generation", "Professional Brand Templates"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -272,12 +269,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-amber-500 transition-colors">
                 Slip Bill
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Generate simplified receipts for local businesses without GST complexity.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["No GST Calculations", "Quick Receipt Format", "Thermal Printer Ready"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -303,12 +300,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-rose-500 transition-colors">
                 Delivery Challan
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Create delivery challans for goods movement without tax invoice requirements.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["No Tax Calculation", "Delivery Status Tracking", "Receiver Info Fields"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-rose-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -334,12 +331,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-teal-500 transition-colors">
                 Quotations
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Create flexible manufacturing estimates with optional tax components.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["Flexible GST Selector", "Estimate PDF Rendering", "Load Draft/Template"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-teal-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -365,12 +362,12 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-purple-500 transition-colors">
                 GST Reports
               </h3>
-              <p className="text-text-desc mb-5 text-sm">
+              <p className="  mb-5 text-sm">
                 Comprehensive tax summaries, HSN breakdowns, and GSTR-1 ready exports.
               </p>
               <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
                 {["GSTR-1 Format Compliant", "HSN/SAC Wise Summary", "One-click Excel Export"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs text-text-desc">
+                  <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
@@ -412,7 +409,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
                       <p className="font-semibold text-text-title text-sm">
                         #{inv.invoiceNo || inv.dcNo || 'Draft'} — {inv.buyerName || inv.buyer?.name || 'Unknown'}
                       </p>
-                      <p className="text-xs text-text-desc">
+                      <p className="text-xs  ">
                         {new Date(inv.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </p>
                     </div>
@@ -435,7 +432,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/50 dark:border-slate-800/50 mt-20 py-6 bg-slate-50 dark:bg-slate-900/20 text-center text-xs text-text-desc">
+      <footer className="border-t border-slate-200/50 dark:border-slate-800/50 mt-20 py-6 bg-slate-50  /20 text-center text-xs  ">
         <p>© {new Date().getFullYear()} Business Suite. Designed for ultimate reliability.</p>
       </footer>
     </div>

@@ -47,7 +47,7 @@ export default function ThemeSelector() {
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 py-2 px-4 rounded-2xl shadow-sm">
+    <div className="flex flex-wrap items-center gap-4 bg-white/50  /50 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 py-2 px-4 rounded-2xl shadow-sm">
       {/* Theme Presets */}
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">

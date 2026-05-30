@@ -49,7 +49,7 @@ export default function SavedInvoicesList({
       {filteredByMode.length > 0 && (
         <div className="relative">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-desc"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4  "
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -71,7 +71,7 @@ export default function SavedInvoicesList({
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-desc hover:text-text-body"
+              className="absolute right-3 top-1/2 -translate-y-1/2   hover:text-text-body"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -83,7 +83,7 @@ export default function SavedInvoicesList({
 
       {/* Results count */}
       {searchQuery && filteredByMode.length > 0 && (
-        <p className="text-xs text-text-desc px-1">
+        <p className="text-xs   px-1">
           {filteredInvoices.length} of {filteredByMode.length} results
         </p>
       )}
@@ -92,11 +92,11 @@ export default function SavedInvoicesList({
       {filteredByMode.length === 0 && (
         <div className="bg-slate-50 dark:bg-slate-950/40 rounded-xl p-8 text-center border border-slate-100 dark:border-slate-800">
           <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-text-desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6  " fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
           </div>
-          <p className="text-text-desc text-sm">
+          <p className="  text-sm">
             No {currentMode === 'gst-bill' ? 'invoices' : currentMode === 'dc-bill' ? 'delivery challans' : currentMode === 'slip-bill' ? 'slip bills' : 'quotations'} saved yet.
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function SavedInvoicesList({
       {/* No search results */}
       {filteredByMode.length > 0 && filteredInvoices.length === 0 && searchQuery && (
         <div className="bg-slate-50 dark:bg-slate-950/40 rounded-xl p-6 text-center border border-slate-100 dark:border-slate-800">
-          <p className="text-text-desc text-sm">No matching records found for &quot;{searchQuery}&quot;</p>
+          <p className="  text-sm">No matching records found for &quot;{searchQuery}&quot;</p>
         </div>
       )}
 
@@ -113,7 +113,7 @@ export default function SavedInvoicesList({
       {filteredInvoices.map((invoice) => (
         <div 
           key={invoice.id} 
-          className="bg-bg-surface dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4 hover:shadow-md transition-shadow group"
+          className="bg-bg-surface   rounded-xl border border-slate-100 dark:border-slate-800 p-4 hover:shadow-md transition-shadow group"
         >
           {/* Top Row: Invoice info + Badge */}
           <div className="flex items-start justify-between gap-3">
@@ -143,10 +143,10 @@ export default function SavedInvoicesList({
                   <div className="font-semibold text-text-title truncate">
                     {currentMode === 'gst-bill' ? 'INV' : currentMode === 'dc-bill' ? invoice.dcNo || 'DC' : currentMode === 'slip-bill' ? 'SLIP' : 'QTN'}-{currentMode === 'dc-bill' ? '' : (invoice.invoiceNo || 'Draft')}
                   </div>
-                  <div className="text-xs text-text-desc truncate">
+                  <div className="text-xs   truncate">
                     {getBuyerName(invoice)}
                   </div>
-                  <div className="text-xs text-text-desc flex items-center gap-2 mt-0.5">
+                  <div className="text-xs   flex items-center gap-2 mt-0.5">
                     <span>{new Date(invoice.date).toLocaleDateString('en-GB')}</span>
                     <span>•</span>
                     <span className="font-medium text-text-title">₹{(invoice.grandTotal || 0).toLocaleString()}</span>
@@ -166,7 +166,7 @@ export default function SavedInvoicesList({
                 invoice.paymentStatus === 'paid' ? 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400' :
                 invoice.paymentStatus === 'partial' ? 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400' :
                 invoice.paymentStatus === 'overdue' ? 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400' :
-                'bg-slate-100 dark:bg-slate-800 text-text-desc'
+                'bg-slate-100 dark:bg-slate-800  '
               )
             }`}>
               {currentMode === 'dc-bill' ? (
@@ -196,7 +196,7 @@ export default function SavedInvoicesList({
               className={`p-2 rounded-lg transition-colors ${
                 invoice.paymentStatus === 'paid' ? 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-950/30' :
                 invoice.paymentStatus === 'partial' ? 'text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-950/30' :
-                'text-text-desc hover:bg-slate-50 dark:hover:bg-slate-800'
+                '  hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
               onClick={() => handleOpenPaymentModal(invoice)}
               title="Payment Status"

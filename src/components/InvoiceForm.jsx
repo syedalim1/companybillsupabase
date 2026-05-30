@@ -43,11 +43,11 @@ export default function InvoiceForm({
   };
 
   return (
-    <div className="flex-1 text-text-body max-w-2xl print:hidden mx-auto lg:mx-0 space-y-6 animate-in fade-in duration-500">
+    <div className="flex-1 text-gray-800 max-w-2xl print:hidden mx-auto lg:mx-0 space-y-6 animate-in fade-in duration-500">
       {/* Back to landing button */}
       <button
         onClick={() => setCurrentMode('landing')}
-        className="flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-gray-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-slate-600"
+        className="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-gray-200"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         Back to Home
@@ -55,21 +55,21 @@ export default function InvoiceForm({
 
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className={`text-3xl font-bold tracking-tight ${currentMode === 'dc-bill' ? 'text-rose-600 dark:text-rose-400' : (currentMode === 'slip-bill' ? 'text-amber-600 dark:text-amber-400' : 'text-text-title')}`}>
+        <h1 className={`text-3xl font-bold tracking-tight ${currentMode === 'dc-bill' ? 'text-rose-600' : (currentMode === 'slip-bill' ? 'text-amber-600' : 'text-gray-900')}`}>
           {currentMode === 'gst-bill' ? 'GST Invoice Generator' : (currentMode === 'dc-bill' ? 'Delivery Challan Generator' : (currentMode === 'slip-bill' ? 'Slip Bill Generator' : 'Quotation Generator'))}
         </h1>
-        <p className="text-text-desc mt-2">
+        <p className="text-gray-500 mt-2">
           {currentMode === 'gst-bill' ? 'Create professional compliant tax invoices.' : (currentMode === 'dc-bill' ? 'Create delivery challans for goods movement.' : (currentMode === 'slip-bill' ? 'Quick receipts for local business.' : 'Generate quick estimates for your clients.'))}
         </p>
       </div>
 
       {/* Editing Mode Indicator */}
       {editingInvoiceId && (
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-3 flex items-center gap-2">
-          <svg className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center gap-2">
+          <svg className="w-5 h-5 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
           </svg>
-          <span className="text-amber-800 dark:text-amber-300 text-sm font-medium">
+          <span className="text-amber-800 text-sm font-medium">
             Editing Invoice #{invoiceData.invoiceDetails?.invoiceNo || 'Draft'}
           </span>
         </div>
@@ -77,9 +77,9 @@ export default function InvoiceForm({
 
       {/* GST Option for Quotations */}
       {currentMode === 'quotation' && (
-        <div className="bg-bg-surface dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6">
-          <h3 className="text-sm font-bold text-text-title uppercase tracking-wider mb-4 flex items-center gap-2">
-            <svg className="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             Tax Configuration
           </h3>
           <div className="flex gap-6">
@@ -91,11 +91,11 @@ export default function InvoiceForm({
                   value="with-gst"
                   checked={quotationGstOption === 'with-gst'}
                   onChange={(e) => handleQuotationGstChange(e.target.value)}
-                  className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded-full checked:border-purple-600 checked:bg-purple-600 transition-all"
+                  className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full checked:border-purple-600 checked:bg-purple-600 transition-all"
                 />
                 <div className="absolute w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
               </div>
-              <span className="text-text-body font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">With GST</span>
+              <span className="text-gray-700 font-medium group-hover:text-purple-600 transition-colors">With GST</span>
             </label>
             <label className="flex items-center cursor-pointer group">
               <div className="relative flex items-center justify-center w-5 h-5 mr-2">
@@ -105,11 +105,11 @@ export default function InvoiceForm({
                   value="without-gst"
                   checked={quotationGstOption === 'without-gst'}
                   onChange={(e) => handleQuotationGstChange(e.target.value)}
-                  className="peer appearance-none w-5 h-5 border-2 border-slate-300 dark:border-slate-600 rounded-full checked:border-purple-600 checked:bg-purple-600 transition-all"
+                  className="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-full checked:border-purple-600 checked:bg-purple-600 transition-all"
                 />
                 <div className="absolute w-2 h-2 bg-white rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
               </div>
-              <span className="text-text-body font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Without GST</span>
+              <span className="text-gray-700 font-medium group-hover:text-purple-600 transition-colors">Without GST</span>
             </label>
           </div>
         </div>
@@ -146,10 +146,10 @@ export default function InvoiceForm({
       </div>
 
       {/* Actions Toolbar */}
-      <div className="sticky bottom-4 z-20 bg-bg-surface/90 dark:bg-slate-900/90 backdrop-blur-lg border border-slate-200 dark:border-slate-700 p-4 rounded-xl shadow-2xl space-y-3">
+      <div className="sticky bottom-4 z-20 bg-white/90 backdrop-blur-lg border border-gray-200 p-4 rounded-xl shadow-2xl space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <button
-            className="flex items-center justify-center gap-2 w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-950 transition-all transform hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2 w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg hover:shadow-blue-200 transition-all transform hover:-translate-y-0.5"
             onClick={() => window.print()}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
@@ -160,7 +160,7 @@ export default function InvoiceForm({
             className={`flex items-center justify-center gap-2 w-full py-3.5 font-bold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 ${
               isSaving
                 ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-purple-600 text-white hover:bg-purple-700 hover:shadow-purple-200 dark:hover:shadow-purple-950'
+                : 'bg-purple-600 text-white hover:bg-purple-700 hover:shadow-purple-200'
             }`}
             onClick={editingInvoiceId ? handleUpdateInvoice : handleSaveInvoice}
             disabled={isSaving}
@@ -187,8 +187,8 @@ export default function InvoiceForm({
           <button
             className={`flex items-center justify-center gap-2 w-full py-3 font-bold rounded-xl border-2 transition-all ${
               isGenerating
-                ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 border-gray-200 dark:border-slate-700 cursor-not-allowed'
-                : 'bg-bg-surface dark:bg-slate-800 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-950/20'
+                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                : 'bg-white text-red-600 border-red-100 hover:bg-red-50'
             }`}
             onClick={handleGeneratePDF}
             disabled={isGenerating}
@@ -205,7 +205,7 @@ export default function InvoiceForm({
           </button>
 
            <button
-            className="flex items-center justify-center gap-2 w-full py-3 bg-bg-surface dark:bg-slate-800 text-orange-600 dark:text-orange-400 font-bold rounded-xl border-2 border-orange-100 dark:border-orange-900/30 hover:bg-orange-50 dark:hover:bg-orange-950/20 transition-all"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-orange-600 font-bold rounded-xl border-2 border-orange-100 hover:bg-orange-50 transition-all"
             onClick={handleExportToExcel}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -213,7 +213,7 @@ export default function InvoiceForm({
           </button>
 
           <button
-            className="flex items-center justify-center gap-2 w-full py-3 bg-bg-surface dark:bg-slate-800 text-green-600 dark:text-green-400 font-bold rounded-xl border-2 border-green-100 dark:border-green-900/30 hover:bg-green-50 dark:hover:bg-green-950/20 transition-all"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-green-600 font-bold rounded-xl border-2 border-green-100 hover:bg-green-50 transition-all"
             onClick={() => setShowEmailModal(true)}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -223,7 +223,7 @@ export default function InvoiceForm({
 
         {editingInvoiceId && (
           <button
-            className="w-full py-3 bg-slate-100 dark:bg-slate-800 text-text-desc font-semibold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+            className="w-full py-3 bg-gray-100 text-gray-600 font-semibold rounded-xl hover:bg-gray-200 transition-all"
             onClick={handleCancelEditing}
           >
             Cancel Editing
@@ -231,8 +231,8 @@ export default function InvoiceForm({
         )}
       </div>
 
-      <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-700">
-        <h3 className="text-lg font-bold text-text-title mb-4">
+      <div className="mt-8 pt-8 border-t border-gray-200">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">
           {currentMode === 'gst-bill' ? 'Saved Invoices' : currentMode === 'dc-bill' ? 'Saved Delivery Challans' : currentMode === 'slip-bill' ? 'Saved Slip Bills' : 'Saved Quotations'}
         </h3>
         <SavedInvoicesList

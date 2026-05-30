@@ -53,7 +53,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-6 transition-all duration-300">
+    <div className="bg-white   rounded-2xl shadow-sm /80 p-6 transition-all duration-300">
       <h3 className="text-sm font-bold text-text-title uppercase tracking-wider mb-6 flex items-center gap-2 pb-4 border-b border-slate-100 dark:border-slate-800/80">
         <svg className="w-4 h-4 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -70,7 +70,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
           const filtered = getFilteredProducts(index);
 
           return (
-            <div key={item.id || index} className="relative bg-slate-50 dark:bg-slate-950/40 rounded-2xl p-5 border border-slate-100 dark:border-slate-800 hover:border-brand-accent/40 transition-all duration-200 group">
+            <div key={item.id || index} className="relative  rounded-2xl p-5  hover:border-brand-accent/40 transition-all duration-200 group">
               {/* Remove Button */}
               {invoiceData.items.length > 1 && (
                 <button
@@ -87,14 +87,14 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
               {/* Description Input acting as Auto-Complete Search */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="relative">
-                  <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Item Name / Description</label>
+                  <label className="block text-xs font-semibold   mb-1 ml-1">Item Name / Description</label>
                   <input
                     type="text"
                     value={item.description}
                     onChange={(e) => handleDescriptionChange(index, e.target.value)}
                     onBlur={() => setTimeout(() => setShowProductDropdown(null), 250)}
                     placeholder="Enter item description..."
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm font-semibold text-text-title"
+                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm font-semibold text-text-title"
                   />
                   
                   {/* Stock Warnings */}
@@ -118,7 +118,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                   )}
 
                   {showProductDropdown === index && filtered.length > 0 && (
-                    <div className="absolute z-30 w-full mt-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-xl shadow-xl max-h-48 overflow-y-auto">
+                    <div className="absolute z-30 w-full border mt-1 bg-white   /80 rounded-xl shadow-xl max-h-48 overflow-y-auto">
                       {filtered.map((product) => (
                         <div
                           key={product.id}
@@ -126,7 +126,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
                           className="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer border-b border-slate-100 dark:border-slate-800/40 last:border-b-0 transition-colors"
                         >
                           <div className="font-semibold text-text-title text-sm">{product.name}</div>
-                          <div className="text-[11px] text-text-desc flex justify-between mt-1">
+                          <div className="text-[11px]   flex justify-between mt-1">
                             <span>₹{product.rate} / {product.unit || 'Nos'}</span>
                             <span>Stock: {product.stock} {isLowStock && '(Low)'}</span>
                           </div>
@@ -138,23 +138,23 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
 
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">HSN</label>
+                    <label className="block text-xs font-semibold   mb-1 ml-1">HSN</label>
                     <input
                       type="text"
                       value={item.hsn || ''}
                       onChange={(e) => handleItemChange(index, 'hsn', e.target.value)}
                       placeholder="HSN Code"
-                      className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
+                      className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">SAC</label>
+                    <label className="block text-xs font-semibold   mb-1 ml-1">SAC</label>
                     <input
                       type="text"
                       value={item.sac || ''}
                       onChange={(e) => handleItemChange(index, 'sac', e.target.value)}
                       placeholder="SAC Code"
-                      className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
+                      className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-mono text-text-title"
                     />
                   </div>
                 </div>
@@ -162,46 +162,46 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
               
               <div className="grid grid-cols-4 gap-2">
                 <div className="col-span-1">
-                  <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Qty</label>
+                  <label className="block text-xs font-semibold   mb-1 ml-1">Qty</label>
                   <input
                     type="number"
                     value={item.quantity}
                     onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value) || 0)}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-bold text-text-title"
+                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center font-bold text-text-title"
                   />
                 </div>
                 <div className="col-span-1">
-                  <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Unit</label>
+                  <label className="block text-xs font-semibold   mb-1 ml-1">Unit</label>
                   <input
                     type="text"
                     value={item.unit || 'Nos'}
                     onChange={(e) => handleItemChange(index, 'unit', e.target.value)}
                     placeholder="Unit"
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
+                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
                   />
                 </div>
                 <div className="col-span-1">
-                  <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Rate</label>
+                  <label className="block text-xs font-semibold   mb-1 ml-1">Rate</label>
                   <input
                     type="number"
                     value={item.rate}
                     onChange={(e) => handleItemChange(index, 'rate', parseFloat(e.target.value) || 0)}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
+                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-text-title"
                   />
                 </div>
                 <div className="col-span-1">
-                  <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Disc %</label>
+                  <label className="block text-xs font-semibold   mb-1 ml-1">Disc %</label>
                   <input
                     type="number"
                     value={item.discount}
                     onChange={(e) => handleItemChange(index, 'discount', parseFloat(e.target.value) || 0)}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-rose-500 font-bold"
+                    className="w-full border p-2.5 bg-white    rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-sm text-center text-rose-500 font-bold"
                   />
                 </div>
               </div>
               
               <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center px-1">
-                <span className="text-xs font-semibold text-text-desc uppercase tracking-wide">Item Total</span>
+                <span className="text-xs font-semibold   uppercase tracking-wide">Item Total</span>
                 <span className="text-lg font-black text-brand-primary">
                   ₹{(item.quantity * item.rate * (1 - item.discount / 100)).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                 </span>
@@ -213,7 +213,7 @@ const ItemsForm = ({ invoiceData, handleItemChange, addItem, removeItem }) => {
 
       <button
         onClick={addItem}
-        className="w-full mt-4 py-3 bg-brand-primary/5 text-brand-primary rounded-xl hover:bg-brand-primary/10 focus:outline-none focus:ring-2 focus:ring-brand-primary font-bold border border-brand-primary/20 border-dashed transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+        className="w-full border mt-4 py-3 bg-brand-primary/5 text-brand-primary rounded-xl hover:bg-brand-primary/10 focus:outline-none focus:ring-2 focus:ring-brand-primary font-bold border border-brand-primary/20 border-dashed transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

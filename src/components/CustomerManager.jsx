@@ -310,7 +310,7 @@ const CustomerManager = () => {
   }
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto text-gray-800 bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto text-gray-800 bg-white min-h-screen">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -417,7 +417,7 @@ const CustomerManager = () => {
       <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-white border-b border-gray-200">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">GSTIN</th>
@@ -429,7 +429,7 @@ const CustomerManager = () => {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredBuyers.map((buyer) => (
-                <tr key={buyer.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={buyer.id} className="hover:bg-white transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{buyer.name}</div>
                   </td>
@@ -493,7 +493,7 @@ const CustomerManager = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
               <h2 className="text-xl font-bold text-gray-900">Add New Customer</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
@@ -633,10 +633,10 @@ const CustomerManager = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex gap-3">
+            <div className="px-6 py-4 bg-white border-t border-gray-100 flex gap-3">
               <button
                 onClick={() => setShowAddModal(false)}
-                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all cursor-pointer"
+                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>
@@ -656,7 +656,7 @@ const CustomerManager = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
               <h2 className="text-xl font-bold text-gray-900">Edit Customer</h2>
               <button 
                 onClick={() => setEditingBuyer(null)}
@@ -791,10 +791,10 @@ const CustomerManager = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex gap-3">
+            <div className="px-6 py-4 bg-white border-t border-gray-100 flex gap-3">
               <button
                 onClick={() => setEditingBuyer(null)}
-                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all cursor-pointer"
+                className="flex-1 py-2.5 px-4 bg-white border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all cursor-pointer"
               >
                 Cancel
               </button>

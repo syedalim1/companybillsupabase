@@ -153,7 +153,7 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
   const isGstinValid = validateGstin(invoiceData.buyer.gstin);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-6 transition-all duration-300">
+    <div className="bg-white   rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-6 transition-all duration-300">
       <div className="flex justify-between items-center pb-4 mb-4 border-b border-slate-100 dark:border-slate-800/80">
         <h3 className="text-sm font-bold text-text-title uppercase tracking-wider flex items-center gap-2">
           <svg className="w-4 h-4 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,24 +175,24 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
       <div className="space-y-4">
         {/* Name with autocomplete */}
         <div className="relative">
-          <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Client Name</label>
+          <label className="block text-xs font-medium   mb-1 ml-1">Client Name</label>
           <input
             type="text"
             value={invoiceData.buyer.name}
             onChange={(e) => handleNameChange(e.target.value)}
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all font-medium text-text-title"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all font-medium text-text-title"
             placeholder="Search or enter client name..."
           />
           {showDropdown && filteredBuyers.length > 0 && (
-            <div className="absolute z-10 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+            <div className="absolute z-10 w-full mt-2 bg-white   border border-slate-100 dark:border-slate-800/80 rounded-xl shadow-xl max-h-60 overflow-y-auto">
               {filteredBuyers.map((buyer) => (
                 <div
                   key={buyer.id}
-                  className="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer border-b border-slate-100 dark:border-slate-800/40 last:border-b-0 transition-colors"
+                  className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors"
                   onClick={() => handleBuyerSelect(buyer)}
                 >
                   <div className="font-semibold text-text-title text-sm">{buyer.name}</div>
-                  <div className="text-[11px] text-text-desc flex flex-wrap gap-2 mt-1">
+                  <div className="text-[11px]   flex flex-wrap gap-2 mt-1">
                     {buyer.gstin && <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">GST: {buyer.gstin}</span>}
                     {buyer.state && <span>{buyer.state}</span>}
                     {buyer.email && <span>{buyer.email}</span>}
@@ -206,22 +206,22 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
         {/* Address and Destination */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Address</label>
+            <label className="block text-xs font-medium   mb-1 ml-1">Address</label>
             <input
               type="text"
               value={invoiceData.buyer.address}
               onChange={(e) => handleInputChange('buyer', 'address', e.target.value)}
-              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+              className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="Street Address"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Destination</label>
+            <label className="block text-xs font-medium   mb-1 ml-1">Destination</label>
             <input
               type="text"
               value={invoiceData.buyer.destination}
               onChange={(e) => handleInputChange('buyer', 'destination', e.target.value)}
-              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+              className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="City / Destination"
             />
           </div>
@@ -230,14 +230,14 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
         {/* GSTIN and Contact */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-text-desc mb-1 ml-1">GSTIN (Press Enter to Fetch)</label>
+            <label className="block text-xs font-medium   mb-1 ml-1">GSTIN (Press Enter to Fetch)</label>
             <div className="relative">
               <input
                 type="text"
                 value={invoiceData.buyer.gstin}
                 onChange={(e) => handleGstinChange(e.target.value)}
                 onKeyDown={handleGstinKeyDown}
-                className={`w-full p-3 bg-slate-50 dark:bg-slate-950 border rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 transition-all font-mono text-sm text-text-title pr-10 ${
+                className={`w-full p-3 bg-white border rounded-xl focus:outline-none focus:ring-2 transition-all font-mono text-sm text-text-title pr-10 ${
                   invoiceData.buyer.gstin
                     ? isGstinValid
                       ? "border-emerald-500 focus:ring-emerald-500/50"
@@ -260,12 +260,12 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
             )}
           </div>
           <div>
-            <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Contact</label>
+            <label className="block text-xs font-medium   mb-1 ml-1">Contact</label>
             <input
               type="text"
               value={invoiceData.buyer.contact}
               onChange={(e) => handleInputChange('buyer', 'contact', e.target.value)}
-              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+              className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="Phone Number"
             />
           </div>
@@ -273,12 +273,12 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
 
         {/* Email Field */}
         <div>
-          <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Email (for invoice)</label>
+          <label className="block text-xs font-medium   mb-1 ml-1">Email (for invoice)</label>
           <input
             type="email"
             value={invoiceData.buyer.email || ''}
             onChange={(e) => handleInputChange('buyer', 'email', e.target.value)}
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
             placeholder="client@company.com"
           />
         </div>
@@ -286,34 +286,34 @@ const ClientForm = ({ invoiceData, handleInputChange }) => {
         {/* State and State Code */}
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2">
-            <label className="block text-xs font-medium text-text-desc mb-1 ml-1">State</label>
+            <label className="block text-xs font-medium   mb-1 ml-1">State</label>
             <input
               type="text"
               value={invoiceData.buyer.state}
               onChange={(e) => handleInputChange('buyer', 'state', e.target.value)}
-              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+              className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="State Name"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Code</label>
+            <label className="block text-xs font-medium   mb-1 ml-1">Code</label>
             <input
               type="number"
               value={invoiceData.buyer.stateCode || ''}
               onChange={(e) => handleInputChange('buyer', 'stateCode', parseInt(e.target.value) || null)}
-              className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+              className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
               placeholder="33"
             />
           </div>
         </div>
         
         <div>
-          <label className="block text-xs font-medium text-text-desc mb-1 ml-1">Buyer Order No (Optional)</label>
+          <label className="block text-xs font-medium   mb-1 ml-1">Buyer Order No (Optional)</label>
           <input
             type="text"
             value={invoiceData.buyer.buyerNumber || ''}
             onChange={(e) => handleInputChange('buyer', 'buyerNumber', e.target.value)}
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-text-title text-sm"
             placeholder="PO / Order reference"
           />
         </div>

@@ -10,13 +10,13 @@ const PlusIcon = () => (
 );
 
 const SearchIcon = () => (
-  <svg className="w-5 h-5 text-text-desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5  " fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
   </svg>
 );
 
 const FilterIcon = () => (
-  <svg className="w-5 h-5 text-text-desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg className="w-5 h-5  " fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
   </svg>
 );
@@ -132,7 +132,7 @@ const ProductList = () => {
           <h1 className="text-3xl font-extrabold text-text-title tracking-tight">
             Product Catalog & Stock Management
           </h1>
-          <p className="text-text-desc mt-1">
+          <p className="  mt-1">
             Track inventory stock, unit measures, categories, default GST tax rates, and HSN codes.
           </p>
         </div>
@@ -148,7 +148,7 @@ const ProductList = () => {
       {/* Form Overlay */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
+          <div className="bg-white   rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in zoom-in-95 duration-200">
             <ProductForm
               product={editingProduct}
               onSave={handleSaveProduct}
@@ -159,7 +159,7 @@ const ProductList = () => {
       )}
 
       {/* Filters */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-4 mb-6">
+      <div className="bg-white   rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -198,7 +198,7 @@ const ProductList = () => {
         {filteredProducts.map((product) => {
           const isLowStock = product.stock <= (product.minStock || 0);
           return (
-            <div key={product.id} className="bg-white dark:bg-slate-900 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 hover:shadow-md transition-shadow">
+            <div key={product.id} className="bg-white   p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 hover:shadow-md transition-shadow">
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <h3 className="font-bold text-text-title text-lg">{product.name}</h3>
@@ -222,18 +222,18 @@ const ProductList = () => {
                     ₹{product.rate.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </span>
                   {product.gstRate && (
-                    <span className="text-[10px] text-text-desc block">GST: {product.gstRate}%</span>
+                    <span className="text-[10px]   block">GST: {product.gstRate}%</span>
                   )}
                 </div>
               </div>
               
               {product.description && (
-                <p className="text-sm text-text-desc mb-3 line-clamp-2">
+                <p className="text-sm   mb-3 line-clamp-2">
                   {product.description}
                 </p>
               )}
 
-              <div className="flex items-center gap-3 text-xs text-text-desc font-mono bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl mb-4 border border-slate-100 dark:border-slate-800/50">
+              <div className="flex items-center gap-3 text-xs   font-mono bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl mb-4 border border-slate-100 dark:border-slate-800/50">
                 {product.hsn && <span>HSN: {product.hsn}</span>}
                 {product.sac && <span>SAC: {product.sac}</span>}
                 {!product.hsn && !product.sac && <span>No Tax Code</span>}
@@ -261,26 +261,26 @@ const ProductList = () => {
       </div>
 
       {/* Products List - Desktop Table View */}
-      <div className="hidden md:block bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 overflow-hidden">
+      <div className="hidden md:block bg-white   rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 overflow-hidden">
         {filteredProducts.length === 0 ? (
           <div className="p-16 text-center">
             <div className="inline-block p-4 bg-slate-100 dark:bg-slate-800 rounded-full mb-4">
               <SearchIcon />
             </div>
             <h3 className="text-xl font-bold text-text-title">No products found</h3>
-            <p className="text-text-desc mt-2">Try adjusting your filters or search terms.</p>
+            <p className="  mt-2">Try adjusting your filters or search terms.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-50 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-text-desc uppercase tracking-wider">Product Info</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-text-desc uppercase tracking-wider">Category</th>
-                  <th className="px-6 py-4 text-center text-xs font-bold text-text-desc uppercase tracking-wider">Stock Level</th>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-text-desc uppercase tracking-wider">HSN/SAC</th>
-                  <th className="px-6 py-4 text-right text-xs font-bold text-text-desc uppercase tracking-wider">Rate (₹)</th>
-                  <th className="px-6 py-4 text-right text-xs font-bold text-text-desc uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold   uppercase tracking-wider">Product Info</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold   uppercase tracking-wider">Category</th>
+                  <th className="px-6 py-4 text-center text-xs font-bold   uppercase tracking-wider">Stock Level</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold   uppercase tracking-wider">HSN/SAC</th>
+                  <th className="px-6 py-4 text-right text-xs font-bold   uppercase tracking-wider">Rate (₹)</th>
+                  <th className="px-6 py-4 text-right text-xs font-bold   uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-850">
@@ -292,7 +292,7 @@ const ProductList = () => {
                         <div>
                           <div className="text-sm font-bold text-text-title">{product.name}</div>
                           {product.description && (
-                            <div className="text-xs text-text-desc truncate max-w-xs mt-0.5">{product.description}</div>
+                            <div className="text-xs   truncate max-w-xs mt-0.5">{product.description}</div>
                           )}
                         </div>
                       </td>
@@ -302,7 +302,7 @@ const ProductList = () => {
                             {product.category}
                           </span>
                         ) : (
-                          <span className="text-text-desc text-sm">-</span>
+                          <span className="  text-sm">-</span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -315,11 +315,11 @@ const ProductList = () => {
                           {isLowStock && ' (Low Stock Alert)'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-text-desc">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-mono  ">
                         <div className="flex flex-col gap-0.5 text-xs">
                           {product.hsn && <span>HSN: {product.hsn}</span>}
                           {product.sac && <span>SAC: {product.sac}</span>}
-                          {!product.hsn && !product.sac && <span className="text-text-desc">-</span>}
+                          {!product.hsn && !product.sac && <span className=" ">-</span>}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -327,7 +327,7 @@ const ProductList = () => {
                           ₹{product.rate.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </div>
                         {product.gstRate && (
-                          <span className="text-[10px] text-text-desc block">GST: {product.gstRate}%</span>
+                          <span className="text-[10px]   block">GST: {product.gstRate}%</span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold">
@@ -358,7 +358,7 @@ const ProductList = () => {
       </div>
       
       {/* Footer / Status */}
-      <div className="text-center text-xs text-text-desc mt-6">
+      <div className="text-center text-xs   mt-6">
         Showing {filteredProducts.length} of {products.length} products in catalog
       </div>
     </div>

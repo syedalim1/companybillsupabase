@@ -115,7 +115,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
   const units = ['PCS', 'KG', 'MTR', 'LTR', 'SQM', 'BOX', 'SET', 'BAG', 'NOS'];
 
   return (
-    <div className="p-6 bg-white dark:bg-slate-900 text-text-body transition-colors duration-200">
+    <div className="p-6 bg-white   text-text-body transition-colors duration-200">
       <h3 className="text-lg font-bold text-text-title mb-6 pb-4 border-b border-slate-100 dark:border-slate-800/80">
         {product ? 'Edit Product details' : 'Add New Product to Catalog'}
       </h3>
@@ -124,7 +124,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Product Name */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Product Name *</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">Product Name *</label>
             <input
               type="text"
               value={formData.name}
@@ -137,7 +137,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Category */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Category</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">Category</label>
             <select
               value={formData.category}
               onChange={(e) => handleInputChange('category', e.target.value)}
@@ -152,7 +152,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Rate */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Rate (₹) *</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">Rate (₹) *</label>
             <input
               type="number"
               step="0.01"
@@ -166,7 +166,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Unit */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Unit</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">Unit</label>
             <select
               value={formData.unit}
               onChange={(e) => handleInputChange('unit', e.target.value)}
@@ -181,7 +181,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* HSN Code */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">HSN Code</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">HSN Code</label>
             <input
               type="text"
               value={formData.hsn}
@@ -193,7 +193,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* SAC Code */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">SAC Code</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">SAC Code</label>
             <input
               type="text"
               value={formData.sac}
@@ -205,7 +205,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Default GST Rate */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Default GST Rate (%)</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">Default GST Rate (%)</label>
             <input
               type="number"
               step="0.01"
@@ -218,7 +218,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Current Stock - NEW */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1 font-bold text-brand-primary">Stock Quantity (In-Hand) *</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1 font-bold text-brand-primary">Stock Quantity (In-Hand) *</label>
             <input
               type="number"
               value={formData.stock}
@@ -231,7 +231,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
           {/* Minimum Stock Alert threshold */}
           <div>
-            <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Min Stock Alert threshold</label>
+            <label className="block text-xs font-semibold   mb-1 ml-1">Min Stock Alert threshold</label>
             <input
               type="number"
               value={formData.minStock}
@@ -244,7 +244,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-semibold text-text-desc mb-1 ml-1">Description</label>
+          <label className="block text-xs font-semibold   mb-1 ml-1">Description</label>
           <textarea
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}

@@ -68,7 +68,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
       case 'paid': return 'text-green-600 bg-green-100 dark:bg-green-950/30 dark:text-green-400';
       case 'partial': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-950/30 dark:text-yellow-400';
       case 'overdue': return 'text-red-600 bg-red-100 dark:bg-red-950/30 dark:text-red-400';
-      default: return 'text-text-desc bg-slate-100 dark:bg-slate-800';
+      default: return '  bg-slate-100 dark:bg-slate-800';
     }
   };
 
@@ -76,13 +76,13 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-bg-surface dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700">
+      <div className="bg-bg-surface   rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-text-title">Update Payment Status</h2>
             <button
               onClick={onClose}
-              className="text-text-desc hover:text-text-body text-2xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="  hover:text-text-body text-2xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               ×
             </button>
@@ -148,7 +148,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
                 placeholder="Enter payment amount"
                 className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
               />
-              <p className="text-xs text-text-desc mt-1">
+              <p className="text-xs   mt-1">
                 Total Invoice Amount: ₹{invoice.grandTotal?.toLocaleString('en-IN')}
               </p>
             </div>

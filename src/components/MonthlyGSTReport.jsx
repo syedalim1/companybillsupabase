@@ -221,7 +221,7 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
   };
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto text-gray-800 bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto text-gray-800 bg-white min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-gray-900 tracking-tight">GST Compliance Center</h2>
@@ -239,7 +239,7 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
                 <select
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none font-medium"
+                  className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none font-medium"
                 >
                   {months.map(month => (
                     <option key={month.value} value={month.value}>{month.label}</option>
@@ -257,7 +257,7 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
                 <select
                   value={selectedYear}
                   onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none font-medium"
+                  className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none font-medium"
                 >
                   {years.map(year => (
                     <option key={year} value={year}>{year}</option>
@@ -283,7 +283,7 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
       {/* Report Content */}
       {!monthlyData || monthlyData.totalInvoices === 0 ? (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-16 text-center">
-          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
              <InvoiceIcon />
           </div>
           <h3 className="text-xl font-bold text-gray-900">No Invoices Found</h3>
@@ -338,7 +338,7 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
                <h3 className="font-bold text-gray-800 mb-4">Recent Invoices</h3>
                <div className="overflow-x-auto">
                  <table className="w-full text-sm text-left">
-                   <thead className="text-xs text-gray-400 uppercase bg-gray-50">
+                   <thead className="text-xs text-gray-400 uppercase bg-white">
                      <tr>
                        <th className="px-4 py-3 rounded-l-lg">Date</th>
                        <th className="px-4 py-3">Invoice #</th>
@@ -348,7 +348,7 @@ const MonthlyGSTReport = ({ savedInvoices, invoiceData }) => {
                    </thead>
                    <tbody className="divide-y divide-gray-100">
                      {monthlyData.invoiceBreakdown.slice(0, 5).map((inv, i) => (
-                       <tr key={i} className="hover:bg-gray-50">
+                       <tr key={i} className="hover:bg-white">
                          <td className="px-4 py-3 text-gray-500">{new Date(inv.date).toLocaleDateString()}</td>
                          <td className="px-4 py-3 font-mono text-gray-600">{inv.invoiceNo}</td>
                          <td className="px-4 py-3 font-medium">{inv.buyerName}</td>

@@ -28,7 +28,7 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
   const isShippingGstinValid = validateGstin(invoiceData.shipping.gstin);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-6 transition-all duration-300">
+    <div className="bg-white   rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-6 transition-all duration-300">
       <h3 className="text-sm font-bold text-text-title uppercase tracking-wider mb-6 flex items-center gap-2 pb-4 border-b border-slate-100 dark:border-slate-800/80">
         <svg className="w-4 h-4 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -54,14 +54,14 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
             value={invoiceData.billing.name}
             onChange={(e) => handleInputChange('billing', 'name', e.target.value)}
             placeholder="Company Name"
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
           />
           <textarea
             value={invoiceData.billing.address}
             onChange={(e) => handleInputChange('billing', 'address', e.target.value)}
             placeholder="Billing Address"
             rows="3"
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm resize-none text-text-title"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm resize-none text-text-title"
           />
           <div>
             <input
@@ -69,7 +69,7 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
               value={invoiceData.billing.gstin}
               onChange={(e) => handleBillingGstinChange(e.target.value)}
               placeholder="Billing GSTIN"
-              className={`w-full p-3 bg-slate-50 dark:bg-slate-950 border rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 transition-all text-sm font-mono text-text-title ${
+              className={`w-full p-3 bg-white border rounded-xl focus:outline-none focus:ring-2 transition-all text-sm font-mono text-text-title ${
                 invoiceData.billing.gstin
                   ? isBillingGstinValid
                     ? "border-emerald-500 focus:ring-emerald-500/50"
@@ -87,14 +87,14 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
               value={invoiceData.billing.state}
               onChange={(e) => handleInputChange('billing', 'state', e.target.value)}
               placeholder="State"
-              className="flex-1 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
+              className="flex-1 p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
             />
             <input
               type="number"
               value={invoiceData.billing.stateCode || ''}
               onChange={(e) => handleInputChange('billing', 'stateCode', parseInt(e.target.value) || null)}
               placeholder="Code"
-              className="w-20 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
+              className="w-20 p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
             />
           </div>
         </div>
@@ -115,14 +115,14 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
             value={invoiceData.shipping.name}
             onChange={(e) => handleInputChange('shipping', 'name', e.target.value)}
             placeholder="Company Name"
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
           />
           <textarea
             value={invoiceData.shipping.address}
             onChange={(e) => handleInputChange('shipping', 'address', e.target.value)}
             placeholder="Shipping Address"
             rows="3"
-            className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm resize-none text-text-title"
+            className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm resize-none text-text-title"
           />
           <div>
             <input
@@ -130,7 +130,7 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
               value={invoiceData.shipping.gstin}
               onChange={(e) => handleShippingGstinChange(e.target.value)}
               placeholder="Shipping GSTIN (Optional)"
-              className={`w-full p-3 bg-slate-50 dark:bg-slate-950 border rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 transition-all text-sm font-mono text-text-title ${
+              className={`w-full p-3 bg-white border rounded-xl focus:outline-none focus:ring-2 transition-all text-sm font-mono text-text-title ${
                 invoiceData.shipping.gstin
                   ? isShippingGstinValid
                     ? "border-emerald-500 focus:ring-emerald-500/50"
@@ -148,14 +148,14 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
               value={invoiceData.shipping.state}
               onChange={(e) => handleInputChange('shipping', 'state', e.target.value)}
               placeholder="State"
-              className="flex-1 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
+              className="flex-1 p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
             />
             <input
               type="number"
               value={invoiceData.shipping.stateCode || ''}
               onChange={(e) => handleInputChange('shipping', 'stateCode', parseInt(e.target.value) || null)}
               placeholder="Code"
-              className="w-20 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
+              className="w-20 p-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all text-sm text-text-title"
             />
           </div>
         </div>

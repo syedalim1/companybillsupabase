@@ -21,6 +21,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          document.documentElement.classList.remove('dark');
+          try { localStorage.removeItem('theme-dark'); localStorage.removeItem('theme-preset'); } catch(e) {}
+        `}} />
+      </head>
       <body
         className={`${outfit.variable} ${inter.variable} font-sans antialiased`}
       >

@@ -283,13 +283,13 @@ const handleGeneratePDF = async () => {
         <div className="flex-1 max-w-4xl print:hidden mx-auto">
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Back to Home
           </button>
 
-          <h1 className="text-3xl font-bold text-center mb-6 text-purple-600 dark:text-purple-400">
+          <h1 className="text-3xl font-bold text-center mb-6 text-purple-600">
             GST Monthly Report Generator
           </h1>
 
@@ -306,7 +306,7 @@ const handleGeneratePDF = async () => {
         <div className="flex-1 max-w-7xl print:hidden mx-auto">
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Back to Home
@@ -325,13 +325,13 @@ const handleGeneratePDF = async () => {
         <div className="flex-1 max-w-7xl print:hidden mx-auto">
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Back to Home
           </button>
 
-          <h1 className="text-3xl font-bold text-center mb-6 text-green-600 dark:text-green-400">
+          <h1 className="text-3xl font-bold text-center mb-6 text-green-600">
             Product Management
           </h1>
 
@@ -348,7 +348,7 @@ const handleGeneratePDF = async () => {
         <div className="flex-1 max-w-7xl print:hidden mx-auto">
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Back to Home

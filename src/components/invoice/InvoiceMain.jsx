@@ -145,7 +145,7 @@ const InvoiceMain = ({
           </div>
       ) : (shouldShowGST ? (
         <div className="grid grid-cols-2 border border-t-0 ">
-          <div className=" p-2 border-r-1  bg-gray-50">
+          <div className=" p-2 border-r-1  bg-white">
             <h3 className="text-[10px] font-bold uppercase  mb-2">Bill To</h3>
             <p className="font-bold  text-[13px]">
               {invoiceData.billing?.name || invoiceData.buyer.name}
@@ -168,7 +168,7 @@ const InvoiceMain = ({
               {invoiceData.billing?.stateCode || invoiceData.buyer.stateCode})
             </p>
           </div>
-          <div className=" p-2   bg-gray-50">
+          <div className=" p-2   bg-white">
             <h3 className="text-[10px] font-bold uppercase  mb-2">Ship To</h3>
             <p className="font-bold text-gray-800 text-[13px]">
               {invoiceData.shipping?.name || invoiceData.buyer.name}
@@ -200,7 +200,7 @@ const InvoiceMain = ({
           </div>
         </div>
       ) : (
-        <div className=" p-2  bg-gray-50 border border-t-0">
+        <div className=" p-2  bg-white border border-t-0">
           <h3 className="text-[10px] font-bold uppercase text-gray-500 mb-2">
             Party Details
           </h3>
@@ -272,7 +272,7 @@ const InvoiceMain = ({
 
           ) : (
           <table className="w-full text-xs border-collapse border border-slate-400">
-            <thead className="bg-gray-50">
+            <thead className="bg-white">
               <tr className="">
                 <th className="p-2 text-center w-[5%] border ">SI No.</th>
                 <th className="p-2 text-left w-[35%] border ">
@@ -456,7 +456,7 @@ const InvoiceMain = ({
                   </tr>
                 ))}
               {/* --- Grand Total Row --- */}
-              <tr className="font-bold bg-gray-50">
+              <tr className="font-bold bg-white">
                 <td colSpan="3" className="p-2 text-left border-b ">
                   {(invoiceData.additionalCharges.discount > 0 ||
                     invoiceData.additionalCharges.lessAmount > 0)
@@ -660,7 +660,7 @@ const InvoiceMain = ({
 
         {/* --- Transport Details Section (Duplicate/Transporter copy only) --- */}
         {copyType === 'duplicate' && mode === 'gst-bill' && (
-          <div className="border border-t-0 p-3 bg-gray-50">
+          <div className="border border-t-0 p-3 bg-white">
             <h3 className="text-[11px] font-bold uppercase text-gray-600 mb-2 border-b pb-1">Transport Details</h3>
             <div className="grid grid-cols-2 gap-x-6 gap-y-1">
               <p className="text-[12px]">
@@ -689,7 +689,7 @@ const InvoiceMain = ({
 
         {/* --- Receiver Signature Section for DC Bill --- */}
         {mode === 'dc-bill' && (
-          <div className="mt-6 p-4 border border-b-0 bg-gray-50 ">
+          <div className="mt-6 p-4 border border-b-0 bg-white ">
             <div className="grid grid-cols-2 gap-8">
               <div>
                 <p className="font-semibold text-xs mb-1">Goods Dispatched By:</p>
