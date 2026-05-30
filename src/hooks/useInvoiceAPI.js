@@ -172,9 +172,9 @@ export function useInvoiceAPI(
       },
       invoiceDetails: {
         invoiceNo: clonedInvoice.invoiceNo || '',
-        date: clonedInvoice.date || '',
+        date: clonedInvoice.date ? clonedInvoice.date.split('T')[0] : '',
         taxType: clonedInvoice.taxType || 'cgst_sgst',
-        dueDate: clonedInvoice.dueDate || '',
+        dueDate: clonedInvoice.dueDate ? clonedInvoice.dueDate.split('T')[0] : '',
         poNumber: clonedInvoice.poNumber || '',
         reference: clonedInvoice.reference || '',
         placeOfSupply: clonedInvoice.placeOfSupply || '',
@@ -283,9 +283,9 @@ export function useInvoiceAPI(
       },
       invoiceDetails: {
         invoiceNo: clonedInvoice.invoiceNo || '',
-        date: clonedInvoice.date || '',
+        date: clonedInvoice.date ? clonedInvoice.date.split('T')[0] : '',
         taxType: clonedInvoice.taxType || 'cgst_sgst',
-        dueDate: clonedInvoice.dueDate || '',
+        dueDate: clonedInvoice.dueDate ? clonedInvoice.dueDate.split('T')[0] : '',
         poNumber: clonedInvoice.poNumber || '',
         reference: clonedInvoice.reference || '',
         placeOfSupply: clonedInvoice.placeOfSupply || '',

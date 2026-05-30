@@ -49,7 +49,7 @@ export default function SavedInvoicesList({
       {filteredByMode.length > 0 && (
         <div className="relative">
           <svg
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4  "
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -66,12 +66,12 @@ export default function SavedInvoicesList({
             placeholder="Search by name, invoice no, amount..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-text-title focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-sm text-text-title focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all placeholder:text-text-desc/60"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2   hover:text-text-body"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-text-title dark:hover:text-text-title transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -143,10 +143,10 @@ export default function SavedInvoicesList({
                   <div className="font-semibold text-text-title truncate">
                     {currentMode === 'gst-bill' ? 'INV' : currentMode === 'dc-bill' ? invoice.dcNo || 'DC' : currentMode === 'slip-bill' ? 'SLIP' : 'QTN'}-{currentMode === 'dc-bill' ? '' : (invoice.invoiceNo || 'Draft')}
                   </div>
-                  <div className="text-xs   truncate">
+                  <div className="text-xs text-text-desc truncate">
                     {getBuyerName(invoice)}
                   </div>
-                  <div className="text-xs   flex items-center gap-2 mt-0.5">
+                  <div className="text-xs text-text-desc flex items-center gap-2 mt-0.5">
                     <span>{new Date(invoice.date).toLocaleDateString('en-GB')}</span>
                     <span>•</span>
                     <span className="font-medium text-text-title">₹{(invoice.grandTotal || 0).toLocaleString()}</span>
@@ -166,7 +166,7 @@ export default function SavedInvoicesList({
                 invoice.paymentStatus === 'paid' ? 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400' :
                 invoice.paymentStatus === 'partial' ? 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400' :
                 invoice.paymentStatus === 'overdue' ? 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400' :
-                'bg-slate-100 dark:bg-slate-800  '
+                'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300'
               )
             }`}>
               {currentMode === 'dc-bill' ? (

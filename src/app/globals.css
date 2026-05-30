@@ -4,19 +4,19 @@
   --font-sans: var(--font-outfit), var(--font-inter), sans-serif;
   --font-serif: serif;
   
-  --color-brand-primary: #6366f1;
-  --color-brand-primary-hover: #4f46e5;
-  --color-brand-accent: #818cf8;
-  --color-bg-base: #ffffff;
-  --color-bg-surface: #ffffff;
-  --color-bg-surface-hover: #fafafa;
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-accent: var(--brand-accent);
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-surface-hover: var(--bg-surface-hover);
   
-  --color-text-title: #0f172a;
-  --color-text-body: #334155;
-  --color-text-desc: #64748b;
+  --color-text-title: var(--text-title);
+  --color-text-body: var(--text-body);
+  --color-text-desc: var(--text-desc);
   
-  --color-border-subtle: #e2e8f0;
-  --color-border-focus: #6366f1;
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
 }
 
 :root {
@@ -24,7 +24,7 @@
   --brand-primary-hover: #4f46e5;
   --brand-accent: #818cf8;
   
-  --bg-base: #ffffff;
+  --bg-base: #f8fafc;
   --bg-surface: #ffffff;
   --bg-surface-hover: #fafafa;
   
@@ -36,6 +36,23 @@
   --border-focus: #6366f1;
 }
 
+.dark {
+  --brand-primary: #818cf8;
+  --brand-primary-hover: #6366f1;
+  --brand-accent: #a5b4fc;
+  
+  --bg-base: #0b0f19;
+  --bg-surface: #151c2c;
+  --bg-surface-hover: #1e293b;
+  
+  --text-title: #f8fafc;
+  --text-body: #cbd5e1;
+  --text-desc: #94a3b8;
+  
+  --border-subtle: #1e293b;
+  --border-focus: #818cf8;
+}
+
 /* Custom premium styling utilities */
 .glassmorphism {
   background: rgba(255, 255, 255, 0.75);
@@ -44,12 +61,23 @@
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
+.dark .glassmorphism {
+  background: rgba(15, 20, 35, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .glassmorphism-card {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(226, 232, 240, 0.5);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+}
+
+.dark .glassmorphism-card {
+  background: rgba(21, 28, 44, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
 body {

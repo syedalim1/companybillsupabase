@@ -25,6 +25,14 @@ function safeParseInt(val) {
 }
 
 /**
+ * Safely extract the additional charges object, supporting both 1:1 nested object or single-item array representations.
+ */
+function getAdditionalCharges(charges) {
+  if (!charges) return null;
+  return Array.isArray(charges) ? (charges[0] || null) : charges;
+}
+
+/**
  * Calculate the next invoice/DC/slip numbers from the database.
  * Single source of truth — clients must trust these values.
  */
@@ -404,7 +412,9 @@ export async function POST(request) {
 
     const formattedInvoice = {
       ...fullInvoice,
-      additionalCharges: fullInvoice.additionalCharges?.[0] || null
+      date: fullInvoice.date ? fullInvoice.date.split('T')[0] : null,
+      dueDate: fullInvoice.dueDate ? fullInvoice.dueDate.split('T')[0] : null,
+      additionalCharges: getAdditionalCharges(fullInvoice.additionalCharges)
     };
 
     // --- Deduct stock for non-quotation invoices ---
@@ -466,7 +476,9 @@ export async function GET() {
 
     const formattedInvoices = (invoices || []).map((inv) => ({
       ...inv,
-      additionalCharges: inv.additionalCharges?.[0] || null,
+      date: inv.date ? inv.date.split('T')[0] : null,
+      dueDate: inv.dueDate ? inv.dueDate.split('T')[0] : null,
+      additionalCharges: getAdditionalCharges(inv.additionalCharges),
     }));
 
     const nextNumbers = await getNextNumbers();
@@ -514,7 +526,7 @@ export async function PUT(request) {
       );
     }
 
-    const existingCharges = existingInvoice.additionalCharges?.[0] || null;
+    const existingCharges = getAdditionalCharges(existingInvoice.additionalCharges);
 
     // --- Restore stock from old items ---
     if (existingInvoice.mode !== 'quotation') {
@@ -661,7 +673,9 @@ export async function PUT(request) {
 
     const formattedInvoice = {
       ...updatedInvoice,
-      additionalCharges: updatedInvoice.additionalCharges?.[0] || null
+      date: updatedInvoice.date ? updatedInvoice.date.split('T')[0] : null,
+      dueDate: updatedInvoice.dueDate ? updatedInvoice.dueDate.split('T')[0] : null,
+      additionalCharges: getAdditionalCharges(updatedInvoice.additionalCharges)
     };
 
     // --- Deduct stock for new items ---
@@ -793,7 +807,7 @@ export async function PATCH(request) {
 
     const formattedInvoice = {
       ...invoice,
-      additionalCharges: invoice.additionalCharges?.[0] || null
+      additionalCharges: getAdditionalCharges(invoice.additionalCharges)
     };
 
     return NextResponse.json({ invoice: formattedInvoice });
