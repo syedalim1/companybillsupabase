@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import * as XLSX from 'xlsx';
 
 // --- Advanced Chart Components ---
 
@@ -48,7 +47,7 @@ const ChartBar = ({ label, value, maxValue, colorStart, colorEnd, count, growth,
       </div>
 
       {/* Label */}
-      <div className="mt-3 text-[10px] sm:text-xs text-gray-400 font-medium group-hover:text-gray-800 transition-colors">
+      <div className="mt-3 text-[10px] sm:text-xs text-text-desc font-medium group-hover:text-text-title transition-colors">
         {label}
       </div>
     </div>
@@ -67,18 +66,18 @@ const MetricCard = ({ title, value, subtitle, icon, color = "green", trend }) =>
   const c = colorClasses[color] || colorClasses.green;
   
   return (
-    <div className={`bg-white p-5 rounded-2xl shadow-sm border ${c.border} hover:shadow-md transition-shadow relative overflow-hidden group`}>
+    <div className={`bg-bg-surface dark:bg-slate-900 p-5 rounded-2xl shadow-sm border ${c.border} dark:border-slate-800 hover:shadow-md transition-shadow relative overflow-hidden group`}>
       {/* Background Icon Watermark */}
       <div className={`absolute -right-4 -bottom-4 opacity-5 transform rotate-12 scale-150 pointer-events-none group-hover:scale-125 transition-transform duration-500`}>
         {icon}
       </div>
 
       <div className="flex items-center justify-between mb-4 relative z-10">
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">{title}</h4>
+        <h4 className="text-xs font-bold text-text-desc uppercase tracking-wider">{title}</h4>
         <div className={`p-2 ${c.bg} rounded-xl`}>{icon}</div>
       </div>
       <div className="relative z-10">
-        <p className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">{value}</p>
+        <p className="text-2xl sm:text-3xl font-extrabold text-text-title tracking-tight">{value}</p>
         <div className="flex items-center gap-2 mt-2">
           {trend && (
              <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${trend > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -226,8 +225,9 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
     });
   };
 
-  const handleExportAnalytics = () => {
+  const handleExportAnalytics = async () => {
     if (!analytics) return;
+    const XLSX = (await import('xlsx'));
     const wb = XLSX.utils.book_new();
     const summaryData = [
       ['Business Analytics Report'],
@@ -241,8 +241,6 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       ['Total GST (₹)', analytics.totalGST.toFixed(2)],
       // ... same export logic
     ];
-    // Simple alert for now as logic is same
-    alert('Exporting analytics...');
     const ws = XLSX.utils.aoa_to_sheet(summaryData);
     XLSX.utils.book_append_sheet(wb, ws, 'Summary');
     XLSX.writeFile(wb, `Analytics_${activeTab}.xlsx`);
@@ -264,33 +262,33 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
   const gradient = getGradient();
 
   return (
-    <div className="p-4 md:p-8 max-w-7xl mx-auto text-gray-800 bg-gray-50 min-h-screen">
+    <div className="p-4 md:p-8 max-w-7xl mx-auto text-text-body bg-bg-base min-h-screen">
       
       {/* Premium Header */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 transform translate-x-1/2 -translate-y-1/2"></div>
+      <div className="bg-bg-surface dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 mb-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 dark:bg-indigo-950/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 transform translate-x-1/2 -translate-y-1/2"></div>
          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
             <div>
-              <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h2>
-              <p className="text-gray-500 font-medium">Overview of your business performance</p>
+               <h2 className="text-3xl font-extrabold text-text-title tracking-tight">Dashboard</h2>
+               <p className="text-text-desc font-medium">Overview of your business performance</p>
             </div>
              <div className="flex flex-wrap gap-2">
-               <div className="flex bg-gray-100 p-1 rounded-xl">
-                   {['all', 'gst-bills', 'quotations', 'dc-bills'].map(tab => (
+               <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+                   {['all', 'gst-bills', 'quotations', 'dc-bills', 'slip-bills'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
                             activeTab === tab
-                                ? 'bg-white text-gray-900 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700'
+                                ? 'bg-bg-surface dark:bg-slate-700 text-text-title shadow-sm'
+                                : 'text-text-desc hover:text-text-body'
                             }`}
                         >
-                            {tab === 'all' ? 'All' : tab === 'gst-bills' ? 'GST' : tab === 'quotations' ? 'Quotes' : 'DC'}
+                            {tab === 'all' ? 'All' : tab === 'gst-bills' ? 'GST' : tab === 'quotations' ? 'Quotes' : tab === 'dc-bills' ? 'DC' : 'Slips'}
                         </button>
                     ))}
                </div>
-               <button onClick={handleExportAnalytics} className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-black shadow-lg shadow-gray-200 transition-all text-sm font-bold">
+               <button onClick={handleExportAnalytics} className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 dark:bg-slate-700 text-white rounded-xl hover:bg-black dark:hover:bg-slate-600 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 transition-all text-sm font-bold">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                   Export
                </button>
@@ -319,7 +317,6 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
           value={`₹${analytics.paidAmount.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`}
           subtitle={`${analytics.paymentStats.paid} fully paid`}
           color="green"
-          trend={12} 
           icon={<svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
         />
         <MetricCard
@@ -336,28 +333,14 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
           color="rose"
           icon={<svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>}
         />
-        <MetricCard
-          title="Slip Bills"
-          value={analytics.slipBillsCount || 0}
-          subtitle="Quick receipts"
-          color="indigo" // or amber/yellow if supported, but existing colors are limited in MetricCard definition. Wait, definition supports: green, blue, indigo, purple, red, rose.
-          // I will use 'indigo' for now or add 'amber' to MetricCard if I want distinctive color.
-          // Let's check MetricCard definition.
-          // It has limited map. I'll stick to 'blue' or something distinct? 
-          // 'indigo' is used for Total Revenue. 
-          // I'll add 'yellow' or 'amber' to MetricCard definition first?
-          // No, I'll use 'blue' for now or just 'indigo' as defined.
-          // Wait, 'indigo' is used. 'blue' is available.
-          icon={<svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>}
-        />
       </div>
 
       {/* Advanced Chart Section */}
-      <div className="bg-white text-gray-800 rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 mb-8 relative">
+      <div className="bg-bg-surface dark:bg-slate-900 text-text-body rounded-3xl p-6 md:p-8 shadow-lg border border-slate-100 dark:border-slate-800 mb-8 relative">
          <div className="flex items-center justify-between mb-8">
             <div>
-                <h3 className="text-xl font-bold text-gray-900">Revenue Flow</h3>
-                <p className="text-gray-400 text-sm mt-1">Monthly performance (Valid Revenue Only)</p>
+                <h3 className="text-xl font-bold text-text-title">Revenue Flow</h3>
+                <p className="text-text-desc text-sm mt-1">Monthly performance (Valid Revenue Only)</p>
             </div>
             <div className="text-right">
                 <div className="text-2xl font-bold">₹{averageRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
@@ -370,7 +353,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
             {/* Grid Lines */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
                 {[...Array(5)].map((_, i) => (
-                    <div key={i} className="w-full h-px bg-gray-100 border-t border-dashed border-gray-100"></div>
+                    <div key={i} className="w-full h-px bg-gray-100 dark:bg-slate-800 border-t border-dashed"></div>
                 ))}
             </div>
 
@@ -395,7 +378,6 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
                         colorStart={gradient.start}
                         colorEnd={gradient.end}
                         count={trend.invoices}
-                        growth={trend.growth}
                         delay={index * 50} 
                     />
                 ))}
@@ -406,22 +388,22 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       {/* Bottom Grid: Products & Buyers */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
          {/* Top Products - Premium List */}
-         <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Top Performing Products</h3>
+         <div className="bg-bg-surface dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+            <h3 className="text-lg font-bold text-text-title mb-6">Top Performing Products</h3>
             <div className="space-y-4">
                {analytics.topProducts.map((product, index) => (
-                   <div key={index} className="group flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-gray-200 hover:bg-white hover:shadow-sm transition-all">
+                   <div key={index} className="group flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all">
                        <div className="flex items-center gap-4">
-                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${index === 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-200 text-gray-600'}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${index === 0 ? 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400' : 'bg-slate-200 dark:bg-slate-800 text-text-desc'}`}>
                                #{index + 1}
                            </div>
                            <div>
-                               <div className="font-bold text-gray-900">{product.name}</div>
-                               <div className="text-xs text-gray-500">{product.totalQuantity} units sold</div>
+                                <div className="font-bold text-text-title">{product.name}</div>
+                                <div className="text-xs text-text-desc">{product.totalQuantity} units sold</div>
                            </div>
                        </div>
                        <div className="text-right">
-                           <div className="font-bold text-gray-900">₹{product.totalRevenue.toLocaleString()}</div>
+                            <div className="font-bold text-text-title">₹{product.totalRevenue.toLocaleString()}</div>
                        </div>
                    </div>
                ))}
@@ -430,22 +412,22 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
          </div>
 
          {/* Top Buyers - Premium List */}
-         <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">Top Customers</h3>
+         <div className="bg-bg-surface dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+            <h3 className="text-lg font-bold text-text-title mb-6">Top Customers</h3>
              <div className="space-y-4">
                {analytics.topBuyers.map((buyer, index) => (
-                   <div key={index} className="group flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-transparent hover:border-gray-200 hover:bg-white hover:shadow-sm transition-all">
+                   <div key={index} className="group flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all">
                        <div className="flex items-center gap-4">
                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center font-bold text-indigo-600 text-sm">
                                {buyer.name.charAt(0)}
                            </div>
                            <div>
-                               <div className="font-bold text-gray-900">{buyer.name}</div>
-                               <div className="text-xs text-gray-500">{buyer.totalInvoices} orders</div>
+                                <div className="font-bold text-text-title">{buyer.name}</div>
+                                <div className="text-xs text-text-desc">{buyer.totalInvoices} orders</div>
                            </div>
                        </div>
                        <div className="text-right">
-                           <div className="font-bold text-gray-900">₹{buyer.totalRevenue.toLocaleString()}</div>
+                            <div className="font-bold text-text-title">₹{buyer.totalRevenue.toLocaleString()}</div>
                        </div>
                    </div>
                ))}

@@ -66,14 +66,14 @@ ${invoiceData?.seller?.email || ''}`,
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-bg-surface dark:bg-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Send Invoice via Email</h2>
+            <h2 className="text-2xl font-bold text-text-title">Send Invoice via Email</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="text-text-desc hover:text-text-body text-2xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               ×
             </button>
@@ -82,14 +82,14 @@ ${invoiceData?.seller?.email || ''}`,
           <div className="space-y-4">
             {/* Recipient Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Recipient Email *
               </label>
               <input
                 type="email"
                 value={formData.recipientEmail}
                 onChange={(e) => handleInputChange('recipientEmail', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
                 placeholder="customer@example.com"
                 required
               />
@@ -97,36 +97,36 @@ ${invoiceData?.seller?.email || ''}`,
 
             {/* Subject */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Subject
               </label>
               <input
                 type="text"
                 value={formData.subject}
                 onChange={(e) => handleInputChange('subject', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
                 placeholder="Email subject"
               />
             </div>
 
             {/* Message */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Message
               </label>
               <textarea
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title resize-none"
                 rows={8}
                 placeholder="Enter your message..."
               />
             </div>
 
             {/* Invoice Preview */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium text-gray-800 mb-2">Invoice Summary</h4>
-              <div className="text-sm text-gray-600 space-y-1">
+            <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+              <h4 className="font-medium text-text-title mb-2">Invoice Summary</h4>
+              <div className="text-sm text-text-body space-y-1">
                 <p><strong>Invoice No:</strong> {invoiceData?.invoiceDetails?.invoiceNo || 'N/A'}</p>
                 <p><strong>Customer:</strong> {invoiceData?.buyer?.name || 'N/A'}</p>
                 <p><strong>Amount:</strong> ₹{(() => {
@@ -152,18 +152,18 @@ ${invoiceData?.seller?.email || ''}`,
             </div>
 
             {/* Email Configuration Note */}
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/30 rounded-xl p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-5 w-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-yellow-800">
+                  <h3 className="text-sm font-medium text-amber-800 dark:text-amber-400">
                     Email Configuration Required
                   </h3>
-                  <div className="mt-2 text-sm text-yellow-700">
+                  <div className="mt-2 text-sm text-amber-700 dark:text-amber-500">
                     <p>
                       To send emails, you need to configure SMTP settings in your environment variables:
                       SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS.
@@ -175,17 +175,17 @@ ${invoiceData?.seller?.email || ''}`,
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-4 mt-6 pt-4 border-t">
+          <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+              className="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-medium"
             >
               Cancel
             </button>
             <button
               onClick={handleSend}
               disabled={isSending}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:bg-gray-400"
+              className="px-6 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all font-bold disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-green-200 dark:hover:shadow-green-950"
             >
               {isSending ? 'Sending...' : 'Send Invoice'}
             </button>

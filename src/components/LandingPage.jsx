@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import ThemeSelector from "./ThemeSelector";
 
-const LandingPage = ({ onSelectGenerator, setAuthenticated }) => {
+const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }) => {
   const [stats, setStats] = useState({ products: 0, customers: 0, lowStock: 0 });
 
   useEffect(() => {
@@ -73,7 +73,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated }) => {
               title="Log Out"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 01-3-3h4a3 3 0 013 3v1" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
               <span className="hidden sm:inline">Logout</span>
             </button>
@@ -86,7 +86,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated }) => {
         
         {/* Low Stock Warning Banner */}
         {stats.lowStock > 0 && (
-          <div className="mb-8 flex items-center justify-between p-4 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-2xl animate-bounce">
+          <div className="mb-8 flex items-center justify-between p-4 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-2xl">
             <div className="flex items-center gap-3">
               <svg className="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -381,6 +381,57 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated }) => {
             </div>
           </div>
         </div>
+
+        {/* Recent Activity */}
+        {savedInvoices.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-text-title mb-6 flex items-center gap-2">
+              <svg className="w-5 h-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Recent Activity
+            </h2>
+            <div className="space-y-3">
+              {savedInvoices.slice(0, 5).map((inv) => (
+                <div key={inv.id} className="glassmorphism-card rounded-2xl p-4 flex items-center justify-between hover:shadow-md transition-all cursor-pointer group"
+                  onClick={() => {
+                    const mode = inv.mode || 'gst-bill';
+                    onSelectGenerator(mode);
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
+                      inv.mode === 'gst-bill' ? 'bg-blue-100 dark:bg-blue-950/30 text-blue-600' :
+                      inv.mode === 'quotation' ? 'bg-teal-100 dark:bg-teal-950/30 text-teal-600' :
+                      inv.mode === 'dc-bill' ? 'bg-rose-100 dark:bg-rose-950/30 text-rose-600' :
+                      'bg-amber-100 dark:bg-amber-950/30 text-amber-600'
+                    }`}>
+                      {inv.mode === 'gst-bill' ? 'INV' : inv.mode === 'quotation' ? 'QTN' : inv.mode === 'dc-bill' ? 'DC' : 'SLIP'}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-text-title text-sm">
+                        #{inv.invoiceNo || inv.dcNo || 'Draft'} — {inv.buyerName || inv.buyer?.name || 'Unknown'}
+                      </p>
+                      <p className="text-xs text-text-desc">
+                        {new Date(inv.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold text-text-title">₹{(inv.grandTotal || 0).toLocaleString('en-IN')}</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                      inv.paymentStatus === 'paid' ? 'bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400' :
+                      inv.paymentStatus === 'partial' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-400' :
+                      'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                    }`}>
+                      {inv.paymentStatus === 'paid' ? 'Paid' : inv.paymentStatus === 'partial' ? 'Partial' : 'Unpaid'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Footer */}

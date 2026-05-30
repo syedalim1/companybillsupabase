@@ -13,7 +13,7 @@ import LoginScreen from "@/components/LoginScreen";
 import { useInvoiceState } from "@/hooks/useInvoiceState";
 import { useInvoiceAPI } from "@/hooks/useInvoiceAPI";
 import { useInvoiceCalculations } from "@/hooks/useInvoiceCalculations";
-import * as XLSX from 'xlsx';
+
 
 export default function Home() {
   const [authenticated, setAuthenticated] = useState(null);
@@ -104,8 +104,9 @@ export default function Home() {
     handleDeleteInvoice,
   } = api;
 
-  // Export to Excel
-  const handleExportToExcel = () => {
+  // Export to Excel (dynamically imported for performance)
+  const handleExportToExcel = async () => {
+    const XLSX = (await import('xlsx'));
     const { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal } = calculations;
 
     const data = [
@@ -188,7 +189,6 @@ export default function Home() {
 
 // --- PDF GENERATION FUNCTION ---
 const handleGeneratePDF = async () => {
-  console.log('Starting PDF generation...');
 
   const element = document.getElementById('invoice-preview');
   if (!element) {
@@ -202,7 +202,6 @@ const handleGeneratePDF = async () => {
   try {
     const html2pdf = (await import('html2pdf.js')).default;
 
-    console.log('html2pdf.js imported successfully.');
 
     const options = {
       margin: [0.2, 0.2, 0.2, 0.2], // top, left, bottom, right margins in inches
@@ -250,11 +249,10 @@ const handleGeneratePDF = async () => {
     };
 
     await html2pdf().from(element).set(options).save();
-    console.log('PDF saved successfully.');
     setIsGenerating(false);
   } catch (err) {
-    console.error('An error occurred while generating the PDF:', err);
-    alert('An error occurred. Please check the console for details.');
+    console.error('PDF generation error:', err);
+    alert('An error occurred while generating the PDF.');
     setIsGenerating(false);
   }
 };
@@ -275,23 +273,23 @@ const handleGeneratePDF = async () => {
 
   // Show landing page
   if (currentMode === 'landing') {
-    return <LandingPage onSelectGenerator={handleSelectGenerator} setAuthenticated={setAuthenticated} />;
+    return <LandingPage onSelectGenerator={handleSelectGenerator} setAuthenticated={setAuthenticated} savedInvoices={savedInvoices} />;
   }
 
   // Show GST Monthly Report interface
   if (currentMode === 'gst-monthly-report') {
     return (
-      <div className="flex  text-black flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-bg-base min-h-screen p-6">
         <div className="flex-1 max-w-4xl print:hidden mx-auto">
-          {/* Back to landing button */}
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
           >
-            ← Back to Home
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Home
           </button>
 
-          <h1 className="text-3xl font-bold text-center mb-6 text-purple-600">
+          <h1 className="text-3xl font-bold text-center mb-6 text-purple-600 dark:text-purple-400">
             GST Monthly Report Generator
           </h1>
 
@@ -304,14 +302,14 @@ const handleGeneratePDF = async () => {
   // Show Customer Manager interface
   if (currentMode === 'customers') {
     return (
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-bg-base min-h-screen p-6">
         <div className="flex-1 max-w-7xl print:hidden mx-auto">
-          {/* Back to landing button */}
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
           >
-            ← Back to Home
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Home
           </button>
 
           <CustomerManager />
@@ -323,17 +321,17 @@ const handleGeneratePDF = async () => {
   // Show Product Management interface
   if (currentMode === 'products') {
     return (
-      <div className="flex text-black flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
-        <div className="flex-1 max-w-6xl print:hidden mx-auto">
-          {/* Back to landing button */}
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-bg-base min-h-screen p-6">
+        <div className="flex-1 max-w-7xl print:hidden mx-auto">
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
           >
-            ← Back to Home
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Home
           </button>
 
-          <h1 className="text-3xl font-bold text-center mb-6 text-green-600">
+          <h1 className="text-3xl font-bold text-center mb-6 text-green-600 dark:text-green-400">
             Product Management
           </h1>
 
@@ -346,14 +344,14 @@ const handleGeneratePDF = async () => {
   // Show Analytics Dashboard interface
   if (currentMode === 'analytics') {
     return (
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-bg-base min-h-screen p-6">
         <div className="flex-1 max-w-7xl print:hidden mx-auto">
-          {/* Back to landing button */}
           <button
             onClick={() => setCurrentMode('landing')}
-            className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-bg-surface dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm transition-all"
           >
-            ← Back to Home
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Home
           </button>
 
           <AnalyticsDashboard savedInvoices={savedInvoices} />
@@ -364,7 +362,7 @@ const handleGeneratePDF = async () => {
 
   // Show GST Bill or Quotation interface
   return (
-    <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto py-8 bg-gray-50 min-h-screen p-6">
+    <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto py-8 bg-bg-base min-h-screen p-6">
       <InvoiceForm
         currentMode={currentMode}
         setCurrentMode={setCurrentMode}
@@ -389,6 +387,8 @@ const handleGeneratePDF = async () => {
         handleDeleteInvoice={handleDeleteInvoice}
         isSaving={isSaving}
         resetToDefault={resetToDefault}
+        handleGeneratePDF={handleGeneratePDF}
+        isGenerating={isGenerating}
       />
 
       <InvoicePreview

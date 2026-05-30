@@ -65,33 +65,33 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'paid': return 'text-green-600 bg-green-100';
-      case 'partial': return 'text-yellow-600 bg-yellow-100';
-      case 'overdue': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'paid': return 'text-green-600 bg-green-100 dark:bg-green-950/30 dark:text-green-400';
+      case 'partial': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-950/30 dark:text-yellow-400';
+      case 'overdue': return 'text-red-600 bg-red-100 dark:bg-red-950/30 dark:text-red-400';
+      default: return 'text-text-desc bg-slate-100 dark:bg-slate-800';
     }
   };
 
   if (!isOpen || !invoice) return null;
 
   return (
-    <div className="fixed text-black inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-bg-surface dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700">
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Update Payment Status</h2>
+            <h2 className="text-2xl font-bold text-text-title">Update Payment Status</h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="text-text-desc hover:text-text-body text-2xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               ×
             </button>
           </div>
 
           {/* Invoice Summary */}
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <h3 className="font-semibold text-gray-800 mb-2">Invoice Details</h3>
-            <div className="text-sm text-gray-600 space-y-1">
+          <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl mb-6 border border-slate-100 dark:border-slate-800">
+            <h3 className="font-semibold text-text-title mb-2">Invoice Details</h3>
+            <div className="text-sm text-text-body space-y-1">
               <p><strong>Invoice No:</strong> {invoice.invoiceNo}</p>
               <p><strong>Customer:</strong> {invoice.buyerName || invoice.buyer?.name || 'N/A'}</p>
               <p><strong>Total Amount:</strong> ₹{invoice.grandTotal?.toLocaleString('en-IN')}</p>
@@ -106,13 +106,13 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Payment Status */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Payment Status *
               </label>
               <select
                 value={formData.paymentStatus}
                 onChange={(e) => handleInputChange('paymentStatus', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
                 required
               >
                 <option value="unpaid">Unpaid</option>
@@ -124,20 +124,20 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
 
             {/* Payment Date */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Payment Date
               </label>
               <input
                 type="date"
                 value={formData.paymentDate}
                 onChange={(e) => handleInputChange('paymentDate', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
               />
             </div>
 
             {/* Payment Amount */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Payment Amount (₹)
               </label>
               <input
@@ -146,40 +146,40 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
                 value={formData.paymentAmount}
                 onChange={(e) => handleInputChange('paymentAmount', e.target.value)}
                 placeholder="Enter payment amount"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-text-desc mt-1">
                 Total Invoice Amount: ₹{invoice.grandTotal?.toLocaleString('en-IN')}
               </p>
             </div>
 
             {/* Payment Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-body mb-2">
                 Payment Notes
               </label>
               <textarea
                 value={formData.paymentNotes}
                 onChange={(e) => handleInputChange('paymentNotes', e.target.value)}
                 placeholder="Add payment notes or transaction details..."
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title resize-none"
                 rows={3}
               />
             </div>
 
             {/* Buttons */}
-            <div className="flex justify-end gap-4 mt-6 pt-4 border-t">
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-200"
+                className="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isUpdating}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 disabled:bg-gray-400"
+                className="px-6 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all font-bold disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-950"
               >
                 {isUpdating ? 'Updating...' : 'Update Payment Status'}
               </button>

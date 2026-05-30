@@ -67,6 +67,10 @@ const InvoiceMain = ({
   const emptyRowsCount =
     minRows > invoiceData.items.length ? minRows - invoiceData.items.length : 0;
 
+  // Dynamic tax rate from user settings
+  const taxRate = parseFloat(invoiceData.taxRate) || 18;
+  const halfRate = taxRate / 2;
+
   // Calculate GST data grouped by HSN
   let gstData = {};
   if (shouldShowGST) {
@@ -88,11 +92,11 @@ const InvoiceMain = ({
     Object.keys(gstData).forEach((hsn) => {
       const taxable = gstData[hsn].taxable;
       if (isCGST_SGST) {
-        gstData[hsn].cgst = taxable * 0.09;
-        gstData[hsn].sgst = taxable * 0.09;
+        gstData[hsn].cgst = taxable * (halfRate / 100);
+        gstData[hsn].sgst = taxable * (halfRate / 100);
         gstData[hsn].totalTax = gstData[hsn].cgst + gstData[hsn].sgst;
       } else {
-        gstData[hsn].igst = taxable * 0.18;
+        gstData[hsn].igst = taxable * (taxRate / 100);
         gstData[hsn].totalTax = gstData[hsn].igst;
       }
     });
@@ -409,7 +413,7 @@ const InvoiceMain = ({
                         colSpan="5"
                         className="p-2 text-right font-semibold border "
                       >
-                        CGST @ 9%
+                        CGST @ {halfRate}%
                       </td>
                       <td className="p-2 text-right border ">
                         {cgstAmount.toLocaleString("en-IN", {
@@ -424,7 +428,7 @@ const InvoiceMain = ({
                         colSpan="5"
                         className="p-2 text-right font-semibold border "
                       >
-                        SGST @ 9%
+                        SGST @ {halfRate}%
                       </td>
                       <td className="p-2 text-right border ">
                         {sgstAmount.toLocaleString("en-IN", {
@@ -441,7 +445,7 @@ const InvoiceMain = ({
                       colSpan="5"
                       className="p-2 text-right font-semibold border "
                     >
-                      IGST @ 18%
+                      IGST @ {taxRate}%
                     </td>
                     <td className="p-2 text-right border ">
                       {igstAmount.toLocaleString("en-IN", {
@@ -563,7 +567,7 @@ const InvoiceMain = ({
                     {isCGST_SGST ? (
                       <>
                         <td className="border border-black text-center align-middle">
-                          9%
+                          {halfRate}%
                         </td>
                         <td className="border border-black text-center align-middle">
                           {data.cgst.toLocaleString("en-IN", {
@@ -572,7 +576,7 @@ const InvoiceMain = ({
                           })}
                         </td>
                         <td className="border border-black text-center align-middle">
-                          9%
+                          {halfRate}%
                         </td>
                         <td className="border border-black text-center align-middle">
                           {data.sgst.toLocaleString("en-IN", {
@@ -584,7 +588,7 @@ const InvoiceMain = ({
                     ) : (
                       <>
                         <td className="border border-black text-center align-middle">
-                          18%
+                          {taxRate}%
                         </td>
                         <td className="border border-black text-center align-middle">
                           {data.igst.toLocaleString("en-IN", {
