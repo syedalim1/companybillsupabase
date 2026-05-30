@@ -66,7 +66,7 @@ const MetricCard = ({ title, value, subtitle, icon, color = "green", trend }) =>
   const c = colorClasses[color] || colorClasses.green;
   
   return (
-    <div className={`bg-bg-surface   p-5 rounded-2xl shadow-sm border ${c.border} dark:border-slate-800 hover:shadow-md transition-shadow relative overflow-hidden group`}>
+    <div className={`bg-bg-surface   p-5 rounded-2xl shadow-sm border ${c.border}     hover:shadow-md transition-shadow relative overflow-hidden group`}>
       {/* Background Icon Watermark */}
       <div className={`absolute -right-4 -bottom-4 opacity-5 transform rotate-12 scale-150 pointer-events-none group-hover:scale-125 transition-transform duration-500`}>
         {icon}
@@ -265,7 +265,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
     <div className="p-4 md:p-8 max-w-7xl mx-auto text-text-body bg-bg-base min-h-screen">
       
       {/* Premium Header */}
-      <div className="bg-bg-surface   rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 mb-8 relative overflow-hidden">
+      <div className="bg-bg-surface   rounded-3xl p-6 shadow-sm border border-slate-100     mb-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 dark:bg-indigo-950/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 transform translate-x-1/2 -translate-y-1/2"></div>
          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
             <div>
@@ -273,7 +273,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
                <p className="  font-medium">Overview of your business performance</p>
             </div>
              <div className="flex flex-wrap gap-2">
-               <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+               <div className="flex bg-slate-100   p-1 rounded-xl">
                    {['all', 'gst-bills', 'quotations', 'dc-bills', 'slip-bills'].map(tab => (
                         <button
                             key={tab}
@@ -336,7 +336,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       </div>
 
       {/* Advanced Chart Section */}
-      <div className="bg-bg-surface   text-text-body rounded-3xl p-6 md:p-8 shadow-lg border border-slate-100 dark:border-slate-800 mb-8 relative">
+      <div className="bg-bg-surface   text-text-body rounded-3xl p-6 md:p-8 shadow-lg border border-slate-100     mb-8 relative">
          <div className="flex items-center justify-between mb-8">
             <div>
                 <h3 className="text-xl font-bold text-text-title">Revenue Flow</h3>
@@ -353,7 +353,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
             {/* Grid Lines */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
                 {[...Array(5)].map((_, i) => (
-                    <div key={i} className="w-full h-px bg-gray-100 dark:bg-slate-800 border-t border-dashed"></div>
+                    <div key={i} className="w-full h-px bg-gray-100   border-t border-dashed"></div>
                 ))}
             </div>
 
@@ -388,13 +388,13 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
       {/* Bottom Grid: Products & Buyers */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
          {/* Top Products - Premium List */}
-         <div className="bg-bg-surface   rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+         <div className="bg-bg-surface   rounded-3xl p-6 shadow-sm border border-slate-100    ">
             <h3 className="text-lg font-bold text-text-title mb-6">Top Performing Products</h3>
             <div className="space-y-4">
                {analytics.topProducts.map((product, index) => (
                    <div key={index} className="group flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm transition-all">
                        <div className="flex items-center gap-4">
-                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${index === 0 ? 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400' : 'bg-slate-200 dark:bg-slate-800  '}`}>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${index === 0 ? 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400' : 'bg-slate-200    '}`}>
                                #{index + 1}
                            </div>
                            <div>
@@ -412,7 +412,7 @@ const AnalyticsDashboard = ({ savedInvoices }) => {
          </div>
 
          {/* Top Buyers - Premium List */}
-         <div className="bg-bg-surface   rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+         <div className="bg-bg-surface   rounded-3xl p-6 shadow-sm border border-slate-100    ">
             <h3 className="text-lg font-bold text-text-title mb-6">Top Customers</h3>
              <div className="space-y-4">
                {analytics.topBuyers.map((buyer, index) => (

@@ -23,16 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
-          try {
-            const savedDarkMode = localStorage.getItem('theme-dark') === 'true';
-            const savedTheme = localStorage.getItem('theme-preset') || 'default';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            if (savedDarkMode) {
-              document.documentElement.classList.add('dark');
-            } else {
-              document.documentElement.classList.remove('dark');
-            }
-          } catch (e) {}
+        
         `}} />
       </head>
       <body

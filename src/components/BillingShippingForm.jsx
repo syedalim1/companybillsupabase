@@ -28,8 +28,8 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
   const isShippingGstinValid = validateGstin(invoiceData.shipping.gstin);
 
   return (
-    <div className="bg-white   rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/80 p-6 transition-all duration-300">
-      <h3 className="text-sm font-bold text-text-title uppercase tracking-wider mb-6 flex items-center gap-2 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+    <div className="bg-white   rounded-2xl shadow-sm border border-slate-100    /80 p-6 transition-all duration-300">
+      <h3 className="text-sm font-bold text-text-title uppercase tracking-wider mb-6 flex items-center gap-2 pb-4 border-b border-slate-100    /80">
         <svg className="w-4 h-4 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
@@ -74,7 +74,7 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
                   ? isBillingGstinValid
                     ? "border-emerald-500 focus:ring-emerald-500/50"
                     : "border-amber-500 focus:ring-amber-500/50"
-                  : "border-slate-200 dark:border-slate-800 focus:ring-brand-primary/50 focus:border-brand-primary"
+                  : "border-slate-200     focus:ring-brand-primary/50 focus:border-brand-primary"
               }`}
             />
             {invoiceData.billing.gstin && !isBillingGstinValid && (
@@ -135,7 +135,7 @@ const BillingShippingForm = ({ invoiceData, handleInputChange }) => {
                   ? isShippingGstinValid
                     ? "border-emerald-500 focus:ring-emerald-500/50"
                     : "border-amber-500 focus:ring-amber-500/50"
-                  : "border-slate-200 dark:border-slate-800 focus:ring-brand-primary/50 focus:border-brand-primary"
+                  : "border-slate-200     focus:ring-brand-primary/50 focus:border-brand-primary"
               }`}
             />
             {invoiceData.shipping.gstin && !isShippingGstinValid && (

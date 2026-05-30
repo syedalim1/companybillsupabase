@@ -197,41 +197,6 @@ function buildSnapshotFields(data) {
   };
 }
 
-/**
- * Handle stock deduction for invoice items.
- */
-async function deductStock(items) {
-  for (const item of items) {
-    if (item.description) {
-      const deduction = parseFloat(item.quantity) || 0;
-      const { error } = await supabase.rpc('adjust_product_stock', {
-        product_name: item.description,
-        quantity_change: -deduction
-      });
-      if (error) {
-        console.error(`Error deducting stock for "${item.description}":`, error);
-      }
-    }
-  }
-}
-
-/**
- * Handle stock restoration for invoice items.
- */
-async function restoreStock(items) {
-  for (const item of items) {
-    if (item.description) {
-      const restoration = parseFloat(item.quantity) || 0;
-      const { error } = await supabase.rpc('adjust_product_stock', {
-        product_name: item.description,
-        quantity_change: restoration
-      });
-      if (error) {
-        console.error(`Error restoring stock for "${item.description}":`, error);
-      }
-    }
-  }
-}
 
 // ============================================================================
 // POST — Create a new invoice
@@ -417,32 +382,10 @@ export async function POST(request) {
       additionalCharges: getAdditionalCharges(fullInvoice.additionalCharges)
     };
 
-    // --- Deduct stock for non-quotation invoices ---
-    // Bug 10 fix: Deduct stock before building response so errors are caught
-    let stockWarnings = [];
-    if (mode !== 'quotation') {
-      for (const item of data.items) {
-        if (item.description) {
-          const deduction = parseFloat(item.quantity) || 0;
-          const { error } = await supabase.rpc('adjust_product_stock', {
-            product_name: item.description,
-            quantity_change: -deduction
-          });
-          if (error) {
-            console.error(`Error deducting stock for "${item.description}":`, error);
-            stockWarnings.push(`Stock deduction failed for "${item.description}"`);
-          }
-        }
-      }
-    }
-
     // --- Get updated next numbers ---
     const nextNumbers = await getNextNumbers();
 
     const response = { invoice: formattedInvoice, ...nextNumbers };
-    if (stockWarnings.length > 0) {
-      response.stockWarnings = stockWarnings;
-    }
     return NextResponse.json(response, { status: 201 });
   } catch (error) {
     console.error('Error creating invoice:', error);
@@ -527,11 +470,6 @@ export async function PUT(request) {
     }
 
     const existingCharges = getAdditionalCharges(existingInvoice.additionalCharges);
-
-    // --- Restore stock from old items ---
-    if (existingInvoice.mode !== 'quotation') {
-      await restoreStock(existingInvoice.items || []);
-    }
 
     // --- Find or create seller/buyer ---
     const seller = await findOrCreateSeller(data.seller || {});
@@ -678,11 +616,6 @@ export async function PUT(request) {
       additionalCharges: getAdditionalCharges(updatedInvoice.additionalCharges)
     };
 
-    // --- Deduct stock for new items ---
-    if ((data.mode || existingInvoice.mode) !== 'quotation') {
-      await deductStock(data.items || []);
-    }
-
     return NextResponse.json({ invoice: formattedInvoice });
   } catch (error) {
     console.error('Error updating invoice:', error);
@@ -725,11 +658,6 @@ export async function DELETE(request) {
         { error: 'Invoice not found' },
         { status: 404 }
       );
-    }
-
-    // --- Restore stock ---
-    if (invoiceToDelete.mode !== 'quotation') {
-      await restoreStock(invoiceToDelete.items || []);
     }
 
     // --- Delete invoice (cascades to items and additionalCharges via foreign keys) ---

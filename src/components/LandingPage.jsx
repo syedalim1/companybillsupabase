@@ -2,27 +2,19 @@
 import React, { useState, useEffect } from "react";
 
 const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }) => {
-  const [stats, setStats] = useState({ products: 0, customers: 0, lowStock: 0 });
+  const [stats, setStats] = useState({ customers: 0 });
 
   useEffect(() => {
     // Let's fetch some quick stats to make the dashboard feel alive and real
     async function loadStats() {
       try {
-        const prodRes = await fetch("/api/products");
-        const prodData = await prodRes.json();
         const custRes = await fetch("/api/buyers");
         const custData = await custRes.json();
         
-        const productsList = Array.isArray(prodData) ? prodData : (prodData.products || []);
-        const productsCount = productsList.length;
         const customersCount = Array.isArray(custData) ? custData.length : 0;
-        
-        const lowStockCount = productsList.filter(p => p.stock <= (p.minStock || 0)).length;
 
         setStats({
-          products: productsCount,
           customers: customersCount,
-          lowStock: lowStockCount,
         });
       } catch (err) {
         console.error("Failed to load dashboard metrics", err);
@@ -81,50 +73,21 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
       {/* Main Body */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         
-        {/* Low Stock Warning Banner */}
-        {stats.lowStock > 0 && (
-          <div className="mb-8 flex items-center justify-between p-4 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-500 rounded-2xl">
-            <div className="flex items-center gap-3">
-              <svg className="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <div>
-                <h4 className="font-bold text-sm">Critical Inventory Alert</h4>
-                <p className="text-xs opacity-90">There are {stats.lowStock} products running low on stock. Please restock soon.</p>
-              </div>
-            </div>
-            <button 
-              onClick={() => onSelectGenerator("products")}
-              className="text-xs font-bold underline hover:opacity-80"
-            >
-              Manage Catalog
-            </button>
-          </div>
-        )}
-
         {/* Hero Welcome */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-text-title tracking-tight mb-3">
             Welcome back, Admin
           </h1>
           <p className="  max-w-2xl mx-auto text-base sm:text-lg">
-            Manage your customers, billing workflows, catalog, and insights through a highly interactive suite.
+            Manage your customers, billing workflows, and insights through a highly interactive suite.
           </p>
         </div>
 
         {/* Quick Metrics Ribbon */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-12">
-          <div className="glassmorphism-card rounded-2xl p-4 text-center">
+        <div className="flex justify-center max-w-xs mx-auto mb-12">
+          <div className="glassmorphism-card rounded-2xl p-4 text-center w-full">
             <p className="text-xs font-semibold   uppercase tracking-wider">Total Customers</p>
             <p className="text-2xl font-bold text-text-title mt-1">{stats.customers}</p>
-          </div>
-          <div className="glassmorphism-card rounded-2xl p-4 text-center">
-            <p className="text-xs font-semibold   uppercase tracking-wider">Catalog Products</p>
-            <p className="text-2xl font-bold text-text-title mt-1">{stats.products}</p>
-          </div>
-          <div className="glassmorphism-card rounded-2xl p-4 text-center col-span-2 md:col-span-1">
-            <p className="text-xs font-semibold   uppercase tracking-wider">Low Stock Warnings</p>
-            <p className={`text-2xl font-bold mt-1 ${stats.lowStock > 0 ? "text-amber-500" : "text-text-title"}`}>{stats.lowStock}</p>
           </div>
         </div>
 
@@ -133,7 +96,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           {/* Customer Manager Card */}
           <div
             onClick={() => onSelectGenerator("customers")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-orange-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
@@ -148,7 +111,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Complete database for client details, GSTIN tracking, and contact management.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["GST Details Database", "One-click Edit/Delete", "Quick Search & Filter"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-orange-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,41 +124,10 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
             </div>
           </div>
 
-          {/* Product Management Card */}
-          <div
-            onClick={() => onSelectGenerator("products")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
-          >
-            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-950/30 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-text-title mb-2 group-hover:text-emerald-500 transition-colors">
-                Product Catalog
-              </h3>
-              <p className="  mb-5 text-sm">
-                Organize inventory items, pricing rules, HSN codes, and current stock tracking.
-              </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
-                {["Stock & Inventory Level", "HSN/SAC Management", "Default GST Tax Preset"].map((item, i) => (
-                  <div key={i} className="flex items-center text-xs  ">
-                    <svg className="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
           {/* Analytics Dashboard Card */}
           <div
             onClick={() => onSelectGenerator("analytics")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-indigo-400 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
@@ -210,7 +142,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Visual reports on revenue flow, top performing products, and sales performance.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["Visual Revenue Trends", "Sales by Product & Customer", "Tax collected reports"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-indigo-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,11 +158,11 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           {/* GST Bill Generator Card */}
           <div
             onClick={() => onSelectGenerator("gst-bill")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-blue-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-950/30 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-blue-100   rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -241,7 +173,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Generate compliant tax invoices with automatic CGST, SGST, and IGST calculations.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["Auto-Tax Calculation", "PDF & Invoice Generation", "Professional Brand Templates"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,11 +189,11 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           {/* Slip Bill Generator Card */}
           <div
             onClick={() => onSelectGenerator("slip-bill")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-amber-400 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
-              <div className="w-12 h-12 bg-amber-100 dark:bg-amber-950/30 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-amber-100   rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>
@@ -272,7 +204,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Generate simplified receipts for local businesses without GST complexity.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["No GST Calculations", "Quick Receipt Format", "Thermal Printer Ready"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-amber-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -288,11 +220,11 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           {/* DC Bill Generator Card */}
           <div
             onClick={() => onSelectGenerator("dc-bill")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-rose-400 to-rose-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
-              <div className="w-12 h-12 bg-rose-100 dark:bg-rose-950/30 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-rose-100   rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
@@ -303,7 +235,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Create delivery challans for goods movement without tax invoice requirements.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["No Tax Calculation", "Delivery Status Tracking", "Receiver Info Fields"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-rose-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -319,11 +251,11 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           {/* Quotation Generator Card */}
           <div
             onClick={() => onSelectGenerator("quotation")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-teal-400 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
-              <div className="w-12 h-12 bg-teal-100 dark:bg-teal-950/30 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-12 h-12 bg-teal-100   rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -334,7 +266,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Create flexible manufacturing estimates with optional tax components.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["Flexible GST Selector", "Estimate PDF Rendering", "Load Draft/Template"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-teal-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -350,7 +282,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
           {/* GST Monthly Report Card */}
           <div
             onClick={() => onSelectGenerator("gst-monthly-report")}
-            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
+            className="group relative glassmorphism-card rounded-3xl p-6 shadow-sm border border-slate-200/50    /50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 cursor-pointer overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-purple-400 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
@@ -365,7 +297,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
               <p className="  mb-5 text-sm">
                 Comprehensive tax summaries, HSN breakdowns, and GSTR-1 ready exports.
               </p>
-              <div className="space-y-2.5 border-t border-slate-100 dark:border-slate-800/80 pt-4">
+              <div className="space-y-2.5 border-t border-slate-100    /80 pt-4">
                 {["GSTR-1 Format Compliant", "HSN/SAC Wise Summary", "One-click Excel Export"].map((item, i) => (
                   <div key={i} className="flex items-center text-xs  ">
                     <svg className="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,10 +330,10 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
                 >
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
-                      inv.mode === 'gst-bill' ? 'bg-blue-100 dark:bg-blue-950/30 text-blue-600' :
-                      inv.mode === 'quotation' ? 'bg-teal-100 dark:bg-teal-950/30 text-teal-600' :
-                      inv.mode === 'dc-bill' ? 'bg-rose-100 dark:bg-rose-950/30 text-rose-600' :
-                      'bg-amber-100 dark:bg-amber-950/30 text-amber-600'
+                      inv.mode === 'gst-bill' ? 'bg-blue-100   text-blue-600' :
+                      inv.mode === 'quotation' ? 'bg-teal-100   text-teal-600' :
+                      inv.mode === 'dc-bill' ? 'bg-rose-100   text-rose-600' :
+                      'bg-amber-100   text-amber-600'
                     }`}>
                       {inv.mode === 'gst-bill' ? 'INV' : inv.mode === 'quotation' ? 'QTN' : inv.mode === 'dc-bill' ? 'DC' : 'SLIP'}
                     </div>
@@ -432,7 +364,7 @@ const LandingPage = ({ onSelectGenerator, setAuthenticated, savedInvoices = [] }
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200/50 dark:border-slate-800/50 mt-20 py-6 bg-slate-50  /20 text-center text-xs  ">
+      <footer className="border-t border-slate-200/50    /50 mt-20 py-6 bg-slate-50  /20 text-center text-xs  ">
         <p>© {new Date().getFullYear()} Business Suite. Designed for ultimate reliability.</p>
       </footer>
     </div>

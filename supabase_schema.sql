@@ -7,7 +7,6 @@ DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS invoices CASCADE;
 DROP TABLE IF EXISTS buyers CASCADE;
 DROP TABLE IF EXISTS sellers CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
 
 -- Create Sellers table
 CREATE TABLE sellers (
@@ -156,22 +155,7 @@ CREATE TABLE additional_charges (
     "invoiceId" UUID UNIQUE NOT NULL REFERENCES invoices("id") ON DELETE CASCADE
 );
 
--- Create Products table
-CREATE TABLE products (
-    "id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    "name" TEXT NOT NULL,
-    "description" TEXT,
-    "hsn" TEXT,
-    "sac" TEXT,
-    "rate" NUMERIC(15, 2) NOT NULL,
-    "category" TEXT,
-    "unit" TEXT,
-    "gstRate" NUMERIC(5, 2),
-    "minStock" INTEGER,
-    "stock" NUMERIC(12, 4) DEFAULT 0.00 NOT NULL,
-    "createdAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
+
 
 -- Indexing for performance and lookup optimizations
 CREATE INDEX IF NOT EXISTS idx_invoices_invoice_no ON invoices("invoiceNo");
@@ -181,17 +165,8 @@ CREATE INDEX IF NOT EXISTS idx_invoices_buyer_id ON invoices("buyerId");
 CREATE INDEX IF NOT EXISTS idx_invoices_mode ON invoices("mode");
 CREATE INDEX IF NOT EXISTS idx_invoices_payment_status ON invoices("paymentStatus");
 CREATE INDEX IF NOT EXISTS idx_items_invoice_id ON items("invoiceId");
-CREATE INDEX IF NOT EXISTS idx_products_name ON products(LOWER("name"));
 
--- Atomic stock adjustment helper function
-CREATE OR REPLACE FUNCTION adjust_product_stock(product_name TEXT, quantity_change NUMERIC)
-RETURNS VOID AS $$
-BEGIN
-    UPDATE products
-    SET "stock" = "stock" + quantity_change
-    WHERE LOWER("name") = LOWER(product_name);
-END;
-$$ LANGUAGE plpgsql;
+
 
 -- Trigger function to automatically update the 'updatedAt' column
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -218,7 +193,4 @@ CREATE TRIGGER update_invoices_updated_at
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_products_updated_at 
-    BEFORE UPDATE ON products 
-    FOR EACH ROW 
-    EXECUTE FUNCTION update_updated_at_column();
+

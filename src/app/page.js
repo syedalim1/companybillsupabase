@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import InvoicePreview from "@/components/InvoicePreview";
 import LandingPage from "@/components/LandingPage";
 import MonthlyGSTReport from "@/components/MonthlyGSTReport";
-import ProductList from "@/components/ProductList";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import CustomerManager from "@/components/CustomerManager";
 import EmailInvoiceModal from "@/components/EmailInvoiceModal";
@@ -318,28 +317,7 @@ const handleGeneratePDF = async () => {
     );
   }
 
-  // Show Product Management interface
-  if (currentMode === 'products') {
-    return (
-      <div className="flex flex-col gap-6 max-w-7xl mx-auto py-8 bg-bg-base min-h-screen p-6">
-        <div className="flex-1 max-w-7xl print:hidden mx-auto">
-          <button
-            onClick={() => setCurrentMode('landing')}
-            className="mb-4 flex items-center gap-2 px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 border border-gray-200 shadow-sm transition-all"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to Home
-          </button>
 
-          <h1 className="text-3xl font-bold text-center mb-6 text-green-600">
-            Product Management
-          </h1>
-
-          <ProductList />
-        </div>
-      </div>
-    );
-  }
 
   // Show Analytics Dashboard interface
   if (currentMode === 'analytics') {

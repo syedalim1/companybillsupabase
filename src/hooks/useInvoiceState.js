@@ -106,7 +106,7 @@ function deepClone(obj) {
 // HOOK
 // ============================================================================
 export function useInvoiceState() {
-  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'dc-bill', 'gst-monthly-report', 'products', 'analytics'
+  const [currentMode, setCurrentMode] = useState('landing'); // 'landing', 'gst-bill', 'quotation', 'dc-bill', 'gst-monthly-report', 'analytics'
   const [quotationGstOption, setQuotationGstOption] = useState('with-gst'); // 'with-gst', 'without-gst'
   const [nextId, setNextId] = useState(2);
   const [isGenerating, setIsGenerating] = useState(false); // State to track PDF generation

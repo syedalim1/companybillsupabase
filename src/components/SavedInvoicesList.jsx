@@ -66,7 +66,7 @@ export default function SavedInvoicesList({
             placeholder="Search by name, invoice no, amount..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-850 rounded-xl text-sm text-text-title focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all placeholder:text-text-desc/60"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50  border border-slate-200    rounded-xl text-sm text-text-title focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all placeholder:text-text-desc/60"
           />
           {searchQuery && (
             <button
@@ -90,8 +90,8 @@ export default function SavedInvoicesList({
 
       {/* Empty State */}
       {filteredByMode.length === 0 && (
-        <div className="bg-slate-50 dark:bg-slate-950/40 rounded-xl p-8 text-center border border-slate-100 dark:border-slate-800">
-          <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3">
+        <div className="bg-slate-50 dark:bg-slate-950/40 rounded-xl p-8 text-center border border-slate-100    ">
+          <div className="w-12 h-12 bg-slate-100   rounded-full flex items-center justify-center mx-auto mb-3">
             <svg className="w-6 h-6  " fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
@@ -104,7 +104,7 @@ export default function SavedInvoicesList({
 
       {/* No search results */}
       {filteredByMode.length > 0 && filteredInvoices.length === 0 && searchQuery && (
-        <div className="bg-slate-50 dark:bg-slate-950/40 rounded-xl p-6 text-center border border-slate-100 dark:border-slate-800">
+        <div className="bg-slate-50 dark:bg-slate-950/40 rounded-xl p-6 text-center border border-slate-100    ">
           <p className="  text-sm">No matching records found for &quot;{searchQuery}&quot;</p>
         </div>
       )}
@@ -113,7 +113,7 @@ export default function SavedInvoicesList({
       {filteredInvoices.map((invoice) => (
         <div 
           key={invoice.id} 
-          className="bg-bg-surface   rounded-xl border border-slate-100 dark:border-slate-800 p-4 hover:shadow-md transition-shadow group"
+          className="bg-bg-surface   rounded-xl border border-slate-100     p-4 hover:shadow-md transition-shadow group"
         >
           {/* Top Row: Invoice info + Badge */}
           <div className="flex items-start justify-between gap-3">
@@ -124,9 +124,9 @@ export default function SavedInvoicesList({
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                  currentMode === 'gst-bill' ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400' : 
-                  currentMode === 'dc-bill' ? 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400' : 
-                  currentMode === 'slip-bill' ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400' :
+                  currentMode === 'gst-bill' ? 'bg-blue-50   text-blue-600 dark:text-blue-400' : 
+                  currentMode === 'dc-bill' ? 'bg-rose-50   text-rose-600 dark:text-rose-400' : 
+                  currentMode === 'slip-bill' ? 'bg-amber-50   text-amber-600 dark:text-amber-400' :
                   'bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400'
                 }`}>
                   {currentMode === 'dc-bill' ? (
@@ -159,14 +159,14 @@ export default function SavedInvoicesList({
             <div className={`flex-shrink-0 flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
               currentMode === 'dc-bill' ? (
                 invoice.dcStatus === 'delivered' ? 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400' :
-                invoice.dcStatus === 'in-transit' ? 'bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400' :
+                invoice.dcStatus === 'in-transit' ? 'bg-blue-100   text-blue-700 dark:text-blue-400' :
                 invoice.dcStatus === 'returned' ? 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400' :
                 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400'
               ) : (
                 invoice.paymentStatus === 'paid' ? 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-400' :
                 invoice.paymentStatus === 'partial' ? 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-400' :
                 invoice.paymentStatus === 'overdue' ? 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400' :
-                'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300'
+                'bg-slate-100  /80 text-slate-600 dark:text-slate-300'
               )
             }`}>
               {currentMode === 'dc-bill' ? (
@@ -182,7 +182,7 @@ export default function SavedInvoicesList({
           </div>
 
           {/* Bottom Row: Actions */}
-          <div className="flex items-center justify-end gap-1 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-end gap-1 mt-3 pt-3 border-t border-slate-100    ">
             <button
               className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
               onClick={() => handleEditInvoice(invoice)}

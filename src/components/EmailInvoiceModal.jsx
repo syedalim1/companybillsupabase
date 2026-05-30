@@ -89,7 +89,7 @@ ${invoiceData?.seller?.email || ''}`,
                 type="email"
                 value={formData.recipientEmail}
                 onChange={(e) => handleInputChange('recipientEmail', e.target.value)}
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200     rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
                 placeholder="customer@example.com"
                 required
               />
@@ -104,7 +104,7 @@ ${invoiceData?.seller?.email || ''}`,
                 type="text"
                 value={formData.subject}
                 onChange={(e) => handleInputChange('subject', e.target.value)}
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200     rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
                 placeholder="Email subject"
               />
             </div>
@@ -117,14 +117,14 @@ ${invoiceData?.seller?.email || ''}`,
               <textarea
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title resize-none"
+                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200     rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title resize-none"
                 rows={8}
                 placeholder="Enter your message..."
               />
             </div>
 
             {/* Invoice Preview */}
-            <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl border border-slate-100    ">
               <h4 className="font-medium text-text-title mb-2">Invoice Summary</h4>
               <div className="text-sm text-text-body space-y-1">
                 <p><strong>Invoice No:</strong> {invoiceData?.invoiceDetails?.invoiceNo || 'N/A'}</p>
@@ -178,7 +178,7 @@ ${invoiceData?.seller?.email || ''}`,
           <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
             <button
               onClick={onClose}
-              className="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-medium"
+              className="px-6 py-2.5 bg-slate-100   text-text-body rounded-xl     transition-all font-medium"
             >
               Cancel
             </button>

@@ -65,10 +65,10 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'paid': return 'text-green-600 bg-green-100 dark:bg-green-950/30 dark:text-green-400';
-      case 'partial': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-950/30 dark:text-yellow-400';
-      case 'overdue': return 'text-red-600 bg-red-100 dark:bg-red-950/30 dark:text-red-400';
-      default: return '  bg-slate-100 dark:bg-slate-800';
+      case 'paid': return 'text-green-600 bg-green-100 ';
+      case 'partial': return 'text-yellow-600 bg-yellow-100 ';
+      case 'overdue': return 'text-red-600 bg-red-100 ';
+      default: return '  ';
     }
   };
 
@@ -89,7 +89,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
           </div>
 
           {/* Invoice Summary */}
-          <div className="bg-slate-50 dark:bg-slate-950/50 p-4 rounded-xl mb-6 border border-slate-100 dark:border-slate-800">
+          <div className=" p-4 rounded-xl mb-6 border border-slate-100    ">
             <h3 className="font-semibold text-text-title mb-2">Invoice Details</h3>
             <div className="text-sm text-text-body space-y-1">
               <p><strong>Invoice No:</strong> {invoice.invoiceNo}</p>
@@ -112,7 +112,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
               <select
                 value={formData.paymentStatus}
                 onChange={(e) => handleInputChange('paymentStatus', e.target.value)}
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
+                className="w-full p-3   border border-slate-200     rounded-xl focus:bg-white  focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
                 required
               >
                 <option value="unpaid">Unpaid</option>
@@ -131,7 +131,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
                 type="date"
                 value={formData.paymentDate}
                 onChange={(e) => handleInputChange('paymentDate', e.target.value)}
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
+                className="w-full p-3 bg-slate-50  border border-slate-200     rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
               />
             </div>
 
@@ -146,7 +146,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
                 value={formData.paymentAmount}
                 onChange={(e) => handleInputChange('paymentAmount', e.target.value)}
                 placeholder="Enter payment amount"
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
+                className="w-full p-3 bg-slate-50  border border-slate-200     rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title"
               />
               <p className="text-xs   mt-1">
                 Total Invoice Amount: ₹{invoice.grandTotal?.toLocaleString('en-IN')}
@@ -162,7 +162,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
                 value={formData.paymentNotes}
                 onChange={(e) => handleInputChange('paymentNotes', e.target.value)}
                 placeholder="Add payment notes or transaction details..."
-                className="w-full p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title resize-none"
+                className="w-full p-3 bg-slate-50  border border-slate-200     rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all text-text-title resize-none"
                 rows={3}
               />
             </div>
@@ -172,7 +172,7 @@ const PaymentStatusModal = ({ isOpen, onClose, invoice, onUpdate }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-2.5 bg-slate-100 dark:bg-slate-800 text-text-body rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all font-medium"
+                className="px-6 py-2.5 bg-slate-100   text-text-body rounded-xl  transition-all font-medium"
               >
                 Cancel
               </button>

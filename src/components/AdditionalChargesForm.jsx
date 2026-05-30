@@ -65,7 +65,7 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
       </div>
 
       {/* Discount and Less Amount Section */}
-      <div className="border-t border-slate-100 dark:border-slate-800/80 pt-4 sm:pt-6 space-y-4">
+      <div className="border-t border-slate-100    /80 pt-4 sm:pt-6 space-y-4">
         {/* Discount Row */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
           <label className="text-xs font-bold text-red-500 dark:text-red-400 sm:w-32">Apply Discount</label>
@@ -75,14 +75,14 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
               value={invoiceData.additionalCharges.discount || ''}
               onChange={(e) => handleInputChange('additionalCharges', 'discount', parseFloat(e.target.value) || 0)}
               placeholder="0"
-              className="w-full p-2 sm:p-3 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-xl focus:bg-white dark:focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all text-right font-medium text-red-600 dark:text-red-400 text-sm"
+              className="w-full p-2 sm:p-3 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-xl focus:bg-white    focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all text-right font-medium text-red-600 dark:text-red-400 text-sm"
             />
             <span className="absolute inset-y-0 right-3 flex items-center text-red-400 font-bold">%</span>
           </div>
         </div>
 
         {/* Less Amount Row */}
-        <div className="bg-slate-50 dark:bg-slate-950/50 p-3 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="bg-slate-50 dark:bg-slate-950/50 p-3 sm:p-4 rounded-xl border border-slate-200    ">
           <label className="block text-xs font-bold text-text-title mb-2">Advance / Less Amount</label>
           <div className="flex flex-col sm:flex-row gap-2">
             <input
@@ -90,7 +90,7 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
               value={invoiceData.additionalCharges.lessDescription || ''}
               onChange={(e) => handleInputChange('additionalCharges', 'lessDescription', e.target.value)}
               placeholder="Reason (e.g., Advance Paid)"
-              className="flex-1 p-2 sm:p-3 bg-white   border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-text-title"
+              className="flex-1 p-2 sm:p-3 bg-white   border border-slate-200     rounded-lg text-sm text-text-title"
             />
             <div className="relative w-full sm:w-36">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center   text-sm">₹</span>
@@ -99,7 +99,7 @@ const AdditionalChargesForm = ({ invoiceData, handleInputChange }) => {
                 value={invoiceData.additionalCharges.lessAmount || ''}
                 onChange={(e) => handleInputChange('additionalCharges', 'lessAmount', parseFloat(e.target.value) || 0)}
                 placeholder="0.00"
-                className="w-full pl-8 p-2 sm:p-3 bg-white   border border-slate-200 dark:border-slate-800 rounded-lg text-right font-bold text-sm text-text-title"
+                className="w-full pl-8 p-2 sm:p-3 bg-white   border border-slate-200     rounded-lg text-right font-bold text-sm text-text-title"
               />
             </div>
           </div>
