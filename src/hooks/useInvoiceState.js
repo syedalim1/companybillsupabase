@@ -175,11 +175,18 @@ export function useInvoiceState() {
   }, [currentMode, nextInvoiceNo, nextDcNo, nextSlipNo, editingInvoiceId]);
 
   // --- IMMUTABLE input change handler ---
+  // Bug 2 fix: Handle top-level fields (e.g., taxRate) where field is empty
   const handleInputChange = useCallback((section, field, value) => {
-    setInvoiceData(prev => ({
-      ...prev,
-      [section]: { ...prev[section], [field]: value },
-    }));
+    setInvoiceData(prev => {
+      // If field is empty, treat as a top-level property assignment (e.g., taxRate)
+      if (field === '' || field === undefined || field === null) {
+        return { ...prev, [section]: value };
+      }
+      return {
+        ...prev,
+        [section]: { ...prev[section], [field]: value },
+      };
+    });
   }, []);
 
   // --- FIXED: Deep-clone items to prevent mutation across invoices ---

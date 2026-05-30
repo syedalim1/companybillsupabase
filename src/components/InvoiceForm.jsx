@@ -210,7 +210,7 @@ export default function InvoiceForm({
 
       <div className="mt-8 pt-8 border-t border-gray-200">
         <h3 className="text-lg font-bold text-gray-900 mb-4">
-          {currentMode === 'gst-bill' ? 'Saved Invoices' : 'Saved Quotations'}
+          {currentMode === 'gst-bill' ? 'Saved Invoices' : currentMode === 'dc-bill' ? 'Saved Delivery Challans' : currentMode === 'slip-bill' ? 'Saved Slip Bills' : 'Saved Quotations'}
         </h3>
         <SavedInvoicesList
           savedInvoices={savedInvoices}

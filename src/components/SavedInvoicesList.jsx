@@ -97,7 +97,7 @@ export default function SavedInvoicesList({
             </svg>
           </div>
           <p className="text-gray-500 text-sm">
-            No {currentMode === 'gst-bill' ? 'invoices' : currentMode === 'dc-bill' ? 'delivery challans' : 'quotations'} saved yet.
+            No {currentMode === 'gst-bill' ? 'invoices' : currentMode === 'dc-bill' ? 'delivery challans' : currentMode === 'slip-bill' ? 'slip bills' : 'quotations'} saved yet.
           </p>
         </div>
       )}

@@ -23,7 +23,8 @@ export function useInvoiceAPI(
   setShowPaymentModal,
   setSelectedInvoiceForPayment,
   setIsSaving,
-  calculationResults // { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal }
+  calculationResults, // { subtotal, cgstAmount, sgstAmount, igstAmount, grandTotal }
+  resetToDefault // Bug 8: Accept resetToDefault to reset form after save/update
 ) {
   // ==========================================================================
   // FETCH — Load all saved invoices from the database
@@ -100,6 +101,10 @@ export function useInvoiceAPI(
 
         // Re-fetch from server — server is the single source of truth for next numbers
         await fetchSavedInvoices();
+
+        // Bug 1 fix: Reset the form to defaults with next invoice number
+        // so the user sees a clean form after saving
+        if (resetToDefault) resetToDefault();
       } else {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'Failed to save invoice');
@@ -110,7 +115,7 @@ export function useInvoiceAPI(
     } finally {
       if (setIsSaving) setIsSaving(false);
     }
-  }, [invoiceData, currentMode, quotationGstOption, calculationResults, fetchSavedInvoices, setIsSaving]);
+  }, [invoiceData, currentMode, quotationGstOption, calculationResults, fetchSavedInvoices, setIsSaving, resetToDefault]);
 
   // ==========================================================================
   // LOAD — Load an invoice for viewing (does NOT enable edit mode)
@@ -369,9 +374,16 @@ export function useInvoiceAPI(
 
       if (response.ok) {
         alert('Invoice updated successfully!');
-        setEditingInvoiceId(null);
         // Re-fetch from server
         await fetchSavedInvoices();
+
+        // Bug 3 fix: Reset form to defaults after update
+        // This also clears editingInvoiceId internally
+        if (resetToDefault) {
+          resetToDefault();
+        } else {
+          setEditingInvoiceId(null);
+        }
       } else {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'Failed to update invoice');
@@ -382,7 +394,7 @@ export function useInvoiceAPI(
     } finally {
       if (setIsSaving) setIsSaving(false);
     }
-  }, [editingInvoiceId, invoiceData, currentMode, quotationGstOption, calculationResults, setEditingInvoiceId, fetchSavedInvoices, setIsSaving]);
+  }, [editingInvoiceId, invoiceData, currentMode, quotationGstOption, calculationResults, setEditingInvoiceId, fetchSavedInvoices, setIsSaving, resetToDefault]);
 
   // ==========================================================================
   // DELETE — Delete an invoice with optimistic update
@@ -425,13 +437,17 @@ export function useInvoiceAPI(
   // ==========================================================================
   // PAYMENT — Handle payment status updates
   // ==========================================================================
-  const handlePaymentUpdate = useCallback((updatedInvoice) => {
+  // Bug 4 fix: Re-fetch from server after payment update to stay in sync
+  const handlePaymentUpdate = useCallback(async (updatedInvoice) => {
+    // Optimistic local update first for instant UI feedback
     setSavedInvoices(prev =>
       prev.map(inv => (inv.id === updatedInvoice.id ? deepClone(updatedInvoice) : inv))
     );
     setShowPaymentModal(false);
     setSelectedInvoiceForPayment(null);
-  }, [setSavedInvoices, setShowPaymentModal, setSelectedInvoiceForPayment]);
+    // Then re-fetch from server to ensure full data consistency
+    await fetchSavedInvoices();
+  }, [setSavedInvoices, setShowPaymentModal, setSelectedInvoiceForPayment, fetchSavedInvoices]);
 
   const handleOpenPaymentModal = useCallback((invoice) => {
     setSelectedInvoiceForPayment(deepClone(invoice));

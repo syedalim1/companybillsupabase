@@ -89,7 +89,8 @@ export default function Home() {
     setShowPaymentModal,
     setSelectedInvoiceForPayment,
     setIsSaving,
-    calculations // Pass calculation results directly
+    calculations, // Pass calculation results directly
+    resetToDefault // Bug 8: Pass reset function for form reset after save/update
   );
 
   const {
